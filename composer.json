@@ -16,6 +16,9 @@
     "require": {
         "php": ">=5.3.0"
     },
+    "repositories": [
+        {"type": "git", "url": "http://github.com/caseyamcl/Configula"}
+    ],
     "autoload": {
         "psr-0": { "Configula": "src/" }
     }
