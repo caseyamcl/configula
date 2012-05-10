@@ -1,7 +1,7 @@
 Configula
 =========
 
-Configula is a dead-simple configuration library for PHP 5.3+.  
+Configula is a simple configuration library for PHP 5.3+.  
 
 Features
 --------
