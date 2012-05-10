@@ -20,7 +20,7 @@
         {"type": "git", "url": "http://github.com/caseyamcl/Configula"}
     ],
     "autoload": {
-        "psr-0": { "Configula": "src/" }
+        "psr-0": { "Configula": "lib/" }
     }
 
 }
