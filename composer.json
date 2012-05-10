@@ -1,5 +1,5 @@
 {
-  "name": "caseyamcl/Configula",
+  "name": "caseyamcl/configula",
   "type": "library",
   "description": "A simple, flexible config library for PHP 5.3+",
   "keywords": ["config","configuration"],
