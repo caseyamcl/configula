@@ -15,14 +15,14 @@ class Config
   /**
    * Config File Constructor
    * 
-   * @param $defaults
-   * An optional list of defaults to fall back on, set at instantiation
-   * 
    * @param $config_path
    * An optional absolute path to the configuration folder
    * 
+   * @param $defaults
+   * An optional list of defaults to fall back on, set at instantiation
+   * 
    */
-  public function __construct($defaults = array(), $config_path = NULL) {
+  public function __construct($config_path = NULL, $defaults = array()) {
 
     //Set the defaults
     $this->config_settings = $defaults;
@@ -64,7 +64,15 @@ class Config
     
     //Run all of the files in the directory
     foreach(scandir($config_path) as $filename) {
-    	$config = array_merge($config, $this->parse_config_file($config_path . $filename));
+
+      //If the file ends in .local.EXT, then put it in the files to be processed later
+      $ext = pathinfo($config_path . $filename, PATHINFO_EXTENSION);
+      if (substr($filename, strlen($filename)-strlen('.local.' . $ext)) == '.local.' . $ext) {
+        $unparsed_local_files[] = $filename;
+      }
+      else {
+    	 $config = array_merge($config, $this->parse_config_file($config_path . $filename));
+      }
     }
     
     //Go back a second time and run all of the .local files
@@ -91,10 +99,10 @@ class Config
   public function parse_config_file($filepath) {
 
   	if ( ! is_readable($filepath)) {
-  		throw new Exception("Cannot read from the config file: $filepath");
+  		throw new \Exception("Cannot read from the config file: $filepath");
   	}
 
-		$parser_classname = 'Drivers\\' . ucfirst(strtolower(pathinfo($filepath, PATHINFO_EXTENSION)));
+		$parser_classname = 'Configula\\Drivers\\' . ucfirst(strtolower(pathinfo($filepath, PATHINFO_EXTENSION)));
 
 		if (class_exists($parser_classname)) {
 
