@@ -1,8 +1,8 @@
 <?php
 
-require_once(__DIR__ . '/../Config.php');
-require_once(__DIR__ . '/../DriverInterface.php');
-require_once(__DIR__ . '/../Drivers/Php.php');
+require_once(__DIR__ . '/../Configula/Config.php');
+require_once(__DIR__ . '/../Configula/DriverInterface.php');
+require_once(__DIR__ . '/../Configula/Drivers/Php.php');
 
 class ConfigTest extends PHPUnit_Framework_TestCase {
 

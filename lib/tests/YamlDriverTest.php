@@ -1,7 +1,7 @@
 <?php
 
-require_once(__DIR__ . '/../DriverInterface.php');
-require_once(__DIR__ . '/../Drivers/Yaml.php');
+require_once(__DIR__ . '/../Configula/DriverInterface.php');
+require_once(__DIR__ . '/../Configula/Drivers/Yaml.php');
 
 class YamlDriverTest extends PHPUnit_Framework_TestCase {
 
