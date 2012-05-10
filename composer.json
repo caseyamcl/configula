@@ -1,7 +1,7 @@
 {
   "name": "caseyamcl/Configula",
   "type": "library",
-  "description": "A dead-simple, flexible config library for PHP 5.3+",
+  "description": "A simple, flexible config library for PHP 5.3+",
   "keywords": ["config","configuration"],
   "homepage": "http://github.com/caseyamcl/Configula",
   "license": "MIT",
