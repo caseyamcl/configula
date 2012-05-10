@@ -8,6 +8,8 @@ class IniDriverTest extends PHPUnit_Framework_TestCase {
   private $content_path;
 
   private $file_path;
+  private $bad_file_path;
+  private $empty_file_path;
 
   // --------------------------------------------------------------
 
@@ -35,6 +37,16 @@ class IniDriverTest extends PHPUnit_Framework_TestCase {
 
     file_put_contents($this->content_path . $ds . 'testconfig.ini', $sample_code);
     $this->file_path = $this->content_path . $ds . 'testconfig.ini';
+
+    $bad_code = '
+      asdf1239423-497y8-398289--83--@#_#@*_#*_
+    ';
+
+    file_put_contents($this->content_path . $ds . 'testbad.ini', $bad_code);
+    $this->bad_file_path = $this->content_path . $ds . 'testbad.ini';
+
+    file_put_contents($this->content_path . $ds . 'testempty.ini', '');
+    $this->empty_file_path = $this->content_path . $ds . 'testempty.ini';       
   }
 
   // --------------------------------------------------------------
@@ -43,6 +55,8 @@ class IniDriverTest extends PHPUnit_Framework_TestCase {
   {    
     $ds = DIRECTORY_SEPARATOR;
 
+    unlink($this->empty_file_path);
+    unlink($this->bad_file_path);
     unlink($this->file_path);
     rmdir($this->content_path);
 
@@ -73,6 +87,24 @@ class IniDriverTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($match_array, $result);
   }
 
+  // --------------------------------------------------------------
+
+  public function testBadContentReturnsEmptyArray() {
+    $obj = new Configula\Drivers\Ini();
+    $result = $obj->read($this->bad_file_path);
+
+    $this->assertEquals(array(), $result);
+  }
+
+  // --------------------------------------------------------------
+
+  public function testEmptyContentReturnsEmptyArray() {
+
+    $obj = new Configula\Drivers\Ini();
+    $result = $obj->read($this->empty_file_path);
+
+    $this->assertEquals(array(), $result);
+  }
 }
 
 /* EOF: PhpDriverTest.php */

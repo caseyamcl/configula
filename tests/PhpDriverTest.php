@@ -30,6 +30,16 @@ class PhpDriverTest extends PHPUnit_Framework_TestCase {
 
     file_put_contents($this->content_path . $ds . 'testconfig.php', "<?php\n\n" . $sample_code . "\n/*EOF*/");
     $this->file_path = $this->content_path . $ds . 'testconfig.php';
+
+    $bad_code = '
+      asdf1239423-497y8-398289--83--@#_#@*_#*_
+    ';
+
+    file_put_contents($this->content_path . $ds . 'testbad.php', $bad_code);
+    $this->bad_file_path = $this->content_path . $ds . 'testbad.php';
+
+    file_put_contents($this->content_path . $ds . 'testempty.php', '');
+    $this->empty_file_path = $this->content_path . $ds . 'testempty.php';        
   }
 
   // --------------------------------------------------------------
@@ -37,7 +47,9 @@ class PhpDriverTest extends PHPUnit_Framework_TestCase {
   function tearDown()
   {    
     $ds = DIRECTORY_SEPARATOR;
-
+    
+    unlink($this->empty_file_path);
+    unlink($this->bad_file_path);
     unlink($this->content_path . $ds . 'testconfig.php');
     rmdir($this->content_path);
 
@@ -66,6 +78,24 @@ class PhpDriverTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($config, $result);
   }
 
+  // --------------------------------------------------------------
+
+  public function testBadContentReturnsEmptyArray() {
+    $obj = new Configula\Drivers\Php();
+    $result = $obj->read($this->bad_file_path);
+
+    $this->assertEquals(array(), $result);
+  }
+
+  // --------------------------------------------------------------
+
+  public function testEmptyContentReturnsEmptyArray() {
+
+    $obj = new Configula\Drivers\Php();
+    $result = $obj->read($this->empty_file_path);
+
+    $this->assertEquals(array(), $result);
+  }
 }
 
 /* EOF: PhpDriverTest.php */

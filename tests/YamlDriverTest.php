@@ -7,7 +7,8 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase {
 
   private $content_path;
 
-  private $file_path;
+  private $good_file_path;
+  private $empty_file_path;
 
   // --------------------------------------------------------------
 
@@ -32,7 +33,10 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase {
     ';
 
     file_put_contents($this->content_path . $ds . 'testconfig.yaml', $sample_code);
-    $this->file_path = $this->content_path . $ds . 'testconfig.yaml';
+    $this->good_file_path = $this->content_path . $ds . 'testconfig.yaml';
+
+    file_put_contents($this->content_path . $ds . 'testempty.yaml', '');
+    $this->empty_file_path = $this->content_path . $ds . 'testempty.yaml';    
   }
 
   // --------------------------------------------------------------
@@ -41,7 +45,8 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase {
   {    
     $ds = DIRECTORY_SEPARATOR;
 
-    unlink($this->file_path);
+    unlink($this->empty_file_path);
+    unlink($this->good_file_path);
     rmdir($this->content_path);
 
     parent::tearDown();
@@ -59,7 +64,7 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase {
 
   public function testGetConfigReturnsCorrectItems() {
     $obj = new Configula\Drivers\Yaml();
-    $result = $obj->read($this->file_path);
+    $result = $obj->read($this->good_file_path);
 
     $match_array = array();
     $match_array['a'] = "value";
@@ -71,6 +76,15 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($match_array, $result);
   }
 
+  // --------------------------------------------------------------
+
+  public function testEmptyFileReturnsEmptyArray() {
+
+    $obj = new Configula\Drivers\Yaml();
+    $result = $obj->read($this->empty_file_path);
+
+    $this->assertEquals(array(), $result);  
+  }
 }
 
 /* EOF: PhpDriverTest.php */

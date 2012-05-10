@@ -5,7 +5,7 @@ namespace Configula\Drivers;
 class Yaml implements \Configula\DriverInterface {
 
   public function read($filepath) {
-    return spyc_load_file($filepath); 
+    return spyc_load_file($filepath) ?: array(); 
   } 
 }
 

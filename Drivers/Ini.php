@@ -6,7 +6,7 @@ class Ini implements \Configula\DriverInterface {
 
   public function read($filepath) {
 
-    return parse_ini_file($filepath, TRUE);
+    return parse_ini_file($filepath, TRUE) ?: array();
     
   } 
 }
