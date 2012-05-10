@@ -65,19 +65,19 @@ Basic Usage
 
 6. To get all config settings as an array, use the <code>get_item()</code> method, but do not send any parameters:
 
-   $all_values = $config->get_item();
+    $all_values = $config->get_item();
 
 7. If you would like to preload the config object with default values, send those as the second parameter upon instantiation:
 
-   //Values in the config files will override the default values
-   $default_values = array('foo' => 'bar', 'baz' => 'biz');
-   $config = new Configula\Config('/path/to/app/config', $default_values);
+    //Values in the config files will override the default values
+    $default_values = array('foo' => 'bar', 'baz' => 'biz');
+    $config = new Configula\Config('/path/to/app/config', $default_values);
 
 8. If you would like to use Configula with only default values, do not provide a path to the configuration directory:
 
-   //The default values will be the only config options available
-   $default_values = array('foo' => 'bar', 'baz' => 'biz');
-   $config = new Configula\Config(NULL, $default_values);
+    //The default values will be the only config options available
+    $default_values = array('foo' => 'bar', 'baz' => 'biz');
+    $config = new Configula\Config(NULL, $default_values);
 
 Notes:
 
