@@ -25,6 +25,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
       $config["a"] = "value";
       $config["b"] = array(1, 2, 3);
       $config["c"] = (object) array("d", "e", "f");
+      $config["d"] = array("vala" => "hi", "valb" => "bye");
+      $config["d"]["valc"] = array("a" => 1, "b" => 2, "c" => 3);
       /*EOF*/';
 
     $php_bad_code = '<?php
@@ -63,7 +65,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     $defaults = array(
       'a' => 'value',
       'b' => array(1, 2, 3),
-      'c' => (object) array('d' => 'e', 'f' => 'g')
+      'c' => (object) array('d' => 'e', 'f' => 'g'),
+      'd' => array("vala" => "hi", "valb" => "bye", "valc" =>  array("a" => 1, "b" => 2, "c" => 3))
     );
 
     $obj = new Configula\Config(NULL, $defaults);
@@ -80,7 +83,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     $defaults = array(
       'a' => 'value',
       'b' => array(1, 2, 3),
-      'c' => (object) array('d' => 'e', 'f' => 'g')
+      'c' => (object) array('d' => 'e', 'f' => 'g'),
+      'd' => array("vala" => "hi", "valb" => "bye")
     );
 
     $obj = new Configula\Config(NULL, $defaults);
@@ -88,6 +92,18 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('value', $obj->get_item('a'));
     $this->assertEquals(array(1, 2, 3), $obj->get_item('b'));
     $this->assertEquals('e', $obj->get_item('c')->d);
+    $this->assertEquals('hi', $obj->d['vala']);
+  }
+ 
+  // --------------------------------------------------------------
+
+  public function testDotSyntaxRetrievesItemsCorrectly() {
+ 
+    $obj = new Configula\Config($this->content_path);   
+
+    $this->assertEquals(1, $obj->get_item('b.0'));
+    $this->assertEquals('hi', $obj->get_item('d.vala'));
+    $this->assertEquals(NULL, $obj->get_item('does.not.exist'));
   }
 
   // --------------------------------------------------------------
@@ -168,9 +184,25 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     $obj = new Configula\Config($path);
 
     $this->assertEquals(NULL, $obj->a);
-    $this->assertEquals(array(), $obj->get_item());
+    $this->assertEquals(array(), $obj->get_items());
 
     rmdir($path);
+  }
+
+  // --------------------------------------------------------------
+
+  public function testGetItemsReturnsAnArray() {
+
+    $obj = new Configula\Config($this->content_path);
+
+    //Single item
+    $result = $obj->get_items('a');
+    $this->assertEquals('value', $result['a']);
+
+    //Multiple items
+    $result = $obj->get_items(array('a', 'b'));
+    $this->assertEquals('value', $result['a']);
+    $this->assertEquals(array(1, 2, 3), $result['b']);
   }
 
   // --------------------------------------------------------------
@@ -191,6 +223,37 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('newvalue', $obj->a);
     $this->assertEquals((object) array('j', 'k', 'l'), $obj->c);
     $this->assertEquals(array(1, 2, 3), $obj->b);
+
+    unlink($this->content_path . $ds . 'phpgood.local.php');
+  }
+
+ // --------------------------------------------------------------
+
+  /**
+   * Tests to ensure that the merge_config method works
+   *
+   * A configuration item that is itself an array might have subvalues
+   * inside of it.  If the local configuration file overrides only one
+   * of those subvalues, the remaining values should stay the same.
+   */
+  public function testLocalConfigOverwritesSubArrayItemCorrectly() {
+    
+    $ds = DIRECTORY_SEPARATOR;
+    $code = '<?php
+      $config = array();
+      $config["d"]["vala"] = "newvalue";
+      $config["d"]["valc"]["b"] = "newvalue";
+      /*EOF*/';
+
+    file_put_contents($this->content_path . $ds . 'phpgood.local.php', $code);
+
+    $obj = new Configula\Config($this->content_path);
+
+    $this->assertEquals('newvalue', $obj->d['vala']);
+    $this->assertEquals('bye', $obj->d['valb']);
+
+    $this->assertEquals(1, $obj->d['valc']['a']);
+    $this->assertEquals('newvalue', $obj->d['valc']['b']);
 
     unlink($this->content_path . $ds . 'phpgood.local.php');
   }

@@ -71,13 +71,13 @@ class Config
         $unparsed_local_files[] = $filename;
       }
       else {
-    	 $config = array_merge($config, $this->parse_config_file($config_path . $filename));
+    	 $config = $this->merge_config_arrays($config, $this->parse_config_file($config_path . $filename));
       }
     }
     
     //Go back a second time and run all of the .local files
     foreach($unparsed_local_files as $filename) {
-			$config = array_merge($config, $this->parse_config_file($config_path . $filename));
+			$config = $this->merge_config_arrays($config, $this->parse_config_file($config_path . $filename));
     }
     
     $this->config_settings = $config;
@@ -134,12 +134,9 @@ class Config
 
   /**
    * Return a configuration item
-   * 
-   * If no configuration item returned, this method returns an array
-   * with all configuration items
-   * 
+   *  
    * @param string $item 
-   * The configuration item to retrieve - Leave blank for all
+   * The configuration item to retrieve
    * 
    * @param mixed $default_value
    * The default value to return for a configuration item if no configuration item exists
@@ -148,17 +145,103 @@ class Config
    * An array containing all configuration items, or a specific configuration item
    * NULL if a specified configuration item does not exist
    */
-  public function get_item($item = NULL, $default_value = NULL) {
-    if ($item)
-    {
-      if (isset($this->config_settings[$item]))
+  public function get_item($item, $default_value = NULL) {
+
+      if (isset($this->config_settings[$item])) {
         return $this->config_settings[$item];
-      else
-        return $default_value;
-    }
-    else
-      return $this->config_settings;
+      }
+      elseif (strpos($item, '.') !== FALSE) {
+        $cs = $this->config_settings;
+        if ($val = $this->get_nested_var($cs, $item)) {
+          return $val;
+        }
+      }
+
+      return $default_value;
+
   } 
+
+  // --------------------------------------------------------------
+
+  /**
+   * Returns configuration items (or all items) as an array
+   *
+   * @param  string|array   Array of items or single item
+   * @return array
+   */
+  public function get_items($items = NULL) {
+
+    if ($items) {
+
+      if ( ! is_array($items)) {
+        $items = array($items);
+      }
+
+      $output = array();
+      foreach($items as $item) {
+        $output[$item] = $this->get_item($item);
+      }
+
+      return $output;
+    }
+    else {
+      return $this->config_settings;
+    }
+  }
+
+  // --------------------------------------------------------------
+
+  /**
+   * Merge configuration arrays
+   *
+   * What I would wish that array_merge_recursive actually does...
+   * From: http://www.php.net/manual/en/function.array-merge-recursive.php#102379
+   *
+   * @param array $arr1
+   * @param array $arr2
+   * @return array
+   */
+  private function merge_config_arrays($arr1, $arr2) {
+
+    foreach($arr2 as $key => $value)
+    {
+      if(array_key_exists($key, $arr1) && is_array($value))
+        $arr1[$key] = $this->merge_config_arrays($arr1[$key], $arr2[$key]);
+
+      else
+        $arr1[$key] = $value;
+
+    }
+
+    return $arr1;
+  }
+
+  // --------------------------------------------------------------
+
+  /**
+   * Get nested variable using dot (val.subval.subsubval) syntax
+   *
+   * From: http://stackoverflow.com/questions/2286706/php-lookup-array-contents-with-dot-syntax
+   *   
+   * @param array $context
+   * @param string $name
+   * @return mixed
+   */
+  private function get_nested_var(&$context, $name) {
+
+    $pieces = explode('.', $name);
+
+    foreach ($pieces as $piece) {
+      if ( ! is_array($context) || ! array_key_exists($piece, $context)) {
+        // error occurred
+        return NULL;
+      }
+      $context = &$context[$piece];
+    }
+
+    return $context;
+  }
+
 }
 
 /* EOF: config.php */
