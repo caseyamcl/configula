@@ -35,7 +35,7 @@ class Config
                 $configPath .= DIRECTORY_SEPARATOR;
             }
 
-            $this->load_config($configPath); 
+            $this->loadConfig($configPath); 
         }
     }
     
@@ -50,7 +50,7 @@ class Config
      * @return int
      * The number of configuration settings loaded
      */
-    public function load_config($configPath)
+    public function loadConfig($configPath)
     {
         //Array to hold the configuration items as we get them
         $config = array();
