@@ -32,7 +32,7 @@ Installation
 ###Installation via source:
 
 1. Download from [Github](http://github.com/caseyamcl/Configula, "Github Page for Configula")
-2. Drop the _Configula_ folder into your codebase
+2. Drop the _lib/Configula_ folder into your codebase (you don't need the parent folders)
 3. Use a [PSR-0 Autoloader](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation") to include it!
 
 ###Installation via Packagist:
@@ -59,25 +59,25 @@ Basic Usage
 
     $my_value = $config->my_config_setting;
 
-5. Alternatively, use the <code>get_item()</code> method, which accepts an optional default value:
+5. Alternatively, use the <code>getItem()</code> method, which accepts an optional default value:
 
-    $my_value = $config->get_item('my_config_setting', 'default_to_fall_back_on');
+    $my_value = $config->getItem('my_config_setting', 'default_to_fall_back_on');
 
-6. To get all config settings as an array, use the <code>get_item()</code> method, but do not send any parameters:
+6. To get all config settings as an array, use the <code>getItems()</code> method:
 
-    $all_values = $config->get_item();
+    $all_values = $config->getItems();
 
 7. If you would like to preload the config object with default values, send those as the second parameter upon instantiation:
 
     //Values in the config files will override the default values
-    $default_values = array('foo' => 'bar', 'baz' => 'biz');
-    $config = new Configula\Config('/path/to/app/config', $default_values);
+    $defaults = array('foo' => 'bar', 'baz' => 'biz');
+    $config = new Configula\Config('/path/to/app/config', $defaults);
 
 8. If you would like to use Configula with only default values, do not provide a path to the configuration directory:
 
     //The default values will be the only config options available
-    $default_values = array('foo' => 'bar', 'baz' => 'biz');
-    $config = new Configula\Config(NULL, $default_values);
+    $defaults = array('foo' => 'bar', 'baz' => 'biz');
+    $config = new Configula\Config(null, $defaults);
 
 Notes:
 
@@ -141,5 +141,4 @@ Todo
 ----
 
 * Implement ArrayAccess and ArrayIterator interface
-* Add better documentation
 * Implement Exceptions for invalid configuration files
