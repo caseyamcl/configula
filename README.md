@@ -5,25 +5,25 @@ Configula is a simple configuration library for PHP 5.3+.
 
 Features
 --------
-* Works with .php, .ini, .json, and .yaml configuration files
+Works with .php, .ini, .json, and .yaml configuration files
 
-* Easily write a plugin to support other filetypes
+Easily write a plugin to support other filetypes
 
-* Simple usage:
+Simple usage:
 
     //Access configuration values
     $config = new Configula\Config('/path/to/config/files');
     $some_value = $config->get_value('some_key');
 
-* Property-like access to your config settings:
+Property-like access to your config settings:
 
     //Access configuration values
     $config = new Configula\Config('/path/to/config/files');
     $some_value = $config->some_key;
 
-* Packagist/Composer and [PSR-0 Compliant](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation")
+Packagist/Composer and [PSR-0 Compliant](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation")
 
-* Unit-Tested!  100% coverage, not including certain YAML libraries.
+Unit-Tested!  100% coverage, with the exception of certain YAML libraries.
 
 
 Installation
