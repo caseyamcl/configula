@@ -1,15 +1,10 @@
 <?php
 
-require_once(__DIR__ . '/../Configula/DriverInterface.php');
-require_once(__DIR__ . '/../Configula/Drivers/Json.php');
-
-class JsonDriverTest extends PHPUnit_Framework_TestCase {
+class PhpDriverTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;
 
     private $file_path;
-    private $bad_file_path;
-    private $empty_file_path;
 
     // --------------------------------------------------------------
 
@@ -24,25 +19,24 @@ class JsonDriverTest extends PHPUnit_Framework_TestCase {
         mkdir($this->content_path);
 
         $sample_code = '
-        {
-            "a": "value",
-            "b": [1, 2, 3],
-            "c": {"d": "e", "f": "g", "h": "i"}
-        }
+            $config = array();
+            $config["a"] = "value";
+            $config["b"] = array(1, 2, 3);
+            $config["c"] = (object) array("d", "e", "f");
         ';
 
-        file_put_contents($this->content_path . $ds . 'testconfig.json', $sample_code);
-        $this->file_path = $this->content_path . $ds . 'testconfig.json';
+        file_put_contents($this->content_path . $ds . 'testconfig.php', "<?php\n\n" . $sample_code . "\n/*EOF*/");
+        $this->file_path = $this->content_path . $ds . 'testconfig.php';
 
         $bad_code = '
             asdf1239423-497y8-398289--83--@#_#@*_#*_
         ';
 
-        file_put_contents($this->content_path . $ds . 'testbad.json', $bad_code);
-        $this->bad_file_path = $this->content_path . $ds . 'testbad.json';
+        file_put_contents($this->content_path . $ds . 'testbad.php', $bad_code);
+        $this->bad_file_path = $this->content_path . $ds . 'testbad.php';
 
-        file_put_contents($this->content_path . $ds . 'testempty.json', '');
-        $this->empty_file_path = $this->content_path . $ds . 'testempty.json';           
+        file_put_contents($this->content_path . $ds . 'testempty.php', '');
+        $this->empty_file_path = $this->content_path . $ds . 'testempty.php';        
     }
 
     // --------------------------------------------------------------
@@ -50,10 +44,10 @@ class JsonDriverTest extends PHPUnit_Framework_TestCase {
     function tearDown()
     {    
         $ds = DIRECTORY_SEPARATOR;
-
+        
         unlink($this->empty_file_path);
         unlink($this->bad_file_path);
-        unlink($this->file_path);
+        unlink($this->content_path . $ds . 'testconfig.php');
         rmdir($this->content_path);
 
         parent::tearDown();
@@ -63,30 +57,28 @@ class JsonDriverTest extends PHPUnit_Framework_TestCase {
 
     public function testInstantiateAsObjectSucceeds() {
 
-        $obj = new Configula\Drivers\Json();
-        $this->assertInstanceOf('Configula\Drivers\Json', $obj);
+        $obj = new Configula\Drivers\Php();
+        $this->assertInstanceOf('Configula\Drivers\Php', $obj);
     }
 
     // --------------------------------------------------------------
 
     public function testGetConfigReturnsCorrectItems() {
-        $obj = new Configula\Drivers\Json();
+        $obj = new Configula\Drivers\Php();
         $result = $obj->read($this->file_path);
 
-        $match_array = array();
-        $match_array['a'] = "value";
-        $match_array["b"] = array(1, 2, 3);
-        $match_array["c"]["d"] = 'e';
-        $match_array["c"]["f"] = 'g';
-        $match_array["c"]["h"] = 'i';
+        $config = array();
+        $config["a"] = "value";
+        $config["b"] = array(1, 2, 3);
+        $config["c"] = (object) array("d", "e", "f");
 
-        $this->assertEquals($match_array, $result);
+        $this->assertEquals($config, $result);
     }
 
     // --------------------------------------------------------------
 
- public function testBadContentReturnsEmptyArray() {
-        $obj = new Configula\Drivers\Json();
+    public function testBadContentReturnsEmptyArray() {
+        $obj = new Configula\Drivers\Php();
         $result = $obj->read($this->bad_file_path);
 
         $this->assertEquals(array(), $result);
@@ -96,7 +88,7 @@ class JsonDriverTest extends PHPUnit_Framework_TestCase {
 
     public function testEmptyContentReturnsEmptyArray() {
 
-        $obj = new Configula\Drivers\Json();
+        $obj = new Configula\Drivers\Php();
         $result = $obj->read($this->empty_file_path);
 
         $this->assertEquals(array(), $result);

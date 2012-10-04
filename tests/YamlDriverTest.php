@@ -1,8 +1,5 @@
 <?php
 
-require_once(__DIR__ . '/../Configula/DriverInterface.php');
-require_once(__DIR__ . '/../Configula/Drivers/Yaml.php');
-
 class YamlDriverTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;

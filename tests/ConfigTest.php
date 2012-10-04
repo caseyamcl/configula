@@ -1,9 +1,5 @@
 <?php
 
-require_once(__DIR__ . '/../Configula/Config.php');
-require_once(__DIR__ . '/../Configula/DriverInterface.php');
-require_once(__DIR__ . '/../Configula/Drivers/Php.php');
-
 class ConfigTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;

@@ -3,6 +3,10 @@ Configula
 
 Configula is a simple configuration library for PHP 5.3+.  
 
+Use it when you don't need all the power and flexibility of the 
+Symfony2 Configuration library, but instead just need a simple class
+to read configuration files of different types.
+
 Features
 --------
 Works with .php, .ini, .json, and .yaml configuration files
@@ -23,7 +27,7 @@ Property-like access to your config settings:
 
 Packagist/Composer and [PSR-0 Compliant](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation")
 
-Unit-Tested!  100% coverage, with the exception of certain YAML libraries.
+Unit-Tested!  100% coverage.
 
 
 Installation
@@ -32,7 +36,7 @@ Installation
 ###Installation via source:
 
 1. Download from [Github](http://github.com/caseyamcl/Configula, "Github Page for Configula")
-2. Drop the _lib/Configula_ folder into your codebase (you don't need the parent folders)
+2. Drop the _src/Configula_ folder into your codebase (you don't need the parent folders)
 3. Use a [PSR-0 Autoloader](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation") to include it!
 
 ###Installation via Packagist:
@@ -92,7 +96,7 @@ You can use any single folder to store configuration files.  You can also mix an
 
 * __PHP__ - Configula will look for an array called <code>$config</code> in this file.
 * __JSON__
-* __YAML__ - YAML parsing support is built-in.  You do not need an external library of PECL package for this.
+* __YAML__ - YAML parsing depends on the symfony/yaml package (v2.1.0 or higher)
 * __INI__
 
 ### Local Configuration Files

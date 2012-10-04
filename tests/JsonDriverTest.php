@@ -1,9 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../Configula/DriverInterface.php');
-require_once(__DIR__ . '/../Configula/Drivers/Ini.php');
-
-class IniDriverTest extends PHPUnit_Framework_TestCase {
+class JsonDriverTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;
 
@@ -24,29 +21,25 @@ class IniDriverTest extends PHPUnit_Framework_TestCase {
         mkdir($this->content_path);
 
         $sample_code = '
-            a = value
-
-            b[] = 1
-            b[] = 2
-            b[] = 3
-
-            c_one = d
-            c_two = e
-            c_thr = f
+        {
+            "a": "value",
+            "b": [1, 2, 3],
+            "c": {"d": "e", "f": "g", "h": "i"}
+        }
         ';
 
-        file_put_contents($this->content_path . $ds . 'testconfig.ini', $sample_code);
-        $this->file_path = $this->content_path . $ds . 'testconfig.ini';
+        file_put_contents($this->content_path . $ds . 'testconfig.json', $sample_code);
+        $this->file_path = $this->content_path . $ds . 'testconfig.json';
 
         $bad_code = '
             asdf1239423-497y8-398289--83--@#_#@*_#*_
         ';
 
-        file_put_contents($this->content_path . $ds . 'testbad.ini', $bad_code);
-        $this->bad_file_path = $this->content_path . $ds . 'testbad.ini';
+        file_put_contents($this->content_path . $ds . 'testbad.json', $bad_code);
+        $this->bad_file_path = $this->content_path . $ds . 'testbad.json';
 
-        file_put_contents($this->content_path . $ds . 'testempty.ini', '');
-        $this->empty_file_path = $this->content_path . $ds . 'testempty.ini';       
+        file_put_contents($this->content_path . $ds . 'testempty.json', '');
+        $this->empty_file_path = $this->content_path . $ds . 'testempty.json';           
     }
 
     // --------------------------------------------------------------
@@ -67,30 +60,30 @@ class IniDriverTest extends PHPUnit_Framework_TestCase {
 
     public function testInstantiateAsObjectSucceeds() {
 
-        $obj = new Configula\Drivers\Ini();
-        $this->assertInstanceOf('Configula\Drivers\Ini', $obj);
+        $obj = new Configula\Drivers\Json();
+        $this->assertInstanceOf('Configula\Drivers\Json', $obj);
     }
 
     // --------------------------------------------------------------
 
     public function testGetConfigReturnsCorrectItems() {
-        $obj = new Configula\Drivers\Ini();
+        $obj = new Configula\Drivers\Json();
         $result = $obj->read($this->file_path);
 
         $match_array = array();
         $match_array['a'] = "value";
         $match_array["b"] = array(1, 2, 3);
-        $match_array["c_one"] = 'd';
-        $match_array["c_two"] = 'e';
-        $match_array["c_thr"] = 'f';
+        $match_array["c"]["d"] = 'e';
+        $match_array["c"]["f"] = 'g';
+        $match_array["c"]["h"] = 'i';
 
         $this->assertEquals($match_array, $result);
     }
 
     // --------------------------------------------------------------
 
-    public function testBadContentReturnsEmptyArray() {
-        $obj = new Configula\Drivers\Ini();
+ public function testBadContentReturnsEmptyArray() {
+        $obj = new Configula\Drivers\Json();
         $result = $obj->read($this->bad_file_path);
 
         $this->assertEquals(array(), $result);
@@ -100,7 +93,7 @@ class IniDriverTest extends PHPUnit_Framework_TestCase {
 
     public function testEmptyContentReturnsEmptyArray() {
 
-        $obj = new Configula\Drivers\Ini();
+        $obj = new Configula\Drivers\Json();
         $result = $obj->read($this->empty_file_path);
 
         $this->assertEquals(array(), $result);
