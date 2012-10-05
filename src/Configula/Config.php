@@ -1,14 +1,19 @@
 <?php
 
 namespace Configula;
+use ArrayAccess, Iterator, Countable;
 
-class Config
+class Config implements ArrayAccess, Iterator, Countable
 {
     /**
-     * Configuration settings
-     * @var array 
+     * @var array  Configuration Settings
      */
     private $configSettings = array();
+
+    /**
+     * @var int  Iterator Access Counter
+     */
+    private $iteratorCount = 0;
     
     // --------------------------------------------------------------
     
@@ -185,6 +190,73 @@ class Config
         else {
             return $this->configSettings;
         }
+    }
+
+    // --------------------------------------------------------------
+
+    /*
+     * ArrayAccess Interface
+     */
+
+    public function offsetSet($offset, $data)
+    {
+        throw new \RuntimeException("Configuration is immutable!");
+    }
+
+    public function offsetUnset($offset)
+    {
+        throw new \RuntimeException("Configuration is immutable!");        
+    }
+
+    public function offsetExists($offset)
+    {
+        return $this->getItem($offset) ? true : false; 
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->getItem($offset);
+    }
+
+    /*
+     * Iterator Interface
+     */
+
+    public function rewind()
+    {
+        $this->iteratorCount = 0;
+    }
+
+    public function current()
+    {
+        $vals = array_values($this->configSettings);
+        return $vals[$this->iteratorCount];
+    }
+
+    public function key()
+    {
+        $keys = array_keys($this->configSettings);
+        return $keys[$this->iteratorCount];
+    }
+
+    public function next()
+    {
+        $this->iteratorCount++;
+    }
+
+    public function valid()
+    {
+        $vals = array_values($this->configSettings);
+        return (isset($vals[$this->iteratorCount]));
+    }
+
+    /*
+     * Count Interface
+     */
+
+    public function count()
+    {
+        return count($this->configSettings);
     }
 
     // --------------------------------------------------------------

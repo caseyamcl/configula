@@ -147,6 +147,4 @@ Refer to an existing Unit test for an example of how to test your driver class.
 
 Todo
 ----
-
-* Implement ArrayAccess and ArrayIterator interface
 * Implement Exceptions for invalid configuration files

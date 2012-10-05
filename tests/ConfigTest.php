@@ -171,6 +171,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testLocalConfigFileOverridesMainConfigFile()
     {    
+        if ( ! is_writable($this->configPath)) {
+            $this->markTestSkipped("Could not write temporary file to config path.");
+            return;
+        }
+
         $ds = DIRECTORY_SEPARATOR;
         $code = '<?php
             $config = array();
@@ -223,6 +228,66 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('newvalue', $obj->d['valc']['b']);
 
         unlink($this->configPath . $ds . 'phpgood.local.php');
+    }
+
+    // --------------------------------------------------------------
+
+    public function testCountableInterfaceSucceeds()
+    {
+        $obj = new Configula\Config($this->configPath);
+        $this->assertEquals(4, count($obj));
+    }
+
+    // --------------------------------------------------------------
+
+    public function testIteratorSucceeds()
+    {
+        $obj = new Configula\Config($this->configPath);
+
+        $actualArr = array();
+        foreach($obj as $key => $val) {
+            $actualArr[$key] = $val;
+        }        
+
+        $expectedArr = array(
+            'a' => 'value',
+            'b' => array(1, 2, 3),
+            'c' => (object) array('d', 'e', 'f'),
+            'd' => array('vala' => 'hi', 'valb' => 'bye', 'valc' => array(
+                'a' => 1, 'b' => 2, 'c' => 3
+            ))
+        );
+
+        $this->assertEquals($expectedArr, $actualArr);
+    }
+
+    // --------------------------------------------------------------
+
+    public function testArrayAccessSucceeds()
+    {
+        $obj = new Configula\Config($this->configPath);
+        
+        $this->assertEquals('value', $obj['a']);        
+        $this->assertEquals(array(1, 2, 3), $obj['b']);
+    }
+
+    // --------------------------------------------------------------
+
+    public function testArrayAccessImmutableAndThrowsExceptionForNewValue()
+    {
+        $obj = new Configula\Config($this->configPath);
+        $this->setExpectedException('\RuntimeException');
+
+        $obj['newValue'] = 'hello';
+    }
+
+    // --------------------------------------------------------------
+
+    public function testArrayAccessImmutableAndThrowsExceptionForUnset()
+    {
+        $obj = new Configula\Config($this->configPath);
+        $this->setExpectedException('\RuntimeException');
+        unset($obj['a']);
     }
 }
 
