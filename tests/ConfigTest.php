@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Configula Config Class Unit Test
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @license MIT
+ * @package Configula
+ * @subpackage Unit Tests
+ */
+
 class ConfigTest extends PHPUnit_Framework_TestCase {
 
     private $configPath;

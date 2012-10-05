@@ -1,10 +1,17 @@
 <?php
 
+/**
+ * Configula YAML File Driver
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @license MIT
+ * @package Configula
+ */
+
 namespace Configula\Drivers;
 use Configula\DriverInterface;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
-use Symfony\Component\Yaml\Exception\ParseException;
-
+use Symfony\Component\Yaml\Exception\ParseException as SymfonyParseException;
 
 class Yaml implements DriverInterface
 {
@@ -22,7 +29,7 @@ class Yaml implements DriverInterface
         try {
             return SymfonyYaml::parse($filepath) ?: array();
         }
-        catch (ParseException $e) {
+        catch (SymfonyParseException $e) {
             return array();
         }
     } 

@@ -27,7 +27,7 @@ Property-like access to your config settings:
 
 Packagist/Composer and [PSR-0 Compliant](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation")
 
-Unit-Tested!  100% coverage.
+Unit-Tested!  Just about 100% coverage.
 
 
 Installation

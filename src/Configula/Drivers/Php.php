@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Configula PHP File Driver
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @license MIT
+ * @package Configula
+ */
+
 namespace Configula\Drivers;
 use Configula\DriverInterface;
 

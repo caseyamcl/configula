@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Configula Main Config Class
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @license MIT
+ * @package Configula
+ */
+
 namespace Configula;
 use ArrayAccess, Iterator, Countable;
 

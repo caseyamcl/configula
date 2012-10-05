@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Configula JSON Driver Class Unit Test
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @license MIT
+ * @package Configula
+ * @subpackage Unit Tests
+ */
+
 class JsonDriverTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;

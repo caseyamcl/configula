@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Configula Driver Interface
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @license MIT
+ * @package Configula
+ */
+
 namespace Configula;
 
 interface DriverInterface

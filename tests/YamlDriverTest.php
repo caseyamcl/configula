@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * Configula YAML Driver Class Unit Test
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @license MIT
+ * @package Configula
+ * @subpackage Unit Tests
+ */
+
 class YamlDriverTest extends PHPUnit_Framework_TestCase
 {
     private $goodFilePath;
     private $emptyFilePath;
+    private $badFilePath;
 
     // --------------------------------------------------------------
 
@@ -13,6 +23,7 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase
         
         $this->goodFilePath = realpath(__DIR__ . '/fixtures/yaml/config.yml');
         $this->emptyFilePath = realpath(__DIR__ . '/fixtures/yaml/empty.yml');
+        $this->badFilePath = realpath(__DIR__ . '/fixtures/yaml/bad.yml');
     }
 
     // --------------------------------------------------------------
@@ -39,6 +50,16 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase
         $match_array["c"]["h"] = 'i';
 
         $this->assertEquals($match_array, $result);
+    }
+
+    // --------------------------------------------------------------
+
+    public function testBadContentReturnsEmptyArray()
+    {
+        $obj = new Configula\Drivers\Yaml();
+        $result = $obj->read($this->badFilePath);
+
+        $this->assertEquals(array(), $result);
     }
 
     // --------------------------------------------------------------
