@@ -1,8 +1,9 @@
 <?php
 
 namespace Configula\Drivers;
+use Configula\DriverInterface;
 
-class Json implements \Configula\DriverInterface
+class Json implements DriverInterface
 {
     public function read($filepath)
     {

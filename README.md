@@ -43,12 +43,15 @@ Installation
 
 Include the following in your _composer.json_ file:
 
-    "require": {
-      ...
-      "caseyamcl/Configula": "dev-master"
-    }
+        "require": {
+            ...
+            "symfony/yaml": ">=2.1.0",
+            "caseyamcl/Configula": "dev-master"
+        }
 
 Then, run <code>php composer.phar install</code>
+
+_Note_ The "symfony/yaml:" line is optional, and only required if you wish to parse YAML configuration files.
 
 Basic Usage
 -----------
@@ -114,28 +117,29 @@ Writing Your Own Configuration File Type Support
 In addition to the built-in filetype drivers, you can add your own driver for reading configuration files.  An example would look like
 
     namespace Configula\Drivers;
+    use Configula\DriverInterface;
 
-    class MyDriver implements Configula\DriverInterface {
+    class MyDriver implements DriverInterface
+    {
+        /**
+         * Your read() method should accept a filepath string
+         * and return an array.  Return an empty array if the
+         * file is unreadable or unparsable for any reason.
+         */
+        public function read($filepath)
+        {
+            $contents = file_get_contents($filepath);
+            return $this->parse() ?: array();
+        }
 
-      /**
-       * Your read() method should accept a filepath string
-       * and return an array.  Return an empty array if the
-       * file is unreadable or unparsable for any reason.
-       */
-      public function read($filepath) {
-
-        $contents = file_get_contents($filepath);
-        return $this->parse ?: array();
-      }
-
-      /**
-       * Example parse method
-       */
-      private function parse($contents) {
-
-        /* ... code here .... */
-        return $result ?: FALSE;
-      }
+        /**
+         * Example parse method
+         */
+        protected function parse($contents)
+        {
+            /* ... code here .... */
+            return $result;
+        }
 
     }
 

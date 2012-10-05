@@ -1,10 +1,12 @@
 <?php
 
 namespace Configula\Drivers;
+use Configula\DriverInterface;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
-class Yaml implements \Configula\DriverInterface
+
+class Yaml implements DriverInterface
 {
     public function __construct()
     {

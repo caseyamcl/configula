@@ -1,8 +1,9 @@
 <?php
 
 namespace Configula\Drivers;
+use Configula\DriverInterface;
 
-class Ini implements \Configula\DriverInterface
+class Ini implements DriverInterface
 {
     public function read($filepath)
     {

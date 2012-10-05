@@ -1,8 +1,9 @@
 <?php
 
 namespace Configula\Drivers;
+use Configula\DriverInterface;
 
-class Php implements \Configula\DriverInterface
+class Php implements DriverInterface
 {
 	public function read($filepath)
 	{
