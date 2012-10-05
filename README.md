@@ -56,31 +56,42 @@ _Note_ The "symfony/yaml:" line is optional, and only required if you wish to pa
 Basic Usage
 -----------
 
-1. Create a single folder in your application for storing configuration files.
-2. Populate the folder with configuration files.  See _Config Folder Layout_ section below for more details.
-3. Instantiate a configula instance, and send the path as the first parameter:
+1.  Create a single folder in your application for storing configuration files.
+2.  Populate the folder with configuration files.  See _Config Folder Layout_ section below for more details.
+3.  Instantiate a configula instance, and send the path as the first parameter:
 
     $config = new Configula\Config('/path/to/app/config');
 
-4. Configuration values become properties of the Configula object:
+4.  Configuration values become properties of the Configula object:
 
     $my_value = $config->my_config_setting;
 
-5. Alternatively, use the <code>getItem()</code> method, which accepts an optional default value:
+5.  Alternatively, use the <code>getItem()</code> method, which accepts an optional default value:
 
     $my_value = $config->getItem('my_config_setting', 'default_to_fall_back_on');
 
-6. To get all config settings as an array, use the <code>getItems()</code> method:
+6.  Finally, you can access the object as if it were an array:
+
+    $my_value = $config['my_config_setting'];
+
+7.  foreach() and count() also work, since Configula implements those interfaces:
+
+    foreach ($config as $settingName => $settingValue) {
+        echo "{$settingName} is {$settingValue}";
+    }
+    echo "There are " . count($config) . " settings total";
+
+8.  To get all config settings as an array, use the <code>getItems()</code> method:
 
     $all_values = $config->getItems();
 
-7. If you would like to preload the config object with default values, send those as the second parameter upon instantiation:
+9.  If you would like to preload the config object with default values, send those as the second parameter upon instantiation:
 
     //Values in the config files will override the default values
     $defaults = array('foo' => 'bar', 'baz' => 'biz');
     $config = new Configula\Config('/path/to/app/config', $defaults);
 
-8. If you would like to use Configula with only default values, do not provide a path to the configuration directory:
+10. If you would like to use Configula with only default values, do not provide a path to the configuration directory:
 
     //The default values will be the only config options available
     $defaults = array('foo' => 'bar', 'baz' => 'biz');
