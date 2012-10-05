@@ -3,31 +3,34 @@ Configula
 
 Configula is a simple configuration library for PHP 5.3+.  
 
-Use it when you don't need all the power and flexibility of the 
-Symfony2 Configuration library, but instead just need a simple class
-to read configuration files of different types.
+Use it when you don't need all the power and flexibility of the  Symfony2 Configuration library, but instead just need a simple class to read configuration files of different types.
 
 Features
 --------
-Works with .php, .ini, .json, and .yaml configuration files
+* Works with _.php_, _.ini_, _.json_, and _.yaml_ configuration file types
+* Easily write a plugin to support other filetypes
+* Simple usage:
 
-Easily write a plugin to support other filetypes
+        //Access configuration values
+        $config = new Configula\Config('/path/to/config/files');
+        $some_value = $config->getValue(''some_key');
+        
+* Property-like access to your config settings:
 
-Simple usage:
+        //Access configuration values
+        $config = new Configula\Config('/path/to/config/files');
+        $some_value = $config->some_key;
 
-    //Access configuration values
-    $config = new Configula\Config('/path/to/config/files');
-    $some_value = $config->get_value('some_key');
+* Array and iterator access to your config settings:
 
-Property-like access to your config settings:
+        //Access conifguration values
+        $config = new Configula\Config('/path/to/config/files');
+        foreach ($config as $item => $value) {
+            echo "<li>{$item} is {$value}</li>";
+        }
 
-    //Access configuration values
-    $config = new Configula\Config('/path/to/config/files');
-    $some_value = $config->some_key;
-
-Packagist/Composer and [PSR-0 Compliant](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation")
-
-Unit-Tested!  Just about 100% coverage.
+* [Packagist/Composer](http://getcomposer.org) and [PSR-0 Compliant](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation")
+* Unit-Tested!  Just about 100% coverage.
 
 
 Installation
@@ -39,9 +42,9 @@ Installation
 2. Drop the _src/Configula_ folder into your codebase (you don't need the parent folders)
 3. Use a [PSR-0 Autoloader](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation") to include it!
 
-###Installation via Packagist:
+###Installation via Composer (Packagist):
 
-Include the following in your _composer.json_ file:
+1. Include the following in your _composer.json_ file:
 
         "require": {
             ...
@@ -49,9 +52,8 @@ Include the following in your _composer.json_ file:
             "caseyamcl/Configula": "dev-master"
         }
 
-Then, run <code>php composer.phar install</code>
-
-_Note_ The "symfony/yaml:" line is optional, and only required if you wish to parse YAML configuration files.
+2. Then, run <code>php composer.phar install</code>
+3.  _Note:_ The <code>symfony/yaml</code> line is optional.  Include it only if you wish to parse YAML configuration files.
 
 Basic Usage
 -----------
@@ -60,42 +62,42 @@ Basic Usage
 2.  Populate the folder with configuration files.  See _Config Folder Layout_ section below for more details.
 3.  Instantiate a configula instance, and send the path as the first parameter:
 
-    $config = new Configula\Config('/path/to/app/config');
+        $config = new Configula\Config('/path/to/app/config');
 
 4.  Configuration values become properties of the Configula object:
 
-    $my_value = $config->my_config_setting;
+        $my_value = $config->my_config_setting;
 
 5.  Alternatively, use the <code>getItem()</code> method, which accepts an optional default value:
 
-    $my_value = $config->getItem('my_config_setting', 'default_to_fall_back_on');
+        $my_value = $config->getItem('my_config_setting', 'default_to_fall_back_on');
 
 6.  Finally, you can access the object as if it were an array:
 
-    $my_value = $config['my_config_setting'];
+        $my_value = $config['my_config_setting'];
 
 7.  foreach() and count() also work, since Configula implements those interfaces:
 
-    foreach ($config as $settingName => $settingValue) {
-        echo "{$settingName} is {$settingValue}";
-    }
-    echo "There are " . count($config) . " settings total";
+        foreach ($config as $settingName => $settingValue) {
+            echo "{$settingName} is {$settingValue}";
+        }
+        echo "There are " . count($config) . " settings total";
 
 8.  To get all config settings as an array, use the <code>getItems()</code> method:
 
-    $all_values = $config->getItems();
+        $all_values = $config->getItems();
 
 9.  If you would like to preload the config object with default values, send those as the second parameter upon instantiation:
 
-    //Values in the config files will override the default values
-    $defaults = array('foo' => 'bar', 'baz' => 'biz');
-    $config = new Configula\Config('/path/to/app/config', $defaults);
+        //Values in the config files will override the default values
+        $defaults = array('foo' => 'bar', 'baz' => 'biz');
+        $config = new Configula\Config('/path/to/app/config', $defaults);
 
 10. If you would like to use Configula with only default values, do not provide a path to the configuration directory:
 
-    //The default values will be the only config options available
-    $defaults = array('foo' => 'bar', 'baz' => 'biz');
-    $config = new Configula\Config(null, $defaults);
+        //The default values will be the only config options available
+        $defaults = array('foo' => 'bar', 'baz' => 'biz');
+        $config = new Configula\Config(null, $defaults);
 
 Notes:
 
@@ -106,24 +108,24 @@ Notes:
 Config Folder Layout
 --------------------
 
-You can use any single folder to store configuration files.  You can also mix and match any supported configuration filetype.  Current supported filetypes are:
+You can use any single folder to store configuration files.  You can also mix and match any supported configuration filetypes.  Current supported filetypes are:
 
 * __PHP__ - Configula will look for an array called <code>$config</code> in this file.
-* __JSON__
+* __JSON__ - Uses the built-in PHP <code>json_decode()</code> function
 * __YAML__ - YAML parsing depends on the symfony/yaml package (v2.1.0 or higher)
-* __INI__
+* __INI__ - Uses the built-in PHP <code>parse_ini_file()</code> function
 
 ### Local Configuration Files
 
 In some cases, you may want to have local configuration files that override the default configuration files.  To override any configuration file, create another configuration file, and append <code>.local.EXT</code> to the end.
 
-For example, a configuration file named <code>database.yaml</code> is overridden by <code>database.local.yaml</code>, if the latter file exists.
+For example, a configuration file named <code>database.yml</code> is overridden by <code>database.local.yml</code>, if the latter file exists.
 
-This is very useful if you want certain settings included in version control, and certain settings not versioned (just add <code>/path/to/config/*.local.EXT</code> to your <code>.gitignore</code> or equivalent VCS file)
+This is very useful if you want certain settings included in version control, and certain settings ignored (just add <code>/path/to/config/*.local.EXT</code> to your <code>.gitignore</code> or equivalent VCS file)
 
 
-Writing Your Own Configuration File Type Support
-------------------------------------------------
+Writing Your Own Configuration File Type Driver
+-----------------------------------------------
 
 In addition to the built-in filetype drivers, you can add your own driver for reading configuration files.  An example would look like
 
@@ -136,15 +138,21 @@ In addition to the built-in filetype drivers, you can add your own driver for re
          * Your read() method should accept a filepath string
          * and return an array.  Return an empty array if the
          * file is unreadable or unparsable for any reason.
+         *
+         * @param string $filepath  The realpath to the config file
+         * @return array            Empty if non-parsed
          */
         public function read($filepath)
         {
             $contents = file_get_contents($filepath);
-            return $this->parse() ?: array();
+            return $this->parse($contents) ?: array();
         }
 
         /**
          * Example parse method
+         *
+         * @param string  Raw file contents
+         * @return array  Parsed configuration as associatve array
          */
         protected function parse($contents)
         {
