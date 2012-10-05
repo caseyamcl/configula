@@ -9,8 +9,10 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->goodFilePath = realpath(__DIR__ . '/fixtures/config.yml');
-        $this->emptyFilePath = realpath(__DIR__ . '/fixtures/empty.yml');
+        parent::setUp();
+        
+        $this->goodFilePath = realpath(__DIR__ . '/fixtures/yaml/config.yml');
+        $this->emptyFilePath = realpath(__DIR__ . '/fixtures/yaml/empty.yml');
     }
 
     // --------------------------------------------------------------

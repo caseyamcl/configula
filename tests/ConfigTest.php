@@ -2,62 +2,28 @@
 
 class ConfigTest extends PHPUnit_Framework_TestCase {
 
-    private $content_path;
+    private $configPath;
 
     // --------------------------------------------------------------
 
     function setUp()
     {
         parent::setUp();
-
-        $ds = DIRECTORY_SEPARATOR;
-        $this->content_path = sys_get_temp_dir() . $ds . 'phpunit_configula_test_' . time();
-
-        //Setup fake content directory
-        mkdir($this->content_path);
-
-        $php_good_code = '<?php
-            $config = array();
-            $config["a"] = "value";
-            $config["b"] = array(1, 2, 3);
-            $config["c"] = (object) array("d", "e", "f");
-            $config["d"] = array("vala" => "hi", "valb" => "bye");
-            $config["d"]["valc"] = array("a" => 1, "b" => 2, "c" => 3);
-            /*EOF*/';
-
-        $php_bad_code = '<?php
-            $nuthin = "yep";
-        ';
-
-        file_put_contents($this->content_path . $ds . 'phpgood.php', $php_good_code);
-        file_put_contents($this->content_path . $ds . 'phpbad.php',  $php_bad_code);
+        $this->configPath = realpath(__DIR__ . '/fixtures/main/');
     }
 
     // --------------------------------------------------------------
 
-    function tearDown()
-    {    
-        $ds = DIRECTORY_SEPARATOR;
-
-        unlink($this->content_path . $ds . 'phpgood.php');
-        unlink($this->content_path . $ds . 'phpbad.php');
-        rmdir($this->content_path);
-
-        parent::tearDown();
-    } 
-
-    // --------------------------------------------------------------
-
-    public function testInstantiateAsObjectSucceeds() {
-
+    public function testInstantiateAsObjectSucceeds() 
+    {
         $obj = new Configula\Config();
         $this->assertInstanceOf('Configula\Config', $obj);
     }
 
     // --------------------------------------------------------------
 
-    public function testObjectUsesDefaultValuesWhenNoConfigDirSpecified() {
-
+    public function testObjectUsesDefaultValuesWhenNoConfigDirSpecified()
+    {
         $defaults = array(
             'a' => 'value',
             'b' => array(1, 2, 3),
@@ -74,8 +40,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testObjectNonMagicInterfaceMethodWorks() {
-
+    public function testObjectNonMagicInterfaceMethodWorks()
+    {
         $defaults = array(
             'a' => 'value',
             'b' => array(1, 2, 3),
@@ -93,9 +59,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
  
     // --------------------------------------------------------------
 
-    public function testDotSyntaxRetrievesItemsCorrectly() {
- 
-        $obj = new Configula\Config($this->content_path);   
+    public function testDotSyntaxRetrievesItemsCorrectly()
+    {
+        $obj = new Configula\Config($this->configPath);   
 
         $this->assertEquals(1, $obj->getItem('b.0'));
         $this->assertEquals('hi', $obj->getItem('d.vala'));
@@ -104,8 +70,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testNonExistentValuesReturnsNull() {
-
+    public function testNonExistentValuesReturnsNull()
+    {
         $defaults = array(
             'a' => 'value',
             'b' => array(1, 2, 3),
@@ -120,9 +86,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testParseConfigFileWorksForValidFile() {
-
-        $filepath = $this->content_path . DIRECTORY_SEPARATOR . 'phpgood.php';
+    public function testParseConfigFileWorksForValidFile()
+    {
+        $filepath = $this->configPath . DIRECTORY_SEPARATOR . 'phpgood.php';
 
         $obj = new Configula\Config();
         $result = $obj->parseConfigFile($filepath);
@@ -134,9 +100,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testParseConfigFileReturnsEmptyArrayForInvalidFile() {
-
-        $filepath = $this->content_path . DIRECTORY_SEPARATOR . 'phpbad.php';
+    public function testParseConfigFileReturnsEmptyArrayForInvalidFile()
+    {
+        $filepath = $this->configPath . DIRECTORY_SEPARATOR . 'phpbad.php';
 
         $obj = new Configula\Config();
         $result = $obj->parseConfigFile($filepath);
@@ -146,9 +112,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testParseConfigFileThrowsExceptionForUnreadableFile() {
-
-        $filepath = $this->content_path . 'abc' . rand('1000', '9999') . '.php';
+    public function testParseConfigFileThrowsExceptionForUnreadableFile()
+    {
+        $filepath = $this->configPath . 'abc' . rand('1000', '9999') . '.php';
 
         try {
             $obj = new Configula\Config();
@@ -163,9 +129,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testInstantiateWithValidPathBuildsCorrectValues() {
-
-        $obj = new Configula\Config($this->content_path);
+    public function testInstantiateWithValidPathBuildsCorrectValues()
+    {
+        $obj = new Configula\Config($this->configPath);
 
         $this->assertEquals('value', $obj->a);
         $this->assertEquals(1, $obj->b[0]);
@@ -173,8 +139,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testInstantiateWithInvalidPathBuildsNoValues() {
-
+    public function testInstantiateWithInvalidPathBuildsNoValues() 
+    {
         $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phpunit_test_nothing_' . time();
         mkdir($path);
         $obj = new Configula\Config($path);
@@ -187,9 +153,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testGetItemsReturnsAnArray() {
-
-        $obj = new Configula\Config($this->content_path);
+    public function testGetItemsReturnsAnArray()
+    {
+        $obj = new Configula\Config($this->configPath);
 
         //Single item
         $result = $obj->getItems('a');
@@ -203,8 +169,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testLocalConfigFileOverridesMainConfigFile() {
-        
+    public function testLocalConfigFileOverridesMainConfigFile()
+    {    
         $ds = DIRECTORY_SEPARATOR;
         $code = '<?php
             $config = array();
@@ -212,18 +178,18 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
             $config["c"] = (object) array("j", "k", "l");
             /*EOF*/';
 
-        file_put_contents($this->content_path . $ds . 'phpgood.local.php', $code);
+        file_put_contents($this->configPath . $ds . 'phpgood.local.php', $code);
 
-        $obj = new Configula\Config($this->content_path);
+        $obj = new Configula\Config($this->configPath);
 
         $this->assertEquals('newvalue', $obj->a);
         $this->assertEquals((object) array('j', 'k', 'l'), $obj->c);
         $this->assertEquals(array(1, 2, 3), $obj->b);
 
-        unlink($this->content_path . $ds . 'phpgood.local.php');
+        unlink($this->configPath . $ds . 'phpgood.local.php');
     }
 
- // --------------------------------------------------------------
+    // --------------------------------------------------------------
 
     /**
      * Tests to ensure that the merge_config method works
@@ -232,8 +198,13 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
      * inside of it.  If the local configuration file overrides only one
      * of those subvalues, the remaining values should stay the same.
      */
-    public function testLocalConfigOverwritesSubArrayItemCorrectly() {
-        
+    public function testLocalConfigOverwritesSubArrayItemCorrectly()
+    {    
+        if ( ! is_writable($this->configPath)) {
+            $this->markTestSkipped("Could not write temporary file to config path.");
+            return;
+        }
+
         $ds = DIRECTORY_SEPARATOR;
         $code = '<?php
             $config = array();
@@ -241,9 +212,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
             $config["d"]["valc"]["b"] = "newvalue";
             /*EOF*/';
 
-        file_put_contents($this->content_path . $ds . 'phpgood.local.php', $code);
+        file_put_contents($this->configPath . $ds . 'phpgood.local.php', $code);
 
-        $obj = new Configula\Config($this->content_path);
+        $obj = new Configula\Config($this->configPath);
 
         $this->assertEquals('newvalue', $obj->d['vala']);
         $this->assertEquals('bye', $obj->d['valb']);
@@ -251,7 +222,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(1, $obj->d['valc']['a']);
         $this->assertEquals('newvalue', $obj->d['valc']['b']);
 
-        unlink($this->content_path . $ds . 'phpgood.local.php');
+        unlink($this->configPath . $ds . 'phpgood.local.php');
     }
 }
 

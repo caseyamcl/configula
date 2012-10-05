@@ -4,7 +4,9 @@ class PhpDriverTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;
 
-    private $file_path;
+    private $goodFilePath;
+    private $badFilePath;
+    private $emptyFilePath;
 
     // --------------------------------------------------------------
 
@@ -12,60 +14,25 @@ class PhpDriverTest extends PHPUnit_Framework_TestCase {
     {
         parent::setUp();
 
-        $ds = DIRECTORY_SEPARATOR;
-        $this->content_path = sys_get_temp_dir() . $ds . 'phpunit_configula_test_' . time();
-
-        //Setup fake content directory
-        mkdir($this->content_path);
-
-        $sample_code = '
-            $config = array();
-            $config["a"] = "value";
-            $config["b"] = array(1, 2, 3);
-            $config["c"] = (object) array("d", "e", "f");
-        ';
-
-        file_put_contents($this->content_path . $ds . 'testconfig.php', "<?php\n\n" . $sample_code . "\n/*EOF*/");
-        $this->file_path = $this->content_path . $ds . 'testconfig.php';
-
-        $bad_code = '
-            asdf1239423-497y8-398289--83--@#_#@*_#*_
-        ';
-
-        file_put_contents($this->content_path . $ds . 'testbad.php', $bad_code);
-        $this->bad_file_path = $this->content_path . $ds . 'testbad.php';
-
-        file_put_contents($this->content_path . $ds . 'testempty.php', '');
-        $this->empty_file_path = $this->content_path . $ds . 'testempty.php';        
+        $this->goodFilePath = realpath(__DIR__ . '/fixtures/php/config.php');
+        $this->badFilePath = realpath(__DIR__ . '/fixtures/php/bad.php');
+        $this->emptyFilePath = realpath(__DIR__ . '/fixtures/php/empty.php');
     }
 
     // --------------------------------------------------------------
 
-    function tearDown()
-    {    
-        $ds = DIRECTORY_SEPARATOR;
-        
-        unlink($this->empty_file_path);
-        unlink($this->bad_file_path);
-        unlink($this->content_path . $ds . 'testconfig.php');
-        rmdir($this->content_path);
-
-        parent::tearDown();
-    } 
-
-    // --------------------------------------------------------------
-
-    public function testInstantiateAsObjectSucceeds() {
-
+    public function testInstantiateAsObjectSucceeds()
+    {
         $obj = new Configula\Drivers\Php();
         $this->assertInstanceOf('Configula\Drivers\Php', $obj);
     }
 
     // --------------------------------------------------------------
 
-    public function testGetConfigReturnsCorrectItems() {
+    public function testGetConfigReturnsCorrectItems()
+    {
         $obj = new Configula\Drivers\Php();
-        $result = $obj->read($this->file_path);
+        $result = $obj->read($this->goodFilePath);
 
         $config = array();
         $config["a"] = "value";
@@ -77,19 +44,20 @@ class PhpDriverTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testBadContentReturnsEmptyArray() {
+    public function testBadContentReturnsEmptyArray()
+    {
         $obj = new Configula\Drivers\Php();
-        $result = $obj->read($this->bad_file_path);
+        $result = $obj->read($this->badFilePath);
 
         $this->assertEquals(array(), $result);
     }
 
     // --------------------------------------------------------------
 
-    public function testEmptyContentReturnsEmptyArray() {
-
+    public function testEmptyContentReturnsEmptyArray()
+    {
         $obj = new Configula\Drivers\Php();
-        $result = $obj->read($this->empty_file_path);
+        $result = $obj->read($this->emptyFilePath);
 
         $this->assertEquals(array(), $result);
     }
