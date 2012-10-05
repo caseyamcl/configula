@@ -1,57 +1,22 @@
 <?php
 
-class YamlDriverTest extends PHPUnit_Framework_TestCase {
-
-    private $content_path;
-
-    private $good_file_path;
-    private $empty_file_path;
+class YamlDriverTest extends PHPUnit_Framework_TestCase
+{
+    private $goodFilePath;
+    private $emptyFilePath;
 
     // --------------------------------------------------------------
 
     function setUp()
     {
-        parent::setUp();
-
-        $ds = DIRECTORY_SEPARATOR;
-        $this->content_path = sys_get_temp_dir() . $ds . 'phpunit_configula_test_' . time();
-
-        //Setup fake content directory
-        mkdir($this->content_path);
-
-        $sample_code = '
-         a: value
-         b:
-             [1, 2, 3]
-         c:
-             d: e
-             f: g
-             h: i
-        ';
-
-        file_put_contents($this->content_path . $ds . 'testconfig.yaml', $sample_code);
-        $this->good_file_path = $this->content_path . $ds . 'testconfig.yaml';
-
-        file_put_contents($this->content_path . $ds . 'testempty.yaml', '');
-        $this->empty_file_path = $this->content_path . $ds . 'testempty.yaml';    
+        $this->goodFilePath = realpath(__DIR__ . '/fixtures/config.yml');
+        $this->emptyFilePath = realpath(__DIR__ . '/fixtures/empty.yml');
     }
 
     // --------------------------------------------------------------
 
-    function tearDown()
-    {    
-        $ds = DIRECTORY_SEPARATOR;
-
-        unlink($this->empty_file_path);
-        unlink($this->good_file_path);
-        rmdir($this->content_path);
-
-        parent::tearDown();
-    } 
-
-    // --------------------------------------------------------------
-
-    public function testInstantiateAsObjectSucceeds() {
+    public function testInstantiateAsObjectSucceeds()
+    {
 
         $obj = new Configula\Drivers\Yaml();
         $this->assertInstanceOf('Configula\Drivers\Yaml', $obj);
@@ -59,9 +24,10 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testGetConfigReturnsCorrectItems() {
+    public function testGetConfigReturnsCorrectItems()
+    {
         $obj = new Configula\Drivers\Yaml();
-        $result = $obj->read($this->good_file_path);
+        $result = $obj->read($this->goodFilePath);
 
         $match_array = array();
         $match_array['a'] = "value";
@@ -75,10 +41,10 @@ class YamlDriverTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
-    public function testEmptyFileReturnsEmptyArray() {
-
+    public function testEmptyFileReturnsEmptyArray()
+    {
         $obj = new Configula\Drivers\Yaml();
-        $result = $obj->read($this->empty_file_path);
+        $result = $obj->read($this->emptyFilePath);
 
         $this->assertEquals(array(), $result);  
     }

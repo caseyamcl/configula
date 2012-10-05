@@ -1,0 +1,6 @@
+a: value
+b: [1, 2, 3]
+c:
+    d: e
+    f: g
+    h: i
