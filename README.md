@@ -5,6 +5,8 @@ Configula is a simple configuration library for PHP 5.3+.
 
 Use it when you don't need all the power and flexibility of the  Symfony2 Configuration library, but instead just need a simple class to read configuration files of different types.
 
+[![Build Status](https://travis-ci.org/caseyamcl/Configula.png?branch=master)](https://travis-ci.org/caseyamcl/Configula)
+
 Features
 --------
 * Works with _.php_, _.ini_, _.json_, and _.yaml_ configuration file types
