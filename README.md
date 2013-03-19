@@ -9,13 +9,13 @@ Use it when you don't need all the power and flexibility of the  Symfony2 Config
 
 Features
 --------
-* Works with _.php_, _.ini_, _.json_, and _.yaml_ configuration file types
+* Works with _.php_, _.ini_, _.json_, and _.yml_ configuration file types
 * Easily write a plugin to support other filetypes
 * Simple usage:
 
         //Access configuration values
         $config = new Configula\Config('/path/to/config/files');
-        $some_value = $config->getValue(''some_key');
+        $some_value = $config->getValue('some_key');
         
 * Property-like access to your config settings:
 
@@ -50,12 +50,10 @@ Installation
 
         "require": {
             ...
-            "symfony/yaml": ">=2.1.0",
             "caseyamcl/Configula": "dev-master"
         }
 
 2. Then, run <code>php composer.phar install</code>
-3.  _Note:_ The <code>symfony/yaml</code> line is optional.  Include it only if you wish to parse YAML configuration files.
 
 Basic Usage
 -----------
