@@ -49,6 +49,25 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     // --------------------------------------------------------------
 
+    public function testObjectUsesConfigFileEvenWithDefaultsSpecified()
+    {
+        $defaults = array(
+            'x' => 'xvalue',
+            'y' => array(8, 9, 10),
+            'z' => (object) array('d' => 'e', 'f' => 'g')
+        );
+
+        $obj = new Configula\Config($this->configPath, $defaults);
+
+        $this->assertEquals("value", $obj->a);
+        $this->assertEquals(array(1, 2, 3), $obj->b);
+        $this->assertEquals('xvalue', $obj->x);
+        $this->assertEquals(array(8, 9, 10), $obj->y);
+    }
+
+
+    // --------------------------------------------------------------
+
     public function testObjectNonMagicInterfaceMethodWorks()
     {
         $defaults = array(
