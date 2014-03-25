@@ -93,7 +93,7 @@ class Config implements ArrayAccess, Iterator, Countable
             $config = $this->mergeConfigArrays($config, $this->parseConfigFile($configPath . $filename));
         }
         
-        $this->configSettings = array_merge($this->configSettings, $config);
+        $this->configSettings = $this->mergeConfigArrays($this->configSettings, $config);
         
         return count($this->configSettings);
     }
