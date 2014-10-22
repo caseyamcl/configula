@@ -50,7 +50,7 @@ Installation
 
         "require": {
             ...
-            "caseyamcl/Configula": "dev-master"
+            "caseyamcl/Configula": "~2.2"
         }
 
 2. Then, run <code>php composer.phar install</code>
