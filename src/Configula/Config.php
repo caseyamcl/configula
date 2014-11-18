@@ -64,12 +64,10 @@ class Config implements ArrayAccess, Iterator, Countable
 
     /**
      * Parse a directory for configuration files and load the files
-     * 
-     * @param string $configPath 
-     * An absolute path to the configuration folder
-     * 
-     * @return int
-     * The number of configuration settings loaded
+     *
+     * @param string $configPath An absolute path to the configuration folder
+     * @return int The number of configuration settings loaded
+     * @throws \Exception  If cannot read from Configuration Path
      */
     public function loadConfig($configPath)
     {
@@ -111,11 +109,9 @@ class Config implements ArrayAccess, Iterator, Countable
     /**
      * Parse a configuration file
      *
-     * @param string $filename
-     * The full path to the config file
-     *
-     * @return array
-     * An array of configuration items, or an empty array if the file could not be parsed
+     * @param string $filepath  The full path to the config file
+     * @return array  An array of configuration items, or an empty array if the file could not be parsed
+     * @throws \Exception  If cannot read from the configuration file
      */
     public function parseConfigFile($filepath)
     {
@@ -142,8 +138,8 @@ class Config implements ArrayAccess, Iterator, Countable
     /**
      * Magic Method for getting a configuration settings
      * 
-     * @param string $item
-     * @return mixed
+     * @param string $item  The item to get
+     * @return mixed        The value
      */
     public function __get($item)
     {    
@@ -154,16 +150,10 @@ class Config implements ArrayAccess, Iterator, Countable
 
     /**
      * Return a configuration item
-     *  
-     * @param string $item 
-     * The configuration item to retrieve
-     * 
-     * @param mixed $defaultValue
-     * The default value to return for a configuration item if no configuration item exists
-     * 
-     * @return mixed
-     * An array containing all configuration items, or a specific configuration item
-     * NULL if a specified configuration item does not exist
+     *
+     * @param string $item          The configuration item to retrieve
+     * @param mixed  $defaultValue  The default value to return for a configuration item if no configuration item exists
+     * @return mixed  An array containing all configuration items, or a specific configuration item, or NULL
      */
     public function getItem($item, $defaultValue = NULL)
     {
