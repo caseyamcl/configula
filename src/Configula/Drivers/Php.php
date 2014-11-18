@@ -19,15 +19,14 @@ use Configula\DriverInterface;
  */
 class Php implements DriverInterface
 {
-	public function read($filePath)
-	{
-		ob_start();
-		include($filePath);
-		ob_end_clean();
+    public function read($filePath)
+    {
+        ob_start();
+        include $filePath;
+        ob_end_clean();
 
-		return (isset($config) && is_array($config)) ? $config : array();
-	
-	}
+        return (isset($config) && is_array($config)) ? $config : array();
+    }
 }
 
 /* EOF: Php.php */

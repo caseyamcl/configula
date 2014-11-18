@@ -22,8 +22,8 @@ class Ini implements DriverInterface
 {
     public function read($filePath)
     {
-        return parse_ini_file($filePath, TRUE) ?: array();
-    } 
+        return parse_ini_file($filePath, true) ?: array();
+    }
 }
 
 /* EOF: Ini.php */

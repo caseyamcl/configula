@@ -9,15 +9,17 @@
  */
 
 namespace Configula\Drivers;
+
 use Configula\DriverInterface;
 
 class Json implements DriverInterface
 {
     public function read($filePath)
     {
-        $result = json_decode(file_get_contents($filePath), TRUE);
+        $result = json_decode(file_get_contents($filePath), true);
+
         return $result ?: array();
-    } 
+    }
 }
 
 /* EOF: Json.php */

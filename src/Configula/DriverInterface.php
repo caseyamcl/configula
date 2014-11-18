@@ -22,7 +22,7 @@ interface DriverInterface
     /**
      * Read Interface - Reads a configuration file
      *
-     * @param string $filePath The absolute path the configuration file
+     * @param  string $filePath The absolute path the configuration file
      * @return array
      */
     public function read($filePath);

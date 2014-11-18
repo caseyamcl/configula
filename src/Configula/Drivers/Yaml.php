@@ -24,7 +24,7 @@ class Yaml implements DriverInterface
 {
     public function __construct()
     {
-        if ( ! class_exists('\Symfony\Component\Yaml\Parser')) {
+        if (! class_exists('\Symfony\Component\Yaml\Parser')) {
             throw new \Exception("Missing symfony/yaml dependency.");
         }
     }
@@ -35,11 +35,10 @@ class Yaml implements DriverInterface
     {
         try {
             return SymfonyYaml::parse($filePath) ?: array();
-        }
-        catch (SymfonyParseException $e) {
+        } catch (SymfonyParseException $e) {
             return array();
         }
-    } 
+    }
 }
 
 /* EOF: Yaml.php */
