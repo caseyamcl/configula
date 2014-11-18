@@ -13,9 +13,9 @@ use Configula\DriverInterface;
 
 class Json implements DriverInterface
 {
-    public function read($filepath)
+    public function read($filePath)
     {
-        $result = json_decode(file_get_contents($filepath), TRUE);
+        $result = json_decode(file_get_contents($filePath), TRUE);
         return $result ?: array();
     } 
 }

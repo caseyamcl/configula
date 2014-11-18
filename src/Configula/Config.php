@@ -1,16 +1,24 @@
 <?php
 
 /**
- * Configula Main Config Class
+ * Configula - A simple configuration tool
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  * @license MIT
  * @package Configula
+ * ------------------------------------------------------------------
  */
 
 namespace Configula;
+
 use ArrayAccess, Iterator, Countable;
 
+/**
+ * Config Class
+ *
+ * @package Configula
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ */
 class Config implements ArrayAccess, Iterator, Countable
 {
     /**
