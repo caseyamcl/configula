@@ -322,6 +322,17 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->setExpectedException('\RuntimeException');
         unset($obj['a']);
     }
+    
+    // ---------------------------------------------------------------
+    
+    public function testNumberedConfiguatroniArrayKeysAreNotClobbered()
+    {
+        $obj = new Configula\Config();
+        $result = $obj->parseConfigFile($this->configPath . '/../php/numbered.php');
+        
+        $this->assertEquals(array(1,2,3,5), array_keys($result));
+        
+    }
 }
 
 /* EOF: PhpDriverTest.php */

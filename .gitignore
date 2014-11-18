@@ -3,5 +3,6 @@ composer.lock
 composer.phar
 vendor
 
-# IDE Folders
+# IDE Settings
 .idea
+.codio
