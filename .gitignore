@@ -1,3 +1,7 @@
+# Composer and vendor
 composer.lock
 composer.phar
 vendor
+
+# IDE Folders
+.idea
