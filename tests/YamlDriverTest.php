@@ -1,14 +1,19 @@
 <?php
 
 /**
- * Configula YAML Driver Class Unit Test
+ * Configula - A simple configuration tool
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  * @license MIT
  * @package Configula
- * @subpackage Unit Tests
+ * ------------------------------------------------------------------
  */
 
+/**
+ * YAML Driver Test
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ */
 class YamlDriverTest extends PHPUnit_Framework_TestCase
 {
     private $goodFilePath;

@@ -1,14 +1,19 @@
 <?php
 
 /**
- * Configula Config Class Unit Test
+ * Configula - A simple configuration tool
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  * @license MIT
  * @package Configula
- * @subpackage Unit Tests
+ * ------------------------------------------------------------------
  */
 
+/**
+ * Config Test
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ */
 class ConfigTest extends PHPUnit_Framework_TestCase {
 
     private $configPath;

@@ -1,14 +1,19 @@
 <?php
 
 /**
- * Configula PHP Driver Class Unit Test
+ * Configula - A simple configuration tool
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  * @license MIT
  * @package Configula
- * @subpackage Unit Tests
+ * ------------------------------------------------------------------
  */
 
+/**
+ * PHP Driver Test
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ */
 class PhpDriverTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;

@@ -1,12 +1,18 @@
 <?php
 
 /**
- * Configula Unit Tests Bootstrap File
+ * Configula - A simple configuration tool
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  * @license MIT
  * @package Configula
- * @subpackage Unit Tests
+ * ------------------------------------------------------------------
+ */
+
+/**
+ * Configula Unit Tests Bootstrap File
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
 
 //Files to ensure exist

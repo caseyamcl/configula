@@ -1,14 +1,19 @@
 <?php
 
 /**
- * Configula INI Driver Class Unit Test
+ * Configula - A simple configuration tool
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  * @license MIT
  * @package Configula
- * @subpackage Unit Tests
+ * ------------------------------------------------------------------
  */
 
+/**
+ * IniDriverTest
+ *
+ * @author Casey McLaughlin <caseyamcl@gmail.com>
+ */
 class IniDriverTest extends PHPUnit_Framework_TestCase {
 
     private $content_path;
