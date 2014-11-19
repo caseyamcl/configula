@@ -76,7 +76,7 @@ class Config implements ArrayAccess, Iterator, Countable
 
         //Path good?
         if (! is_readable($configPath)) {
-            throw new \Exception("Cannot read from config path!  Does it exist?  Is it readable?");
+            throw new ConfigulaException("Cannot read from config path!  Does it exist?  Is it readable?");
         }
 
         //Run all of the files in the directory
@@ -113,7 +113,7 @@ class Config implements ArrayAccess, Iterator, Countable
     public function parseConfigFile($filepath)
     {
         if (! is_readable($filepath)) {
-            throw new \Exception("Cannot read from the config file: $filepath");
+            throw new ConfigulaException("Cannot read from the config file: $filepath");
         }
 
         $parserClassname = 'Configula\\Drivers\\'.ucfirst(strtolower(pathinfo($filepath, PATHINFO_EXTENSION)));
@@ -201,12 +201,12 @@ class Config implements ArrayAccess, Iterator, Countable
 
     public function offsetSet($offset, $data)
     {
-        throw new \RuntimeException("Configuration is immutable!");
+        throw new ConfigulaException("Configuration is immutable!");
     }
 
     public function offsetUnset($offset)
     {
-        throw new \RuntimeException("Configuration is immutable!");
+        throw new ConfigulaException("Configuration is immutable!");
     }
 
     public function offsetExists($offset)
