@@ -33,8 +33,10 @@ class Yaml implements DriverInterface
 
     public function read($filePath)
     {
+        $contents = @file_get_contents($filePath);
+
         try {
-            return SymfonyYaml::parse($filePath) ?: array();
+            return SymfonyYaml::parse($contents) ?: array();
         } catch (SymfonyParseException $e) {
             return array();
         }
