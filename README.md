@@ -163,7 +163,3 @@ In addition to the built-in filetype drivers, you can add your own driver for re
     }
 
 Refer to an existing Unit test for an example of how to test your driver class.
-
-Todo
-----
-* Implement Exceptions for invalid configuration files
