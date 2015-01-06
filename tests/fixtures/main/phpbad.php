@@ -1,0 +1,5 @@
+<?php
+
+$nuthin = "yep";
+
+/* EOF */
