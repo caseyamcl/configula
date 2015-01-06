@@ -158,7 +158,8 @@ class Config implements ArrayAccess, Iterator, Countable
         } elseif (strpos($item, '.') !== FALSE) {
 
             $cs = $this->configSettings;
-            if ($val = $this->getNestedVar($cs, $item)) {
+            $val = $this->getNestedVar($cs, $item);
+            if ($val !== null) {
                 return $val;
             }
 
