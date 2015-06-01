@@ -12,6 +12,8 @@
 namespace Configula;
 
 use ArrayAccess;
+use Configula\Exception\ConfigulaException;
+use Configula\Exception\NonExistentConfigValueException;
 use Iterator;
 use Countable;
 
@@ -23,10 +25,14 @@ use Countable;
  */
 class Config implements ArrayAccess, Iterator, Countable
 {
+    const NO_DEFAULT = '__CONFIGULA_CONFIG_NO_DEFAULT__';
+
+    // ---------------------------------------------------------------
+
     /**
      * @var array  Configuration Settings
      */
-    private $configSettings = array();
+    private $values = array();
 
     /**
      * @var int  Iterator Access Counter
@@ -38,93 +44,12 @@ class Config implements ArrayAccess, Iterator, Countable
     /**
      * Constructor
      *
-     * @param string $configPath An optional absolute path to the configuration folder
-     * @param array  $defaults   An optional list of defaults to fall back on, set at instantiation
+     * @param array $values
      */
-    public function __construct($configPath = null, $defaults = array())
+    public function __construct(array $values)
     {
         //Set the defaults
-        $this->configSettings = $defaults;
-
-        //Load the config files
-        if ($configPath) {
-            //Append trailing slash
-            if (substr($configPath, strlen($configPath) - 1) != DIRECTORY_SEPARATOR) {
-                $configPath .= DIRECTORY_SEPARATOR;
-            }
-
-            $this->loadConfig($configPath);
-        }
-    }
-
-    // --------------------------------------------------------------
-
-    /**
-     * Parse a directory for configuration files and load the files
-     *
-     * @param  string     $configPath An absolute path to the configuration folder
-     * @return int        The number of configuration settings loaded
-     * @throws \Exception If cannot read from Configuration Path
-     */
-    public function loadConfig($configPath)
-    {
-        //Array to hold the configuration items as we get them
-        $config = array();
-
-        //Unparsed local files
-        $unparsedLocalFiles = array();
-
-        //Path good?
-        if (! is_readable($configPath)) {
-            throw new ConfigulaException("Cannot read from config path!  Does it exist?  Is it readable?");
-        }
-
-        //Run all of the files in the directory
-        foreach (scandir($configPath) as $filename) {
-            //If the file ends in .local.EXT, then put it in the files to be processed later
-            $ext = pathinfo($configPath.$filename, PATHINFO_EXTENSION);
-
-            if (substr($filename, strlen($filename)-strlen('.local.'.$ext)) == '.local.'.$ext) {
-                $unparsedLocalFiles[] = $filename;
-            } else {
-                $config = $this->mergeConfigArrays($config, $this->parseConfigFile($configPath.$filename));
-            }
-        }
-
-        //Go back a second time and run all of the .local files
-        foreach ($unparsedLocalFiles as $filename) {
-            $config = $this->mergeConfigArrays($config, $this->parseConfigFile($configPath.$filename));
-        }
-
-        $this->configSettings = $this->mergeConfigArrays($this->configSettings, $config);
-
-        return count($this->configSettings);
-    }
-
-    // --------------------------------------------------------------
-
-    /**
-     * Parse a configuration file
-     *
-     * @param  string     $filepath The full path to the config file
-     * @return array      An array of configuration items, or an empty array if the file could not be parsed
-     * @throws \Exception If cannot read from the configuration file
-     */
-    public function parseConfigFile($filepath)
-    {
-        if (! is_readable($filepath)) {
-            throw new ConfigulaException("Cannot read from the config file: $filepath");
-        }
-
-        $parserClassname = 'Configula\\Drivers\\'.ucfirst(strtolower(pathinfo($filepath, PATHINFO_EXTENSION)));
-
-        if (class_exists($parserClassname)) {
-            $cls = new $parserClassname();
-
-            return $cls->read($filepath);
-        } else {
-            return array();
-        }
+        $this->values = $values;
     }
 
     // --------------------------------------------------------------
@@ -137,7 +62,23 @@ class Config implements ArrayAccess, Iterator, Countable
      */
     public function __get($item)
     {
-        return (isset($this->configSettings[$item])) ? $this->configSettings[$item] : false;
+        return (isset($this->values[$item])) ? $this->values[$item] : false;
+    }
+
+    // ---------------------------------------------------------------
+
+    /**
+     * Return a configuration item
+     *
+     * Alias of `self::getItem()`
+     *
+     * @param  string $item         The configuration item to retrieve
+     * @param  mixed  $defaultValue The default value to return for a configuration item if no configuration item exists
+     * @return mixed  An array containing all configuration items, or a specific configuration item, or NULL
+     */
+    public function get($item, $defaultValue = self::NO_DEFAULT)
+    {
+        return $this->getItem($item, $defaultValue);
     }
 
     // --------------------------------------------------------------
@@ -149,22 +90,23 @@ class Config implements ArrayAccess, Iterator, Countable
      * @param  mixed  $defaultValue The default value to return for a configuration item if no configuration item exists
      * @return mixed  An array containing all configuration items, or a specific configuration item, or NULL
      */
-    public function getItem($item, $defaultValue = null)
+    public function getItem($item, $defaultValue = self::NO_DEFAULT)
     {
-        if (isset($this->configSettings[$item])) {
+        if (array_key_exists($item, $this->values)) {
+            return $this->values[$item];
+        }
+        elseif ($defaultValue !== self::NO_DEFAULT) {
+            return $defaultValue;
+        }
+        elseif (strpos($item, '.') !== FALSE) {
 
-            return $this->configSettings[$item];
-
-        } elseif (strpos($item, '.') !== FALSE) {
-
-            $cs = $this->configSettings;
+            $cs = $this->values;
             if ($val = $this->getNestedVar($cs, $item)) {
                 return $val;
             }
-
         }
 
-        return $defaultValue;
+        throw new NonExistentConfigValueException("Could not find configuration item: " . $item);
     }
 
     // --------------------------------------------------------------
@@ -189,7 +131,7 @@ class Config implements ArrayAccess, Iterator, Countable
 
             return $output;
         } else {
-            return $this->configSettings;
+            return $this->values;
         }
     }
 
@@ -198,7 +140,6 @@ class Config implements ArrayAccess, Iterator, Countable
     /*
      * ArrayAccess Interface
      */
-
     public function offsetSet($offset, $data)
     {
         throw new ConfigulaException("Configuration is immutable!");
@@ -222,7 +163,6 @@ class Config implements ArrayAccess, Iterator, Countable
     /*
      * Iterator Interface
      */
-
     public function rewind()
     {
         $this->iteratorCount = 0;
@@ -230,14 +170,14 @@ class Config implements ArrayAccess, Iterator, Countable
 
     public function current()
     {
-        $vals = array_values($this->configSettings);
+        $vals = array_values($this->values);
 
         return $vals[$this->iteratorCount];
     }
 
     public function key()
     {
-        $keys = array_keys($this->configSettings);
+        $keys = array_keys($this->values);
 
         return $keys[$this->iteratorCount];
     }
@@ -249,7 +189,7 @@ class Config implements ArrayAccess, Iterator, Countable
 
     public function valid()
     {
-        $vals = array_values($this->configSettings);
+        $vals = array_values($this->values);
 
         return (isset($vals[$this->iteratorCount]));
     }
@@ -260,32 +200,7 @@ class Config implements ArrayAccess, Iterator, Countable
 
     public function count()
     {
-        return count($this->configSettings);
-    }
-
-    // --------------------------------------------------------------
-
-    /**
-     * Merge configuration arrays
-     *
-     * What I would wish that array_merge_recursive actually does...
-     * From: http://www.php.net/manual/en/function.array-merge-recursive.php#102379
-     *
-     * @param  array $arr1 Array #2
-     * @param  array $arr2 Array #1
-     * @return array
-     */
-    private function mergeConfigArrays($arr1, $arr2)
-    {
-        foreach ($arr2 as $key => $value) {
-            if (array_key_exists($key, $arr1) && is_array($value)) {
-                $arr1[$key] = $this->mergeConfigArrays($arr1[$key], $arr2[$key]);
-            } else {
-                $arr1[$key] = $value;
-            }
-        }
-
-        return $arr1;
+        return count($this->values);
     }
 
     // --------------------------------------------------------------

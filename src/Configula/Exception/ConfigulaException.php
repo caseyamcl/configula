@@ -8,7 +8,8 @@
  * @package Configula
  * ------------------------------------------------------------------
  */
-namespace Configula;
+
+namespace Configula\Exception;
 
 /**
  * Configula Exception

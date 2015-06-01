@@ -3,37 +3,56 @@ Configula
 
 Configula is a simple configuration library for PHP 5.3+.  
 
-Use it when you don't need all the power and flexibility of the  Symfony2 Configuration library, but instead just need a simple class to read configuration files of different types.
+Use this library when you want a simple tool for loading and providing configuration values
+to your application code.
+
+You can use it with the [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html),
+or as a simple standalone tool.
 
 [![Build Status](https://travis-ci.org/caseyamcl/Configula.png?branch=master)](https://travis-ci.org/caseyamcl/Configula)
 
 Features
 --------
-* Works with _.php_, _.ini_, _.json_, and _.yml_ configuration file types
-* Easily write a plugin to support other filetypes
+* Load configuration from a variety of sources:
+    * Load values from _.php_, _.ini_, _.json_, and _.yml_ configuration file types
+    * Load values from the environment
+    * Easily write your own extensions to support other filetypes and sources
+* Multiple load strategies:
+    * Cascade-load values from multiple sources (default)
+    * Load configuration from first found source
+* Provide hard-coded default values for some or all configuration values
+* Optionally use along with [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html)
+  to validate configuration values and/or cache them
+* Provides an immutable object to access your configuration values in your application:
+    * Array-access
+    * Standard value `get(val)` access
+    * Magic method `__get(val)` access
+    * Implements `Iterator` and `Countable` interfaces
+* Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
+* Code quality standards: PSR-2, 100% Unit Test Coverage
+  
+Quick Start
+-----------
+  
 * Simple usage:
 
         //Access configuration values
-        $config = new Configula\Config('/path/to/config/files');
-        $some_value = $config->getValue('some_key');
+        $config = Configula\Config::load('/path/to/config/files');
+        $some_value = $config->get('some_key');
         
 * Property-like access to your config settings:
 
         //Access configuration values
-        $config = new Configula\Config('/path/to/config/files');
+        $config = Configula\Config::load('/path/to/config/files');
         $some_value = $config->some_key;
 
 * Array and iterator access to your config settings:
 
         //Access conifguration values
-        $config = new Configula\Config('/path/to/config/files');
+        $config = Configula\Config::load('/path/to/config/files');
         foreach ($config as $item => $value) {
             echo "<li>{$item} is {$value}</li>";
         }
-
-* [Packagist/Composer](http://getcomposer.org) and [PSR-0 Compliant](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation")
-* Unit-Tested!  Just about 100% coverage.
-
 
 Installation
 ------------
@@ -62,7 +81,7 @@ Basic Usage
 2.  Populate the folder with configuration files.  See _Config Folder Layout_ section below for more details.
 3.  Instantiate a configula instance, and send the path as the first parameter:
 
-        $config = new Configula\Config('/path/to/app/config');
+        $config = Configula\Config::load('/path/to/app/config');
 
 4.  Configuration values become properties of the Configula object:
 
@@ -164,6 +183,3 @@ In addition to the built-in filetype drivers, you can add your own driver for re
 
 Refer to an existing Unit test for an example of how to test your driver class.
 
-Todo
-----
-* Implement Exceptions for invalid configuration files
