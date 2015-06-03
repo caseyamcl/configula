@@ -24,24 +24,46 @@ use Configula\Exception\ConfigLoadingException;
  * Accepts multiple sources and uses the configuration values from the first
  * one that returns data
  *
- * TODO: Reverse these classes; MergeConfigSource should extend ChainConfigSource!
- *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class ChainConfigSource extends MergeConfigSource
+class ChainConfigSource implements ConfigSourceInterface
 {
     /**
-     * @param array|ConfigSourceInterface $configSources
+     * @var array|ConfigSourceInterface[]
+     */
+    protected $configSources;
+
+    /**
+     * Constructor
+     *
+     * @param array|ConfigSourceInterface[] $configSources
      */
     public function __construct(array $configSources)
     {
-        parent::__construct($configSources);
+        foreach ($configSources as $source) {
+            $this->addConfigSource($source);
+        }
     }
+
+    // ---------------------------------------------------------------
+
+    /**
+     * Add a configuration source to the list
+     *
+     * @param ConfigSourceInterface $source
+     */
+    public function addConfigSource(ConfigSourceInterface $source)
+    {
+        $this->configSources[] = $source;
+    }
+
+    // ---------------------------------------------------------------
 
     /**
      * Load configuration values from a source
      *
      * @param array $options Optional runtime values
+     * @return array
      */
     public function getValues(array $options = [])
     {

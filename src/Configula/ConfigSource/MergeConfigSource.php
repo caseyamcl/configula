@@ -27,13 +27,8 @@ use Configula\Util\RecursiveArrayMerger;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class MergeConfigSource implements ConfigSourceInterface
+class MergeConfigSource extends ChainConfigSource
 {
-    /**
-     * @var array|ConfigSourceInterface[]
-     */
-    protected $configSources;
-
     /**
      * @var bool
      */
@@ -42,27 +37,13 @@ class MergeConfigSource implements ConfigSourceInterface
     // ---------------------------------------------------------------
 
     /**
-     * @param array|ConfigSourceInterface $configSources
+     * @param array|ConfigSourceInterface[] $configSources
      * @param bool $ignoreErrors
      */
     public function __construct(array $configSources, $ignoreErrors = true)
     {
         $this->ignoreErrors = $ignoreErrors;
-        foreach ($configSources as $source) {
-            $this->addConfigSource($source);
-        }
-    }
-
-    // ---------------------------------------------------------------
-
-    /**
-     * Add a configuration source to the list
-     *
-     * @param ConfigSourceInterface $source
-     */
-    public function addConfigSource(ConfigSourceInterface $source)
-    {
-        $this->configSources[] = $source;
+        parent::__construct($configSources);
     }
 
     // ---------------------------------------------------------------
