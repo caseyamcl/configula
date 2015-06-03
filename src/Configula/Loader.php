@@ -36,5 +36,4 @@ class Loader
     {
         return new Config($configSource->getValues($options));
     }
-
 }

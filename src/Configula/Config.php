@@ -12,6 +12,7 @@
 namespace Configula;
 
 use ArrayAccess;
+use Configula\ConfigSource\ConfigSourceInterface;
 use Configula\Exception\ConfigulaException;
 use Configula\Exception\NonExistentConfigValueException;
 use Iterator;
@@ -40,6 +41,21 @@ class Config implements ArrayAccess, Iterator, Countable
     private $iteratorCount = 0;
 
     // --------------------------------------------------------------
+
+    /**
+     * Simple, alternative constructor to load configuration from generic loader
+     *
+     * @param ConfigSourceInterface $configSource
+     * @param array                 $options
+     * @return Config
+     */
+    public static function loadFrom(ConfigSourceInterface $configSource, array $options = [])
+    {
+        $loader = new Loader();
+        return $loader->load($configSource, $options);
+    }
+
+    // ---------------------------------------------------------------
 
     /**
      * Constructor
