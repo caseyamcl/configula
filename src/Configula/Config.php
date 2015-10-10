@@ -101,6 +101,26 @@ class Config implements ArrayAccess, Iterator, Countable
         return count($this->configSettings);
     }
 
+    /**
+     * Load configuration values from a file
+     *
+     * @param  string $configFilePath An absolute path to the configuration file
+     * @return int    The number of configuration settings loaded
+     * @throws \Exception If cannot read from Configuration file
+     */
+    public function loadConfgFile($configFilePath)
+    {
+        if (! is_readable($configFilePath)) {
+            throw new ConfigulaException("Cannot read config file!  Does it exist?  Is it readable?");
+        }
+
+        $config = $this->parseConfigFile($configFilePath);
+
+        $this->configSettings = $this->mergeConfigArrays($this->configSettings, $config);
+
+        return count($this->configSettings);
+    }
+
     // --------------------------------------------------------------
 
     /**

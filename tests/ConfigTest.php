@@ -24,6 +24,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     {
         parent::setUp();
         $this->configPath = realpath(__DIR__ . '/fixtures/main/');
+        $this->configPhpGoodFilePath = $this->configPath . '/phpgood.php';
     }
 
     // --------------------------------------------------------------
@@ -261,6 +262,46 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('newvalue', $obj->d['valc']['b']);
 
         unlink($this->configPath . $ds . 'phpgood.local.php');
+    }
+
+    // --------------------------------------------------------------
+
+    public function testLoadConfigFileLoadsFile()
+    {
+        $obj = new Configula\Config();
+        $obj->loadConfgFile($this->configPhpGoodFilePath);
+
+        $this->assertEquals('value', $obj->a);
+    }
+
+    // --------------------------------------------------------------
+
+    /**
+     * Test that single config value load properly overwrites previous values
+     */
+    public function testLoadConfigFileOverridesCurrectValue()
+    {
+        if ( ! is_writable($this->configPath)) {
+            $this->markTestSkipped("Could not write temporary file to config path.");
+            return;
+        }
+
+        $ds = DIRECTORY_SEPARATOR;
+        $code = '<?php
+            $config = array();
+            $config["d"]["vala"] = "newvalue";
+            $config["d"]["valc"]["b"] = "newvalue";
+            /*EOF*/';
+
+        $obj = new Configula\Config($this->configPath);
+        file_put_contents($this->configPath . $ds . 'phpextra.php', $code);
+        $obj->loadConfgFile($this->configPath . $ds . 'phpextra.php');
+
+        $this->assertEquals('bye', $obj->d['valb']);
+        $this->assertEquals('newvalue', $obj->d['vala']);
+
+        unlink($this->configPath . $ds . 'phpextra.php');
+
     }
 
     // --------------------------------------------------------------
