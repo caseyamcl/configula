@@ -17,7 +17,7 @@
 
 //Files to ensure exist
 $checkFiles['autoload'] = __DIR__.'/../vendor/autoload.php';
-$checkFiles[] = __DIR__.'/../vendor/symfony/yaml/Symfony/Component/Yaml/Yaml.php';
+$checkFiles[] = __DIR__.'/../vendor/symfony/yaml/Yaml.php';
 
 //Check 'Em
 foreach($checkFiles as $file) {
