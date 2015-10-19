@@ -374,6 +374,19 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(array(1,2,3,5), array_keys($result));
         
     }
+
+    // ---------------------------------------------------------------
+
+    public function testDotSyntaxRetrievesItemsCorrectlyStrict()
+    {
+        $obj = new Configula\Config($this->configPath . '/../yaml');
+
+        $this->assertSame(true, $obj->getItem('i'));
+        $this->assertNotSame(1, $obj->getItem('i'));
+        $this->assertSame(false, $obj->getItem('j'));
+        $this->assertSame(true, $obj->getItem('section.k'));
+        $this->assertSame(false, $obj->getItem('section.l'));
+    }
 }
 
 /* EOF: PhpDriverTest.php */
