@@ -48,11 +48,6 @@ class Config implements ArrayAccess, Iterator, Countable
 
         //Load the config files
         if ($configPath) {
-            //Append trailing slash
-            if (substr($configPath, strlen($configPath) - 1) != DIRECTORY_SEPARATOR) {
-                $configPath .= DIRECTORY_SEPARATOR;
-            }
-
             $this->loadConfig($configPath);
         }
     }
@@ -68,6 +63,11 @@ class Config implements ArrayAccess, Iterator, Countable
      */
     public function loadConfig($configPath)
     {
+        //Append trailing slash
+        if (substr($configPath, strlen($configPath) - 1) != DIRECTORY_SEPARATOR) {
+            $configPath .= DIRECTORY_SEPARATOR;
+        }
+
         //Array to hold the configuration items as we get them
         $config = array();
 
