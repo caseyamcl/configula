@@ -14,31 +14,31 @@
  * ------------------------------------------------------------------
  */
 
-namespace Configula\Deserializer;
+namespace Configula;
 
 use Configula\Exception\ConfigLoadingException;
 
 /**
- * Class JsonDeserializer
+ * Deserializer Interface
  *
- * @author Casey McLaughlin <caseyamcl@gmail.com>
+ * @package Configula\Deserializer
  */
-class JsonDeserializer implements DeserializerInterface
+interface DeserializerInterface
 {
+    /**
+     * Get file extensions that this deserializer should be associated with
+     *
+     * @return array|string[]  File extensions (without the dot ".")
+     */
+    function getFileExtensions();
+
     /**
      * Deserialize a string into an array of configuration values
      *
      * @param string $rawString
      * @param array  $options
      * @return array
+     * @throws ConfigLoadingException  If could not deserialize
      */
-    function deserialize($rawString, array $options = [])
-    {
-        if ($vals = json_decode($rawString, true)) {
-            return $vals;
-        }
-        else {
-            throw new ConfigLoadingException("Could not decode JSON");
-        }
-    }
+    function deserialize($rawString, array $options = []);
 }

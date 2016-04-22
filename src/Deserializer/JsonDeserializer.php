@@ -16,14 +16,15 @@
 
 namespace Configula\Deserializer;
 
+use Configula\DeserializerInterface;
 use Configula\Exception\ConfigLoadingException;
 
 /**
- * INI Deserializer
+ * Class JsonDeserializer
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class IniDeserializer implements DeserializerInterface
+class JsonDeserializer implements DeserializerInterface
 {
     /**
      * Deserialize a string into an array of configuration values
@@ -32,17 +33,13 @@ class IniDeserializer implements DeserializerInterface
      * @param array  $options
      * @return array
      */
-    function deserialize($rawString, array $options = [])
+    public function deserialize($rawString, array $options = [])
     {
-        $options = array_replace(array(
-            'parse_sections' => true
-        ), $options);
-
-        if ($vals = parse_ini_string($rawString, $options['parse_sections'])) {
+        if ($vals = json_decode($rawString, true)) {
             return $vals;
         }
         else {
-            throw new ConfigLoadingException('Could not parse INI values');
+            throw new ConfigLoadingException("Could not decode JSON");
         }
     }
 }

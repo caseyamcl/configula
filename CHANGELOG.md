@@ -11,6 +11,7 @@ Version 3.0 (Major Rewrite)
 
 ## Changed
 
+* Switched from PSR-0 to PSR-4
 * Constructor now accepts an array of values instead of a file path
 * `Config::getValue()` object now throws exception if invalid configuration value desired and no default value specified
 * Drivers 
