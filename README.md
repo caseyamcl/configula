@@ -1,18 +1,16 @@
-Configula
-=========
+# Configula
 
-Configula is a simple configuration library for PHP 5.3+.  
+Configula is a simple configuration library for PHP 7.1+.  
 
-Use this library when you want a simple tool for loading and providing configuration values
-to your application code.
+Use this library when you want a simple tool for loading and providing configuration values in your application code.
 
 You can use it with the [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html),
-or as a simple standalone tool.
+or as a standalone tool.
 
 [![Build Status](https://travis-ci.org/caseyamcl/Configula.png?branch=master)](https://travis-ci.org/caseyamcl/Configula)
 
-Features
---------
+## Features
+
 * Load configuration from a variety of sources:
     * Load values from _.php_, _.ini_, _.json_, and _.yml_ configuration file types
     * Load values from the environment
@@ -31,8 +29,20 @@ Features
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
 * Code quality standards: PSR-2, 100% Unit Test Coverage
   
-Quick Start
------------
+## Need PHP v5.* compatibility?
+
+The old version of Configula was compatible with PHP 5.3+.  If you prefer to use that
+version, simply instruct use Composer to use the **2.x** version:
+
+```
+composer require caseyamcl/configula:~2.4
+```
+
+## Upgrading?
+
+Refer to `UPGRADE.md` for notes on upgrading from Version 2.x to Version 3.
+ 
+## Quick Start
   
 * Simple usage:
 
@@ -54,32 +64,27 @@ Quick Start
             echo "<li>{$item} is {$value}</li>";
         }
 
-Installation
-------------
+## Installation
 
-###Installation via source:
+### Installation via Composer:
 
-1. Download from [Github](http://github.com/caseyamcl/Configula, "Github Page for Configula")
-2. Drop the _src/Configula_ folder into your codebase (you don't need the parent folders)
-3. Use a [PSR-0 Autoloader](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, "PSR-0 Standards Explanation") to include it!
+```
+composer require caseyamcl/configula
+```
 
-###Installation via Composer (Packagist):
+### Non-composer installation
 
-1. Include the following in your _composer.json_ file:
+This is not recommended, but it is possible.  
 
-        "require": {
-            ...
-            "caseyamcl/Configula": "~2.2"
-        }
+1. Add the `src/` directory to your application (`cp -r src/* /PATH/TO/YOUR/APP/configula`)
+2. Either use `require` statements for ALL classes, or use a [PSR-4 compatible autoloader](http://www.php-fig.org/psr/psr-4/)
+   like [this one](https://packagist.org/packages/keradus/psr4autoloader).
 
-2. Then, run <code>php composer.phar install</code>
-
-Basic Usage
------------
+## Basic Usage
 
 1.  Create a single folder in your application for storing configuration files.
-2.  Populate the folder with configuration files.  See _Config Folder Layout_ section below for more details.
-3.  Instantiate a configula instance, and send the path as the first parameter:
+2.  Populate the folder with configuration files.  See [Config Folder Layout](#config-folder-layout) section below for more details.
+3.  Instantiate a Configula instance, and pass the path as the first parameter:
 
         $config = Configula\Config::load('/path/to/app/config');
 
@@ -124,8 +129,7 @@ Notes:
 * If any configuration file contains invalid code (invalid PHP or malformed JSON, for example), the Configula class will not throw an error.  Instead, it will simply skip reading that file.
 
 
-Config Folder Layout
---------------------
+## Config Folder Layout
 
 You can use any single folder to store configuration files.  You can also mix and match any supported configuration filetypes.  Current supported filetypes are:
 
@@ -143,8 +147,7 @@ For example, a configuration file named <code>database.yml</code> is overridden 
 This is very useful if you want certain settings included in version control, and certain settings ignored (just add <code>/path/to/config/*.local.EXT</code> to your <code>.gitignore</code> or equivalent VCS file)
 
 
-Writing Your Own Configuration File Type Driver
------------------------------------------------
+## Writing Your Own Configuration File Type Driver
 
 In addition to the built-in filetype drivers, you can add your own driver for reading configuration files.  An example would look like
 
