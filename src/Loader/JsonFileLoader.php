@@ -2,7 +2,7 @@
 
 namespace Configula\Loader;
 
-use Configula\Exception\ConfigParseException;
+use Configula\Exception\ConfigLoaderException;
 
 /**
  * Class JsonFileLoader
@@ -18,7 +18,7 @@ class JsonFileLoader extends AbstractFileLoader
     protected function parse(string $rawFileContents): array
     {
         if (! $decoded = @json_decode($rawFileContents, true)) {
-            throw new ConfigParseException("Could not parse JSON file: ". $this->getFilePath());
+            throw new ConfigLoaderException("Could not parse JSON file: ". $this->getFilePath());
         }
 
         return $decoded;

@@ -15,7 +15,7 @@
         ],
         "require": {
             "php"                    : "^7.1",
-            "symfony/yaml"           : "~3.2,<4.0",
+            "symfony/yaml"           : "^2.1|~3.2,<4.0",
             "dflydev/dot-access-data": "~1.1"
 
         },

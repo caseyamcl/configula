@@ -1,9 +1,9 @@
 <?php
 
 namespace Configula\Loader;
+
 use Configula\ConfigValues;
-use Configula\Exception\ConfigParseException;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Configula\Exception\ConfigLoaderException;
 
 /**
  * Config Folder Files Loader
@@ -14,19 +14,6 @@ use Symfony\Component\Yaml\Exception\ParseException;
  */
 class ConfigFolderFilesLoader implements ConfigLoaderInterface
 {
-    const USE_DEFAULT = null;
-
-    /**
-     * @var array  Keys are extensions (lower-case), values are loader classes
-     */
-    private $extensionMap = [
-        'yml'  => YamlFileLoader::class,
-        'yaml' => YamlFileLoader::class,
-        'json' => JsonFileLoader::class,
-        'php'  => PhpFileLoader::class,
-        'ini'  => IniFileLoader::class
-    ];
-
     /**
      * @var string
      */
@@ -41,14 +28,13 @@ class ConfigFolderFilesLoader implements ConfigLoaderInterface
      * ConfigFolderFilesLoader constructor.
      *
      * @param string $path
-     * @param array $defaults
+     * @param array $defaultValues
      * @param null $extensionMap
      */
-    public function __construct(string $path, array $defaults = [], $extensionMap = self::USE_DEFAULT)
+    public function __construct(string $path, array $defaultValues = [], $extensionMap = FileLoader::USE_DEFAULT)
     {
-        $this->path         = $path;
-        $this->defaults     = $defaults;
-        $this->extensionMap = $extensionMap ?: $this->extensionMap;
+        $this->path     = $path;
+        $this->defaults = $defaultValues;
     }
 
     /**
@@ -67,7 +53,7 @@ class ConfigFolderFilesLoader implements ConfigLoaderInterface
 
         // Check valid path
         if (! is_readable($this->path) OR ! is_dir($this->path)) {
-            throw new ParseException(
+            throw new ConfigLoaderException(
                 'Cannot read from config folder path (does it exist? is it a directory?): ' . $this->path
             );
         }
@@ -84,43 +70,17 @@ class ConfigFolderFilesLoader implements ConfigLoaderInterface
             if (strcasecmp(substr($basename, -6), '.local') == 0) {
                 $localFiles[] = $file;
             }
-            elseif ($newConfig = $this->loadFile($file)) {
+            elseif ($newConfig = (new FileLoader((string) $file))->load()) {
                 $config = $config->merge($newConfig);
             }
         }
 
         foreach ($localFiles as $file) {
-            if ($newConfig = $this->loadFile($file)) {
+            if ($newConfig = (new FileLoader((string) $file))->load()) {
                 $config = $config->merge($newConfig);
             }
         }
 
         return $config;
-    }
-
-    /**
-     * @param \SplFileInfo $file
-     * @return ConfigValues|null
-     */
-    private function loadFile(\SplFileInfo $file): ?ConfigValues
-    {
-        if (array_key_exists(strtolower($file->getExtension()), $this->extensionMap)) {
-
-            switch ($this->extensionMap[strtolower($file->getExtension())]) {
-                case YamlFileLoader::class:
-                    return (new YamlFileLoader((string) $file))->load();
-                case JsonFileLoader::class:
-                    return (new JsonFileLoader((string) $file))->load();
-                case PhpFileLoader::class:
-                    return (new PhpFileLoader((string) $file))->load();
-                case IniFileLoader::class:
-                    return (new IniFileLoader((string) $file))->load();
-                default:
-                    throw new ConfigParseException("Error parsing file (could not resolve loader): " . (string) $file);
-            }
-        }
-        else {
-            return null;
-        }
     }
 }

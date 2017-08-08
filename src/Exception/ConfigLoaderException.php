@@ -6,7 +6,7 @@ namespace Configula\Exception;
  * Class ConfigParseException
  * @package Configula\Exception
  */
-class ConfigParseException extends ConfigException
+class ConfigLoaderException extends ConfigException
 {
     // Configuration parsing exception
 }

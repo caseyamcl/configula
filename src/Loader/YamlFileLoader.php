@@ -2,7 +2,7 @@
 
 namespace Configula\Loader;
 
-use Configula\Exception\ConfigParseException;
+use Configula\Exception\ConfigLoaderException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
@@ -42,7 +42,7 @@ class YamlFileLoader extends AbstractFileLoader
         try {
             return $this->parser->parse($rawFileContents, Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
         } catch (ParseException $e) {
-            throw new ConfigParseException("Could parse YAML file: " . $this->getFilePath(), $e->getCode(), $e);
+            throw new ConfigLoaderException("Could parse YAML file: " . $this->getFilePath(), $e->getCode(), $e);
         }
     }
 }

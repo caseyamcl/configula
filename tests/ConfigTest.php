@@ -30,8 +30,8 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testInstantiateAsObjectSucceeds() 
     {
-        $obj = new Configula\Config();
-        $this->assertInstanceOf('Configula\Config', $obj);
+        $obj = new Configula\ConfigFactory();
+        $this->assertInstanceOf('Configula\ConfigFactory', $obj);
     }
 
     // --------------------------------------------------------------
@@ -45,7 +45,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
             'd' => array("vala" => "hi", "valb" => "bye", "valc" =>  array("a" => 1, "b" => 2, "c" => 3))
         );
 
-        $obj = new Configula\Config(NULL, $defaults);
+        $obj = new Configula\ConfigFactory(NULL, $defaults);
 
         $this->assertEquals('value', $obj->a);
         $this->assertEquals(1, $obj->b[0]);
@@ -62,7 +62,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
             'z' => (object) array('d' => 'e', 'f' => 'g')
         );
 
-        $obj = new Configula\Config($this->configPath, $defaults);
+        $obj = new Configula\ConfigFactory($this->configPath, $defaults);
 
         $this->assertEquals("value", $obj->a);
         $this->assertEquals(array(1, 2, 3), $obj->b);
@@ -82,7 +82,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
             'd' => array("vala" => "hi", "valb" => "bye")
         );
 
-        $obj = new Configula\Config(NULL, $defaults);
+        $obj = new Configula\ConfigFactory(NULL, $defaults);
 
         $this->assertEquals('value', $obj->getItem('a'));
         $this->assertEquals(array(1, 2, 3), $obj->getItem('b'));
@@ -94,7 +94,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testDotSyntaxRetrievesItemsCorrectly()
     {
-        $obj = new Configula\Config($this->configPath);   
+        $obj = new Configula\ConfigFactory($this->configPath);
 
         $this->assertEquals(1, $obj->getItem('b.0'));
         $this->assertEquals('hi', $obj->getItem('d.vala'));
@@ -111,7 +111,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
             'c' => (object) array('d' => 'e', 'f' => 'g')
         );
 
-        $obj = new Configula\Config(NULL, $defaults);
+        $obj = new Configula\ConfigFactory(NULL, $defaults);
 
         $this->assertEquals(NULL, $obj->non_existent);
         $this->assertEquals(NULL, $obj->getItem('doesnotexist'));
@@ -123,7 +123,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     {
         $filepath = $this->configPath . DIRECTORY_SEPARATOR . 'phpgood.php';
 
-        $obj = new Configula\Config();
+        $obj = new Configula\ConfigFactory();
         $result = $obj->parseConfigFile($filepath);
         
 
@@ -137,7 +137,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     {
         $filepath = $this->configPath . DIRECTORY_SEPARATOR . 'phpbad.php';
 
-        $obj = new Configula\Config();
+        $obj = new Configula\ConfigFactory();
         $result = $obj->parseConfigFile($filepath);
         
         $this->assertEquals(array(), $result);
@@ -150,7 +150,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $filepath = $this->configPath . 'abc' . rand('1000', '9999') . '.php';
 
         try {
-            $obj = new Configula\Config();
+            $obj = new Configula\ConfigFactory();
             $result = $obj->parseConfigFile($filepath);
         } catch (Exception $e) {
             return;
@@ -164,7 +164,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testInstantiateWithValidPathBuildsCorrectValues()
     {
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
 
         $this->assertEquals('value', $obj->a);
         $this->assertEquals(1, $obj->b[0]);
@@ -176,7 +176,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     {
         $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phpunit_test_nothing_' . time();
         mkdir($path);
-        $obj = new Configula\Config($path);
+        $obj = new Configula\ConfigFactory($path);
 
         $this->assertEquals(NULL, $obj->a);
         $this->assertEquals(array(), $obj->getItems());
@@ -188,7 +188,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testGetItemsReturnsAnArray()
     {
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
 
         //Single item
         $result = $obj->getItems('a');
@@ -218,7 +218,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
         file_put_contents($this->configPath . $ds . 'phpgood.local.php', $code);
 
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
 
         $this->assertEquals('newvalue', $obj->a);
         $this->assertEquals((object) array('j', 'k', 'l'), $obj->c);
@@ -252,7 +252,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
         file_put_contents($this->configPath . $ds . 'phpgood.local.php', $code);
 
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
 
         $this->assertEquals('newvalue', $obj->d['vala']);
         $this->assertEquals('bye', $obj->d['valb']);
@@ -267,7 +267,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testCountableInterfaceSucceeds()
     {
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
         $this->assertEquals(4, count($obj));
     }
 
@@ -275,7 +275,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testIteratorSucceeds()
     {
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
 
         $actualArr = array();
         foreach($obj as $key => $val) {
@@ -298,7 +298,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testArrayAccessSucceeds()
     {
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
         
         $this->assertEquals('value', $obj['a']);        
         $this->assertEquals(array(1, 2, 3), $obj['b']);
@@ -308,7 +308,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testArrayAccessImmutableAndThrowsExceptionForNewValue()
     {
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
         $this->setExpectedException('\RuntimeException');
 
         $obj['newValue'] = 'hello';
@@ -318,7 +318,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function testArrayAccessImmutableAndThrowsExceptionForUnset()
     {
-        $obj = new Configula\Config($this->configPath);
+        $obj = new Configula\ConfigFactory($this->configPath);
         $this->setExpectedException('\RuntimeException');
         unset($obj['a']);
     }
@@ -327,7 +327,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
     
     public function testNumberedConfiguatroniArrayKeysAreNotClobbered()
     {
-        $obj = new Configula\Config();
+        $obj = new Configula\ConfigFactory();
         $result = $obj->parseConfigFile($this->configPath . '/../php/numbered.php');
         
         $this->assertEquals(array(1,2,3,5), array_keys($result));

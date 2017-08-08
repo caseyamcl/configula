@@ -3,7 +3,7 @@
 
 namespace Configula;
 
-use Configula\Exception\ConfigException;
+use Configula\Exception\ConfigLogicException;
 use Configula\Util\RecursiveArrayMerger;
 use Dflydev\DotAccessData\Data;
 use Configula\Exception\ConfigValueNotFoundException;
@@ -185,7 +185,7 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new ConfigException("Cannot set config value: " . $offset . "; config values are immutable");
+        throw new ConfigLogicException("Cannot set config value: " . $offset . "; config values are immutable");
     }
 
     /**
@@ -193,7 +193,7 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        throw new ConfigException("Cannot unset config value: " . $offset . "; config values are immutable");
+        throw new ConfigLogicException("Cannot unset config value: " . $offset . "; config values are immutable");
     }
 
     /**
