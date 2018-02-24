@@ -146,7 +146,7 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     }
 
     /**
-     * Merge and return an new Config instance
+     * Merge config values and return a new Config instance
      *
      * @param ConfigValues $config
      * @return static|ConfigValues
@@ -157,6 +157,17 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
             $this->values->export(),
             $config->getArrayCopy()
         ));
+    }
+
+    /**
+     * Merge values and return a new Config instance
+     *
+     * @param array $values
+     * @return static|ConfigValues
+     */
+    public function mergeValues(array $values): ConfigValues
+    {
+        return $this->merge(new ConfigValues($values));
     }
 
     /**
