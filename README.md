@@ -1,11 +1,13 @@
 # Configula
 
-Configula is a simple configuration library for PHP 7.1+.  
+Configula is a configuration library for PHP 7.1+.  
 
-Use this library when you want a simple tool for loading and providing configuration values in your application code.
+Use this library when you want to load configuration from the filesystem, environment, or other source.  It implements
+your configuration values as an immutable object in PHP.
 
-You can use it with the [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html),
-or as a standalone tool.
+You can use it with [phpDotEnv](https://github.com/vlucas/phpdotenv), 
+the [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html), or as a 
+standalone tool.
 
 [![Build Status](https://travis-ci.org/caseyamcl/Configula.png?branch=master)](https://travis-ci.org/caseyamcl/Configula)
 
@@ -15,7 +17,7 @@ or as a standalone tool.
     * Load values from _.php_, _.ini_, _.json_, and _.yml_ configuration file types
     * Load values from the environment, and _.env_ files using a DotEnv library ([vlucas](https://github.com/vlucas/phpdotenv) or [Symfony](https://github.com/symfony/dotenv))
     * Easily write your own loaders to support other file types and sources
-* Cascade load values from multiple sources (e.g. array, files, environment, etc) 
+* Cascade merge values from multiple sources (e.g. array, files, environment, etc) 
 * Optionally use in combination with [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html)
   to validate configuration values and/or cache them
 * Provides an immutable object to access your configuration values in your application:
@@ -28,11 +30,11 @@ or as a standalone tool.
   
 ## Need PHP v5.* compatibility?
 
-The old version of Configula was compatible with PHP v5.3+.  If you need PHP 5.x compatibility, instruct Composer to use
+Configula Version 2.x is compatible with PHP v5.3+.  If you need PHP 5.x compatibility, instruct Composer to use
 the **2.x** version of this library instead of the current one:
 
 ```
-composer require caseyamcl/configula:~2.4
+composer require caseyamcl/configula:^2.4
 ```
 
 ## Upgrading?
@@ -41,38 +43,44 @@ Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x to Ver
  
 ## Quick Start
   
-* Simple usage:
+Simple usage:
 
-        use Configula\ConfigFactory as Config;
+```php
+use Configula\ConfigFactory as Config;
+
+//Access configuration values
+$config = Config::loadPath('/path/to/config/files');
+$some_value = $config->get('some_key');
+```
         
-        //Access configuration values
-        $config = Config::loadPath('/path/to/config/files');
-        $some_value = $config->get('some_key');
-        
-* Property-like access to your config settings:
+Property-like access to your config settings:
 
-        use Configula\ConfigFactory as Config;
+```php
+use Configula\ConfigFactory as Config;
 
-        //Access configuration values
-        $config = Config::loadPath('/path/to/config/files');
-        $some_value = $config->some_key;
+//Access configuration values
+$config = Config::loadPath('/path/to/config/files');
+$some_value = $config->some_key;
+```
 
-* Array and iterator access to your config settings:
+Array and iterator access to your config settings:
 
-        use Configula\ConfigFactory as Config;
+```php
+use Configula\ConfigFactory as Config;
 
-        //Access conifguration values
-        $config = Config::load('/path/to/config/files');
-        
-        foreach ($config as $item => $value) {
-            echo "<li>{$item} is {$value}</li>";
-        }
+//Access conifguration values
+$config = Config::load('/path/to/config/files');
+
+foreach ($config as $item => $value) {
+    echo "<li>{$item} is {$value}</li>";
+}
+```
 
 ## Installation
 
 ### Installation via Composer:
 
-```
+```bash
 composer require caseyamcl/configula
 ```
 
@@ -118,7 +126,7 @@ This is not recommended, but it is possible:
         }
         echo "There are " . count($config) . " settings total";
 
-8.  To get all config settings as an array, use the <code>getItems()</code> method:
+8.  To get all config settings as an array, use the `getArrayCopy()` method:
 
         $allValues = $config->getArrayCopy();
 
@@ -135,12 +143,29 @@ This is not recommended, but it is possible:
         $values = array('foo' => 'bar', 'baz' => 'biz');
         $config = \Configula\ConfigFactory::build($values);
 
-Notes:
+### Immutability
 
-* The `ConfigValues` object, once instantiated, is immutable, meaning that it is read-only.  You can not alter the config 
-  values.  You can, however, merge values into a new copy of the object using `ConfigValues::merge()` method.
-* If any configuration file contains invalid code (invalid PHP or malformed JSON, for example), the Configula class will 
-  throw a `\Configula\Exception\ConfigParseException()`
+The `ConfigValues` object, once instantiated, is immutable, meaning that it is read-only.  You can not alter the config 
+values.  You can, however, merge values into a new copy of the object using `ConfigValues::merge()` method.
+
+```php
+$values = array('foo' => 'bar', 'baz' => 'biz');
+$config = \Configula\ConfigFactory::build($values);
+
+$config = $config->mergeValues(['another' => 'value']);
+
+// Config new contains
+// 'foo', 'baz', and 'another' items
+
+// You can also merge any ConfigValues instance 
+$config = $config->merge(\Configula\ConfigFactory::path('/some/path'));
+
+```
+
+### Invalid Code
+
+If any configuration file contains invalid code (invalid PHP or malformed JSON, for example), the Configula class will 
+throw a `\Configula\Exception\ConfigParseException()`
 
 ## Default Behavior
 
@@ -172,6 +197,7 @@ to your `.gitignore` or equivalent VCS file.
 ### Example
 
 Consider the following directory layout
+
 ```
 /my/app/config
  ├config.php
@@ -197,21 +223,19 @@ All exceptions extend `Configula\Exception\ConfigException`.  You can catch this
 thrown during loading and reading of configuration values.
 
 * Improper use of this library will generate a `Configula\Exception\ConfigLogicException`.
-
 * If something goes wrong when loading configuration values, a `Config\Exception\ConfigLoaderException` is thrown.
-
-* If you attempt to read a configuration value that does not exist, and you have not provided a default value,
-  a `Configula\Exception\ConfigValueNotFoundException` is thrown
+* If you attempt to read a configuration value that does not exist, and you have not provided a default value at
+  runtime, a `Configula\Exception\ConfigValueNotFoundException` is thrown.
   
-  ```php
-  // All of these throw a ConfigValueNotFoundException
-  $config->get('non_existent_value');
-  $config['non_existent_value'];
-  $config->non_existent_value;
+```php
+// All of these throw a ConfigValueNotFoundException
+$config->get('non_existent_value');
+$config['non_existent_value'];
+$config->non_existent_value;
 
-  // This will not throw an exception if the value doesn't exist
-  $config->get('non_existent_value', null);
-  ```
+// This will not throw an exception if the value doesn't exist
+$config->get('non_existent_value', null);
+```
 
 ## Advanced Loading Options
 
@@ -234,9 +258,8 @@ todo: this..
 
 ## Extending the `ConfigValues` class to make accessing configuration easy
 
-While it is entirely possible to use the `Configula\ConfigValues` class directly, and access values using the
-`get()`, `__get()` or array access methods, you might also want to provide some application-specific methods to
-load configuration values.  This provides a better developer experience. 
+While it is entirely possible to use the `Configula\ConfigValues` class directly , you might also want to provide 
+some application-specific methods to load configuration values.  This provides a better developer experience. 
 
 ```php
 use Configula\ConfigValues;
@@ -275,8 +298,8 @@ class AppConfig extends ConfigValues
 }
 ```
 
-_Note:_ Notice that the example above uses the `InvalidConfigValueException`, which is included with Configula for exactly
-this use-case.
+*Note:* Notice that the example above uses the `InvalidConfigValueException`, which is included with Configula for
+exactly this use-case.
 
 You can use your custom `AppConfig` class as follows:
 
@@ -291,9 +314,9 @@ $config->isDevMode();
 
 ## Using Symfony Config to define a configuration schema
 
-In some cases, you may wish to strictly control what configuration values are allowed and also validate those values. The
-[Symfony Config Component](http://symfony.com/doc/current/components/config.html) provides an excellent mechanism 
-for accomplishing this.
+In some cases, you may wish to strictly control what configuration values are allowed and also validate those values
+when loading the configuration. The [Symfony Config Component](http://symfony.com/doc/current/components/config.html) 
+provides an excellent mechanism for accomplishing this.
 
 First, include the Symfony Config Component library in your application:
 
@@ -358,7 +381,7 @@ SymfonyConfigFilter::filter($configTree, $config);
 
 In addition to using the built-in loaders, you can write your own loader.  There are two ways to do this:
 
-Extend the `Configula\Loader\AbstractFileLoader` to write your own loader that reads data from a file
+Extend the `Configula\Loader\AbstractFileLoader` to write your own loader that reads data from a file.
 
 ```php
 
