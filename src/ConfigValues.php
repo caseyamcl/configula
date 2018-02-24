@@ -119,11 +119,30 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     }
 
     /**
+     * Get an array copy of config values
+     *
      * @return array
      */
     public function getArrayCopy(): array
     {
         return $this->values->export();
+    }
+
+    /**
+     * Get an array copy of config values
+     *
+     * @deprecated Use getArrayCopy instead
+     * @return array
+     */
+    public function getItems(): array
+    {
+        @trigger_error(
+            'ConfigValues::getItems() is deprecated since version 3.0 and will be removed in 4.0. '
+            . 'Use ConfigValues::getArrayCopy() instead.',
+            E_USER_DEPRECATED
+        );
+
+        return $this->getArrayCopy();
     }
 
     /**

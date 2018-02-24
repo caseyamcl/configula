@@ -1,6 +1,7 @@
 # Upgrading from v2.x to v3.x
 
-You can replicate the exact behavior of Configula v2 with minimal code changes by using the `ConfigFactory`:
+Configula v3 is quite different from v2.  But, you can replicate the behavior of Configula v2 
+with minimal code changes by using `Configula\ConfigFactory`:
 
 ## Loading configuration
 
@@ -27,7 +28,7 @@ following:
 ```php
 use Configula\ConfigFactory;
 
-$config = ConfigFactory::loadSingleDirectory(new \DirectoryIterator('/path/to/config/files'));
+$config = ConfigFactory::loadSingleDirectory('/path/to/config/files');
 ```
 
 ## Getting an array copy of values
