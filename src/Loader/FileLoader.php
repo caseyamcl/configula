@@ -49,6 +49,13 @@ class FileLoader implements ConfigLoaderInterface
      */
     public function load(): ConfigValues
     {
+        // Check valid path
+        if (! is_readable($this->filePath) OR ! is_file($this->filePath)) {
+            throw new ConfigLoaderException(
+                'Cannot read from file path (does it exist? is it a regular file?): ' . $this->filePath
+            );
+        }
+
         $file = new \SplFileInfo($this->filePath);
 
         if (array_key_exists(strtolower($file->getExtension()), $this->extensionMap)) {
@@ -69,7 +76,6 @@ class FileLoader implements ConfigLoaderInterface
                         (string) $file
                     ));
             }
-
         }
         else {
             return new ConfigValues([]);

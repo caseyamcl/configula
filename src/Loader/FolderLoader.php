@@ -12,7 +12,7 @@ use Configula\Exception\ConfigLoaderException;
  *
  * @package Configula\Loader
  */
-class ConfigFolderFilesLoader implements ConfigLoaderInterface
+class FolderLoader implements ConfigLoaderInterface
 {
     /**
      * @var string
@@ -47,37 +47,52 @@ class ConfigFolderFilesLoader implements ConfigLoaderInterface
         // Config values
         $config = new ConfigValues($this->defaults);
 
-        // Save '*.local.*' for the end..
-        /** @var array|\SplFileInfo[] $localFiles */
-        $localFiles = [];
-
         // Check valid path
         if (! is_readable($this->path) OR ! is_dir($this->path)) {
             throw new ConfigLoaderException(
-                'Cannot read from config folder path (does it exist? is it a directory?): ' . $this->path
+                'Cannot read from folder path (does it exist? is it a directory?): ' . $this->path
             );
         }
 
-        // Iterate over the files in the directory and load each one
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path));
+        // File list
+        $fileList = [];
 
-        /** @var \SplFileInfo $file */
-        foreach ($iterator as $file) {
+        /**
+         * Build file list
+         *
+         * If the file has '.local', we should load it later
+         * If the file has '.dist', we should load it sooner
+         * If the file has neither, we should load it normally
+         *
+         * @var \SplFileInfo $file
+         */
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path)) as $file) {
+
+            isset($fileCount) ? $fileCount++ : $fileCount = 0;
 
             $ext      = strtolower($file->getExtension());
             $basename = rtrim($file->getBasename($ext), '.');
 
             if (strcasecmp(substr($basename, -6), '.local') == 0) {
-                $localFiles[] = $file;
+                $fileList[3][] = $file;
             }
-            elseif ($newConfig = (new FileLoader((string) $file))->load()) {
-                $config = $config->merge($newConfig);
+            elseif (strcasecmp(substr($basename, -5), '.dist') == 0) {
+                $fileList[1][] = $file;
+            }
+            else {
+                $fileList[2][] = $file;
             }
         }
 
-        foreach ($localFiles as $file) {
-            if ($newConfig = (new FileLoader((string) $file))->load()) {
-                $config = $config->merge($newConfig);
+        ksort($fileList, SORT_NUMERIC);
+
+        // Iterate over the list and load each file
+        foreach ($fileList as $set) {
+            /** @var \SplFileInfo $file */
+            foreach ($set as $file) {
+                if ($newConfig = (new FileLoader((string) $file))->load()) {
+                    $config = $config->merge($newConfig);
+                }
             }
         }
 

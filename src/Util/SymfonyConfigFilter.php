@@ -34,6 +34,7 @@ class SymfonyConfigFilter
 
     /**
      * SymfonyConfigFilter constructor.
+     *
      * @param ConfigurationInterface $configTree
      * @param Processor|null $processor
      */
@@ -44,6 +45,8 @@ class SymfonyConfigFilter
     }
 
     /**
+     * Process configuration through Symfony
+     *
      * @param ConfigValues $values
      */
     public function process(ConfigValues &$values): void
