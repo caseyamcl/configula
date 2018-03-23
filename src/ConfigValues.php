@@ -67,6 +67,18 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     }
 
     /**
+     * Magic method - Get a value or path, or throw an exception
+     *
+     * @param string $path
+     * @param string $default
+     * @return array|mixed|null
+     */
+    public function __invoke(string $path, $default = self::NOT_SET)
+    {
+        return $this->get($path, $default);
+    }
+
+    /**
      * Get a values
      *
      * @param string $path Accepts '.' path notation
