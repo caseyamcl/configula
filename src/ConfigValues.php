@@ -85,6 +85,20 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     }
 
     /**
+     * Find a configuration value, or return NULL if not found
+     *
+     * This is different than the get() method in that it will always return NULL
+     * if the value doesn't exist or is not set, rather than throw an exception.
+     *
+     * @param string $path
+     * @return array|mixed|null
+     */
+    public function find(string $path)
+    {
+        return $this->values->get($path, null);
+    }
+
+    /**
      * Check if value exists (even if it is null)
      *
      * @param string $path
