@@ -25,7 +25,7 @@ class ConfigFactory
      * @param array $items
      * @return ConfigValues
      */
-    public static function build(array $items): ConfigValues
+    public static function fromArray(array $items): ConfigValues
     {
         return new ConfigValues($items);
     }
