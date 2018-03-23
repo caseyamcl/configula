@@ -40,9 +40,9 @@ class YamlFileLoader extends AbstractFileLoader
     protected function parse(string $rawFileContents): array
     {
         try {
-            return $this->parser->parse($rawFileContents, Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
+            return (array) $this->parser->parse($rawFileContents, Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
         } catch (ParseException $e) {
-            throw new ConfigLoaderException("Could parse YAML file: " . $this->getFilePath(), $e->getCode(), $e);
+            throw new ConfigLoaderException("Could not parse YAML file: " . $this->getFilePath(), $e->getCode(), $e);
         }
     }
 }
