@@ -81,19 +81,21 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     /**
      * Get a values
      *
-     * @param string $path Accepts '.' path notation
+     * @param string $path Accepts '.' path notation for nested values
      * @param mixed $default
      * @return array|mixed|null
      */
     public function get(string $path, $default = self::NOT_SET)
     {
-        $result = $this->values->get($path, $default);
-
-        if ($result === self::NOT_SET) {
+        if ($this->values->has($path)) {
+            return $this->values->get($path);
+        }
+        elseif ($default !== static::NOT_SET) {
+            return $default;
+        }
+        else {
             throw new ConfigValueNotFoundException('Config value not found: ' . $path);
         }
-
-        return $result;
     }
 
     /**
@@ -118,8 +120,7 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
      */
     public function has(string $path): bool
     {
-        $result = $this->values->get($path, self::NOT_SET);
-        return $result !== self::NOT_SET;
+        return $this->values->has($path);
     }
 
     /**
