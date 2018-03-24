@@ -1,6 +1,7 @@
 <?php
 
 namespace Configula\Loader;
+
 use Configula\ConfigValues;
 use Dflydev\DotAccessData\Data;
 

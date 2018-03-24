@@ -12,12 +12,7 @@ use Configula\Exception\ConfigLoaderException;
  */
 class FileLoader implements ConfigLoaderInterface
 {
-    const USE_DEFAULT = null;
-
-    /**
-     * @var array  Keys are extensions (lower-case), values are loader classes
-     */
-    private $extensionMap = [
+    const DEFAULT_EXTENSION_MAP = [
         'yml'  => YamlFileLoader::class,
         'yaml' => YamlFileLoader::class,
         'json' => JsonFileLoader::class,
@@ -31,14 +26,19 @@ class FileLoader implements ConfigLoaderInterface
     private $filePath;
 
     /**
+     * @var array
+     */
+    private $extensionMap;
+
+    /**
      * FileLoader constructor.
      *
      * @param string $filePath
      * @param array $extensionMap
      */
-    public function __construct(string $filePath, array $extensionMap = self::USE_DEFAULT)
+    public function __construct(string $filePath, array $extensionMap = self::DEFAULT_EXTENSION_MAP)
     {
-        $this->extensionMap = $extensionMap ?: $this->extensionMap;
+        $this->extensionMap = $extensionMap;
         $this->filePath = $filePath;
     }
 
@@ -71,7 +71,7 @@ class FileLoader implements ConfigLoaderInterface
                     return (new IniFileLoader((string) $file))->load();
                 default:
                     throw new ConfigLoaderException(sprintf(
-                        "Error parsing file (error resolving loader for extension '%s'): %s",
+                        "Error parsing file (no loader for extension '%s'): %s",
                         $file->getExtension(),
                         (string) $file
                     ));
