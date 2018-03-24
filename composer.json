@@ -30,5 +30,8 @@
         },
         "autoload": {
             "psr-4": { "Configula\\": "src/" }
+        },
+        "autoload=dev": {
+            "psr-4": { "Configula\\": "tests/" }
         }
 }

@@ -2,6 +2,7 @@
 
 namespace Configula\Loader;
 use Configula\ConfigValues;
+use Configula\Exception\ConfigLoaderException;
 
 /**
  * Class AbstractFileLoader
@@ -30,10 +31,11 @@ abstract class AbstractFileLoader implements ConfigLoaderInterface
      */
     public function load(): ConfigValues
     {
-        if (is_readable($this->filePath)) {
-            $values = $this->parse(file_get_contents($this->filePath));
+        if (! is_readable($this->filePath)) {
+            throw new ConfigLoaderException("Could not read configuration file: " . $this->filePath);
         }
 
+        $values = $this->parse(file_get_contents($this->filePath));
         return new ConfigValues($values ?? []);
     }
 

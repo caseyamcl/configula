@@ -3,6 +3,7 @@
 namespace Configula\Loader;
 
 use Configula\ConfigValues;
+use Configula\Exception\ConfigLoaderException;
 
 /**
  * Class IniFileLoader
@@ -38,8 +39,11 @@ class IniFileLoader implements ConfigLoaderInterface
      */
     public function load(): ConfigValues
     {
-        if (is_readable($this->filePath)) {
-            $values = parse_ini_file($this->filePath, $this->processSections) ?: array();
+        try {
+            $values = parse_ini_file($this->filePath, $this->processSections, INI_SCANNER_TYPED) ?: [];
+        }
+        catch (\Throwable $e) {
+            throw new ConfigLoaderException("Error parsing INI file: " . $this->filePath);
         }
 
         return new ConfigValues($values ?? []);

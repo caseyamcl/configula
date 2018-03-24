@@ -17,7 +17,10 @@ class JsonFileLoader extends AbstractFileLoader
      */
     protected function parse(string $rawFileContents): array
     {
-        if (! $decoded = @json_decode($rawFileContents, true)) {
+        if (trim($rawFileContents) === '') {
+            return [];
+        }
+        elseif (! $decoded = @json_decode($rawFileContents, true)) {
             throw new ConfigLoaderException("Could not parse JSON file: ". $this->getFilePath());
         }
 

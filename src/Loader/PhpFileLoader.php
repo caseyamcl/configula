@@ -1,8 +1,9 @@
 <?php
 
 namespace Configula\Loader;
+
 use Configula\ConfigValues;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Configula\Exception\ConfigLoaderException;
 
 /**
  * Class PhpFileLoader
@@ -40,8 +41,11 @@ class PhpFileLoader implements ConfigLoaderInterface
         if (isset($config) && is_array($config)) {
             return new ConfigValues($config);
         }
+        elseif (trim(file_get_contents($this->filePath)) === "") {
+            return new ConfigValues([]);
+        }
         else {
-            throw new ParseException("Missing or invalid \$config array in file: " . $this->filePath);
+            throw new ConfigLoaderException("Missing or invalid \$config array in file: " . $this->filePath);
         }
     }
 }

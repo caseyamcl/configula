@@ -10,36 +10,38 @@
  */
 
 namespace Configula\Loader;
+use PHPUnit\Framework\TestCase;
 
 /**
- * YAML Driver Test
+ * JSON Driver Test
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class YamlFileLoaderTest extends \PHPUnit\Framework\TestCase
+class JsonDriverTest extends TestCase
 {
+
     private $goodFilePath;
-    private $emptyFilePath;
     private $badFilePath;
+    private $emptyFilePath;
 
     function setUp()
     {
         parent::setUp();
-        
-        $this->goodFilePath = realpath(__DIR__ . '/../fixtures/yaml/config.yml');
-        $this->emptyFilePath = realpath(__DIR__ . '/../fixtures/yaml/empty.yml');
-        $this->badFilePath = realpath(__DIR__ . '/../fixtures/yaml/bad.yml');
-    }
+
+        $this->goodFilePath  = realpath(__DIR__ . '/../fixtures/json/config.json');
+        $this->badFilePath   = realpath(__DIR__ . '/../fixtures/json/bad.json');
+        $this->emptyFilePath = realpath(__DIR__ . '/../fixtures/json/empty.json');
+    } 
 
     public function testInstantiateAsObjectSucceeds()
     {
-        $loader = new YamlFileLoader($this->goodFilePath);
-        $this->assertInstanceOf(YamlFileLoader::class, $loader);
+        $loader = new JsonFileLoader($this->goodFilePath);
+        $this->assertInstanceOf(JsonFileLoader::class, $loader);
     }
 
     public function testGetConfigReturnsCorrectItems()
     {
-        $loader = new YamlFileLoader($this->goodFilePath);
+        $loader = new JsonFileLoader($this->goodFilePath);
 
         $expected['a'] = "value";
         $expected["b"] = [1, 2, 3];
@@ -53,15 +55,15 @@ class YamlFileLoaderTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException \Configula\Exception\ConfigLoaderException
      */
-    public function testBadContentThrowsParseException()
+    public function testBadContentThrowsException()
     {
-        $loader = new YamlFileLoader($this->badFilePath);
-        $loader->load()->getArrayCopy();
+        $loader = new JsonFileLoader($this->badFilePath);
+        $loader->load();
     }
 
-    public function testEmptyFileReturnsEmptyConfig()
+    public function testEmptyContentReturnsEmptyConfig()
     {
-        $loader = new YamlFileLoader($this->emptyFilePath);
+        $loader = new JsonFileLoader($this->emptyFilePath);
         $this->assertEquals([], $loader->load()->getArrayCopy());
     }
 }
