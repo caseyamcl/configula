@@ -6,6 +6,7 @@ use CallbackFilterIterator;
 use Configula\Exception\ConfigLogicException;
 use Configula\Loader\ArrayValuesLoader;
 use Configula\Loader\CascadingConfigLoader;
+use Configula\Loader\FileListLoader;
 use Configula\Loader\FolderLoader;
 use Configula\Loader\ConfigLoaderInterface;
 use Configula\Loader\FileLoader;
@@ -80,16 +81,14 @@ class ConfigFactory
      *
      * Values are loaded in cascading fashion, with files later in the iterator taking precedence
      *
+     * Missing or unreadable files are ignored.
+     *
      * @param iterable|string[]|\SplFileInfo[] $files
      * @return ConfigValues
      */
     public static function loadFiles(iterable $files): ConfigValues
     {
-        foreach ($files as $file) {
-            $loaders[] = new FileLoader((string) $file);
-        }
-
-        return (new CascadingConfigLoader($loaders ?? []))->load();
+        return (new FileListLoader($files))->load();
     }
 
     /**
