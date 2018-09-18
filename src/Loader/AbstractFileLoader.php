@@ -14,14 +14,20 @@ abstract class AbstractFileLoader implements ConfigLoaderInterface
      * @var string
      */
     private $filePath;
+    /**
+     * @var bool
+     */
+    private $required;
 
     /**
      * AbstractFileLoader constructor.
      * @param string $filePath
+     * @param bool $required    If TRUE, this file is required to exist
      */
-    public function __construct(string $filePath)
+    public function __construct(string $filePath, bool $required = true)
     {
         $this->filePath = $filePath;
+        $this->required = $required;
     }
 
     /**
@@ -32,7 +38,11 @@ abstract class AbstractFileLoader implements ConfigLoaderInterface
     public function load(): ConfigValues
     {
         if (! is_readable($this->filePath)) {
-            throw new ConfigLoaderException("Could not read configuration file: " . $this->filePath);
+            if ($this->required) {
+                throw new ConfigLoaderException("Could not read configuration file: " . $this->filePath);
+            } else {
+                return new ConfigValues([]);
+            }
         }
 
         $values = $this->parse(file_get_contents($this->filePath));
