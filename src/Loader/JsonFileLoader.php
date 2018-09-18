@@ -11,6 +11,22 @@ use Configula\Exception\ConfigLoaderException;
 class JsonFileLoader extends AbstractFileLoader
 {
     /**
+     * JsonFileLoader constructor.
+     * @param string $filePath
+     * @param bool $required
+     * @throws \Exception
+     */
+    public function __construct(string $filePath, bool $required = false)
+    {
+        parent::__construct($filePath, $required);
+
+        if (! is_callable('json_decode')) {
+            throw new \Exception("Missing required extension: ext-json");
+        }
+    }
+
+
+    /**
      * Parse the contents
      * @param string $rawFileContents
      * @return array

@@ -20,10 +20,15 @@ class JsonEnvLoader implements ConfigLoaderInterface
     /**
      * JsonEnvLoader constructor.
      * @param string $envValueName
+     * @throws \Exception
      */
     public function __construct(string $envValueName)
     {
         $this->envValueName = $envValueName;
+
+        if (! is_callable('json_decode')) {
+            throw new \Exception("Missing required extension: ext-json");
+        }
     }
 
     /**
