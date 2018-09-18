@@ -29,9 +29,8 @@ class FolderLoader implements ConfigLoaderInterface
      *
      * @param string $path
      * @param array $defaultValues
-     * @param null $extensionMap
      */
-    public function __construct(string $path, array $defaultValues = [], $extensionMap = FileLoader::USE_DEFAULT)
+    public function __construct(string $path, array $defaultValues = [])
     {
         $this->path     = $path;
         $this->defaults = $defaultValues;
