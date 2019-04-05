@@ -2,13 +2,35 @@
 
 namespace Configula\Util;
 
+use Generator;
+
 /**
  * Configula Utilities Class
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class RecursiveArrayMerger
+class ArrayUtils
 {
+    /**
+     * Flatten and iterate
+     *
+     * @param array $array
+     * @param string $delimiter
+     * @param string $basePath
+     * @return Generator|mixed[]
+     */
+    public static function flattenAndIterate(array $array, string $delimiter = '.', string $basePath = ''): Generator
+    {
+        foreach ($array as $key => $value) {
+            $fullKey = implode($delimiter, array_filter([$basePath, $key]));
+            if (is_array($value)) {
+                yield from static::flattenAndIterate($value, $delimiter, $fullKey);
+            } else {
+                yield $fullKey => $value;
+            }
+        }
+    }
+
     /**
      * Merge configuration arrays
      *

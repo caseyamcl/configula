@@ -1,6 +1,6 @@
 <?php
 
-namespace Configula\Util;
+namespace Configula\Filter;
 
 use Configula\ConfigValues;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -23,13 +23,16 @@ class SymfonyConfigFilter
     private $processor;
 
     /**
+     * Filter method allows single-call static usage of this class
+     *
      * @param ConfigurationInterface $configuration
      * @param ConfigValues $values
+     * @return ConfigValues
      */
-    public static function filter(ConfigurationInterface $configuration, ConfigValues &$values)
+    public static function filter(ConfigurationInterface $configuration, ConfigValues $values)
     {
         $that = new static($configuration);
-        $that->process($values);
+        return $that($values);
     }
 
     /**
@@ -48,9 +51,10 @@ class SymfonyConfigFilter
      * Process configuration through Symfony
      *
      * @param ConfigValues $values
+     * @return ConfigValues
      */
-    public function process(ConfigValues &$values): void
+    public function __invoke(ConfigValues $values): ConfigValues
     {
-        $values = new ConfigValues($this->processor->processConfiguration($this->configTree, $values->getArrayCopy()));
+        return new ConfigValues($this->processor->processConfiguration($this->configTree, $values->getArrayCopy()));
     }
 }

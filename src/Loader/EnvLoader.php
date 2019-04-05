@@ -3,10 +3,13 @@
 namespace Configula\Loader;
 
 use Configula\ConfigValues;
+use Configula\Filter\ExtractTopLevelItemFilter;
 use Dflydev\DotAccessData\Data;
 
 /**
  * Env Loader
+ *
+ * Loads configuration from each environment variable
  *
  * @package Configula\Loader
  */
@@ -15,7 +18,7 @@ class EnvLoader implements ConfigLoaderInterface
     /**
      * @var string
      */
-    private $prefix;
+    private $regex;
 
     /**
      * @var null|string
@@ -28,17 +31,35 @@ class EnvLoader implements ConfigLoaderInterface
     private $toLower;
 
     /**
-     * Environment Loader Constructor
+     * Load from environment looking only for those values with a specified prefix (and remove prefix)
      *
      * @param string $prefix Specify a prefix, and only environment variables with this prefix will be read
-     *                                (e.g. "MYAPP_" means that this will only read env vars starting with "MYAPP_")
-     * @param null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
-     *                                would become the key, "MYSQL.HOST"
-     * @param bool $toLower           Convert all keys to lower-case
+     *                        (e.g. "MYAPP_" means that this will only read env vars starting with "MYAPP_")'
+     *                        Values will be
+     * @param null|string $delimiter  Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
+     * @param bool $toLower  Convert all keys to lower-case
+     * @return ConfigValues
      */
-    public function __construct(string $prefix = '', ?string $delimiter = '_', bool $toLower = true)
+    public static function loadUsingPrefix(string $prefix, string $delimiter = '', bool $toLower = false)
     {
-        $this->prefix    = $prefix;
+        $prefix = preg_quote($prefix);
+        $envLoader = new static("/^{$prefix}/", $delimiter, $toLower);
+        $values = $envLoader->load();
+        return (new ExtractTopLevelItemFilter($toLower ? strtolower($prefix) : $prefix))->__invoke($values);
+    }
+
+    /**
+     * Environment Loader Constructor
+     *
+     * @param string $regex           Optionally filter values based on some regex pattern
+     * @param null|string $delimiter  Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
+     * @param bool $toLower  Convert all keys to lower-case
+     */
+    public function __construct(string $regex = '', string $delimiter = '', bool $toLower = false)
+    {
+        $this->regex     = $regex;
         $this->delimiter = $delimiter;
         $this->toLower   = $toLower;
     }
@@ -50,13 +71,12 @@ class EnvLoader implements ConfigLoaderInterface
     {
         $configValues = new Data();
 
-        foreach ($_ENV as $valName => $valVal) {
+        foreach (getenv() as $valName => $valVal) {
 
-            if ($this->prefix && $this->prefix != substr($valName, 0, strlen($this->prefix))) {
+            if ($this->regex && ! preg_match($this->regex, $valName)) {
                 continue;
             }
 
-            $valName = ($this->prefix) ? substr($valName, strlen($this->prefix)) : $valName;
             $valName = ($this->delimiter) ? str_replace($this->delimiter, '.', $valName) : $valName;
             $valName = ($this->toLower) ? strtolower($valName) : $valName;
             $configValues->set($valName, $this->prepareVal($valVal));

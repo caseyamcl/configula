@@ -1,20 +1,26 @@
 <?php
 
-
 namespace Configula;
 
+use ArrayAccess;
 use Configula\Exception\ConfigLogicException;
-use Configula\Util\RecursiveArrayMerger;
+use Configula\Util\ArrayUtils;
+use Countable;
 use Dflydev\DotAccessData\Data;
 use Configula\Exception\ConfigValueNotFoundException;
+use IteratorAggregate;
+use Traversable;
 
 /**
- * Class ConfigValues
+ * Config Values Class
+ *
+ * Immutable class for storing configuration values
  *
  * @package Configula
  */
-class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
+class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
 {
+    // Silly value, but we need one to reasonably ensure there is no collision with actual data
     const NOT_SET = '__THe_VALUe___iS__Not_SET_l33t__';
 
     /**
@@ -46,7 +52,7 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     /**
      * Magic method - Get a value or path, or throw an exception
      *
-     * @param string $path
+     * @param string $path  Accepts '.' path notation for nested values
      * @return mixed
      * @throws ConfigValueNotFoundException  If the config value is not found
      */
@@ -58,7 +64,7 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     /**
      * Magic method - Check if a value or path exists
      *
-     * @param string $path
+     * @param string $path  Accepts '.' path notation for nested values
      * @return bool
      */
     public function __isset(string $path): bool
@@ -69,7 +75,7 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     /**
      * Magic method - Get a value or path, or throw an exception
      *
-     * @param string $path
+     * @param string $path  Accepts '.' path notation for nested values
      * @param string $default
      * @return array|mixed|null
      */
@@ -81,46 +87,53 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     /**
      * Get a values
      *
-     * @param string $path Accepts '.' path notation for nested values
+     * @param string $path  Accepts '.' path notation for nested values
      * @param mixed $default
      * @return array|mixed|null
      */
     public function get(string $path, $default = self::NOT_SET)
     {
-        if ($this->values->has($path)) {
-            return $this->values->get($path);
-        }
-        elseif ($default !== static::NOT_SET) {
-            return $default;
-        }
-        else {
-            throw new ConfigValueNotFoundException('Config value not found: ' . $path);
+        switch (true) {
+            // Check for top-level, even if it has a dot in the name
+            case isset($this->values->export()[$path]):
+                return $this->values->export()[$path];
+
+            // Use default dot-notation behavior for dot-access-data
+            case $this->values->has($path):
+                return $this->values->get($path);
+
+            // Return default if specified
+            case $default !== static::NOT_SET:
+                return $default;
+
+            // Give up
+            default:
+                throw new ConfigValueNotFoundException('Config value not found: ' . $path);
         }
     }
 
     /**
      * Find a configuration value, or return NULL if not found
      *
-     * This is different than the get() method in that it will always return NULL
-     * if the value doesn't exist or is not set, rather than throw an exception.
+     * This is different than the get() method in that it will not throw an exception if the value doesn't exist.
      *
-     * @param string $path
+     * @param string $path  Accepts '.' path notation for nested values
      * @return array|mixed|null
      */
     public function find(string $path)
     {
-        return $this->values->get($path, null);
+        return $this->get($path, null);
     }
 
     /**
-     * Check if value exists (even if it is null)
+     * Check if value exists (even if it is NULL)
      *
      * @param string $path
      * @return bool
      */
     public function has(string $path): bool
     {
-        return $this->values->has($path);
+        return isset($this->values->export()[$path]) ? true : $this->values->has($path);
     }
 
     /**
@@ -133,16 +146,8 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
      */
     public function hasValue(string $path): bool
     {
-        $result = $this->values->get($path, null);
+        $result = $this->get($path, null);
         return (! in_array($result, [null, '', []], true));
-    }
-
-    /**
-     * @return \RecursiveArrayIterator|iterable
-     */
-    public function getIterator(): iterable
-    {
-        return new \RecursiveArrayIterator($this->values->export());
     }
 
     /**
@@ -175,12 +180,14 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     /**
      * Merge config values and return a new Config instance
      *
+     * This is a recursive merge.  Any sub-arrays will be cascade-merged.
+     *
      * @param ConfigValues $config
      * @return static|ConfigValues
      */
     public function merge(ConfigValues $config): ConfigValues
     {
-        return new static(RecursiveArrayMerger::merge(
+        return new static(ArrayUtils::merge(
             $this->values->export(),
             $config->getArrayCopy()
         ));
@@ -188,6 +195,8 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
 
     /**
      * Merge values and return a new Config instance
+     *
+     * This is a recursive merge.  Any sub-arrays will be cascade-merged.
      *
      * @param array $values
      * @return static|ConfigValues
@@ -197,31 +206,36 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
         return $this->merge(new ConfigValues($values));
     }
 
+    // --------------------------------------------------------------
+
     /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
+     * Iterator access
+     *
+     * Flattens the structure and implodes paths
+     *
+     * @return iterable|array|Traversable|mixed[]
      */
-    public function offsetExists($offset)
+    public function getIterator(): iterable
+    {
+        return ArrayUtils::flattenAndIterate($this->getArrayCopy());
+    }
+
+    /**
+     * Array-access to check if configuration value exists
+     *
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset): bool
     {
         return $this->has($offset);
     }
 
     /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @since 5.0.0
+     * Array-access to a configuration value
+     *
+     * @param mixed $offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
@@ -229,26 +243,22 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
     }
 
     /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
-     * @since 5.0.0
+     * Always throw exception.  Cannot set config values in immutable object
+     *
+     * @param mixed $offset
+     * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new ConfigLogicException("Cannot set config value: " . $offset . "; config values are immutable");
     }
 
     /**
+     * Always throw exception.  Cannot set config values in immutable object
      *
+     * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new ConfigLogicException("Cannot unset config value: " . $offset . "; config values are immutable");
     }
@@ -262,6 +272,6 @@ class ConfigValues implements \IteratorAggregate, \Countable, \ArrayAccess
      */
     public function count(): int
     {
-        return $this->getIterator()->count();
+        return count(iterator_to_array($this->getIterator()));
     }
 }
