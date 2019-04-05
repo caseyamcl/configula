@@ -22,7 +22,7 @@ class YamlFileLoaderTest extends \PHPUnit\Framework\TestCase
     private $emptyFilePath;
     private $badFilePath;
 
-    function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         

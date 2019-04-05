@@ -25,7 +25,7 @@ class PhpFileLoaderTest extends TestCase
     private $badFilePath;
     private $emptyFilePath;
 
-    function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

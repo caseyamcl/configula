@@ -18,7 +18,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase {
 
     private $configPath;
 
-    function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->configPath = realpath(__DIR__ . '/fixtures/main/');

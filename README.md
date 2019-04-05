@@ -5,9 +5,9 @@ Configula is a configuration library for PHP 7.1+.
 
 [![Build Status](https://travis-ci.org/caseyamcl/Configula.png?branch=master)](https://travis-ci.org/caseyamcl/Configula)
 
-Use this library when you want to load configuration from the filesystem, environment, or other source.  It implements
+Use this library when you want to load configuration from the filesystem, environment, and other sources.  It implements
 your configuration values as an immutable object in PHP.  It is a framework-independent tool, and can be easily used in 
-any PHP app.
+any PHP application.
 
 ## Features
 
