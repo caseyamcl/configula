@@ -5,6 +5,7 @@ vendor
 
 # Test stuff
 .phpunit.result.cache
+build/
 
 # IDE Settings
 .idea
