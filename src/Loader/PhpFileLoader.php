@@ -9,7 +9,7 @@ use Configula\Exception\ConfigLoaderException;
  * Class PhpFileLoader
  * @package Configula\Loader
  */
-class PhpFileLoader implements ConfigLoaderInterface
+class PhpFileLoader implements FileLoaderInterface
 {
     /**
      * @var string

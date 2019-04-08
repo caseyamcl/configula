@@ -4,12 +4,13 @@ namespace Configula\Loader;
 
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
+use Throwable;
 
 /**
  * Class IniFileLoader
  * @package Configula\Loader
  */
-class IniFileLoader implements ConfigLoaderInterface
+class IniFileLoader implements FileLoaderInterface
 {
     /**
      * @var string
@@ -42,7 +43,7 @@ class IniFileLoader implements ConfigLoaderInterface
         try {
             $values = parse_ini_file($this->filePath, $this->processSections, INI_SCANNER_TYPED) ?: [];
         }
-        catch (\Throwable $e) {
+        catch (Throwable $e) {
             throw new ConfigLoaderException("Error parsing INI file: " . $this->filePath);
         }
 

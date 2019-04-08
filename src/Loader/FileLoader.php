@@ -4,13 +4,17 @@ namespace Configula\Loader;
 
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
+use Error;
+use SplFileInfo;
 
 /**
  * File Loader
  *
+ * Strategy class to
+ *
  * @package Configula\Loader
  */
-class FileLoader implements ConfigLoaderInterface
+class FileLoader implements FileLoaderInterface
 {
     const DEFAULT_EXTENSION_MAP = [
         'yml'  => YamlFileLoader::class,
@@ -34,7 +38,7 @@ class FileLoader implements ConfigLoaderInterface
      * FileLoader constructor.
      *
      * @param string $filePath
-     * @param array $extensionMap
+     * @param array|string[] $extensionMap  Keys are case-insensitive extensions; values are class names
      */
     public function __construct(string $filePath, array $extensionMap = self::DEFAULT_EXTENSION_MAP)
     {
@@ -46,6 +50,7 @@ class FileLoader implements ConfigLoaderInterface
      * Load config
      *
      * @return ConfigValues
+     * @throws ConfigLoaderException  If file is missing, not readable, or if no registered loader for file extension
      */
     public function load(): ConfigValues
     {
@@ -56,25 +61,34 @@ class FileLoader implements ConfigLoaderInterface
             );
         }
 
-        $file = new \SplFileInfo($this->filePath);
+        $file = new SplFileInfo($this->filePath);
 
         if (array_key_exists(strtolower($file->getExtension()), $this->extensionMap)) {
+            $extension = strtolower($file->getExtension());
 
-            switch ($this->extensionMap[strtolower($file->getExtension())]) {
-                case YamlFileLoader::class:
-                    return (new YamlFileLoader((string) $file))->load();
-                case JsonFileLoader::class:
-                    return (new JsonFileLoader((string) $file))->load();
-                case PhpFileLoader::class:
-                    return (new PhpFileLoader((string) $file))->load();
-                case IniFileLoader::class:
-                    return (new IniFileLoader((string) $file))->load();
-                default:
-                    throw new ConfigLoaderException(sprintf(
-                        "Error parsing file (no loader for extension '%s'): %s",
-                        $file->getExtension(),
-                        (string) $file
-                    ));
+            if (isset($this->extensionMap[$extension])) {
+                $className = $this->extensionMap[strtolower($file->getExtension())];
+
+                try {
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    return (new $className($file->getRealPath()))->load();
+                } catch (Error $e) {
+                    if (! is_a(AbstractFileLoader::class, $className, true)) {
+                        throw new ConfigLoaderException(sprintf(
+                            'File loader class %s must be instance of %s',
+                            $className,
+                            FileLoaderInterface::class
+                        ));
+                    } else {
+                        throw $e;
+                    }
+                }
+            } else {
+                throw new ConfigLoaderException(sprintf(
+                    "Error parsing file (no loader for extension '%s'): %s",
+                    $file->getExtension(),
+                    (string) $file
+                ));
             }
         }
         else {

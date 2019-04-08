@@ -8,7 +8,7 @@ use Configula\Exception\ConfigLoaderException;
  * Class AbstractFileLoader
  * @package Configula\Loader
  */
-abstract class AbstractFileLoader implements ConfigLoaderInterface
+abstract class AbstractFileLoader implements FileLoaderInterface
 {
     /**
      * @var string

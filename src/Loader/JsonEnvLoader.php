@@ -6,7 +6,9 @@ use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
 
 /**
- * Class JsonEnvLoader
+ * Json Env Loader
+ *
+ * Loads JSON tree from single environment variable
  *
  * @package Configula\Loader
  */
@@ -18,17 +20,19 @@ class JsonEnvLoader implements ConfigLoaderInterface
     private $envValueName;
 
     /**
+     * @var bool
+     */
+    private $asAssoc;
+
+    /**
      * JsonEnvLoader constructor.
      * @param string $envValueName
-     * @throws \Exception
+     * @param bool $asAssoc
      */
-    public function __construct(string $envValueName)
+    public function __construct(string $envValueName, bool $asAssoc = false)
     {
         $this->envValueName = $envValueName;
-
-        if (! is_callable('json_decode')) {
-            throw new \Exception("Missing required extension: ext-json");
-        }
+        $this->asAssoc = $asAssoc;
     }
 
     /**
@@ -40,10 +44,10 @@ class JsonEnvLoader implements ConfigLoaderInterface
     {
         $rawContent = getenv($this->envValueName);
 
-        if (! $decoded = @json_decode($rawContent, true)) {
+        if (! $decoded = @json_decode($rawContent, $this->asAssoc)) {
             throw new ConfigLoaderException("Could not parse JSON from environment variable: ". $this->envValueName);
         }
 
-        return new ConfigValues($decoded);
+        return new ConfigValues((array) $decoded);
     }
 }

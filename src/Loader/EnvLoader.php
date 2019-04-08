@@ -4,6 +4,7 @@ namespace Configula\Loader;
 
 use Configula\ConfigValues;
 use Configula\Filter\ExtractTopLevelItemFilter;
+use Configula\Filter\RemovePrefixFilter;
 use Dflydev\DotAccessData\Data;
 
 /**
@@ -44,9 +45,11 @@ class EnvLoader implements ConfigLoaderInterface
     public static function loadUsingPrefix(string $prefix, string $delimiter = '', bool $toLower = false)
     {
         $prefix = preg_quote($prefix);
-        $envLoader = new static("/^{$prefix}/", $delimiter, $toLower);
-        $values = $envLoader->load();
-        return (new ExtractTopLevelItemFilter($toLower ? strtolower($prefix) : $prefix))->__invoke($values);
+        $values = (new static("/^{$prefix}/", $delimiter, $toLower))->load();
+
+        return $delimiter
+            ? (new ExtractTopLevelItemFilter($toLower ? strtolower($prefix) : $prefix))->__invoke($values)
+            : (new RemovePrefixFilter($toLower ? strtolower($prefix) : $prefix))->__invoke($values);
     }
 
     /**
@@ -79,7 +82,7 @@ class EnvLoader implements ConfigLoaderInterface
 
             $valName = ($this->delimiter) ? str_replace($this->delimiter, '.', $valName) : $valName;
             $valName = ($this->toLower) ? strtolower($valName) : $valName;
-            $configValues->set($valName, $this->prepareVal($valVal));
+            $configValues->set($valName, $this->prepareVal((string) $valVal));
         }
 
         return new ConfigValues($configValues->export());
@@ -88,25 +91,24 @@ class EnvLoader implements ConfigLoaderInterface
     /**
      * Prepare string value
      *
-     * @param mixed $value
+     * @param string $value
      * @return mixed
      */
-    private function prepareVal($value)
+    private function prepareVal(string $value)
     {
-        if (is_string($value)) {
-            switch (strtolower($value)) {
-                case 'null':
-                    return null;
-                case 'false':
-                    return false;
-                case 'true':
-                    return true;
-                default:
-                    return $value;
-            }
+        if (is_numeric($value)) {
+            return filter_var($value, FILTER_VALIDATE_INT) !== false ? (int) $value : (float) $value;
         }
-        else {
-            return $value;
+
+        switch (strtolower($value)) {
+            case 'null':
+                return null;
+            case 'false':
+                return false;
+            case 'true':
+                return true;
+            default:
+                return $value;
         }
     }
 }
