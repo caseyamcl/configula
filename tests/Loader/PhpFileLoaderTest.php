@@ -7,7 +7,7 @@ namespace Configula\Loader;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class PhpFileLoaderTest extends FileLoaderInterfaceTest
+class PhpFileLoaderTest extends AbstractFileLoaderTest
 {
 
     /**

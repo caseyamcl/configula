@@ -7,7 +7,7 @@ namespace Configula\Loader;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class YamlFileLoaderTest extends FileLoaderInterfaceTest
+class YamlFileLoaderTest extends AbstractFileLoaderTest
 {
 
     /**

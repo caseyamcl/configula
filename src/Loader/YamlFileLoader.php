@@ -12,7 +12,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @package FandF\Config
  */
-class YamlFileLoader extends AbstractFileLoader
+class YamlFileLoader extends FileLoader
 {
     /**
      * @var Parser

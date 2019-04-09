@@ -187,10 +187,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      */
     public function merge(ConfigValues $config): ConfigValues
     {
-        return new static(ArrayUtils::merge(
-            $this->values->export(),
-            $config->getArrayCopy()
-        ));
+        return new static(ArrayUtils::merge($this->getArrayCopy(), $config->getArrayCopy()));
     }
 
     /**

@@ -9,7 +9,9 @@ use Configula\Loader\CascadingConfigLoader;
 use Configula\Loader\FileListLoader;
 use Configula\Loader\FolderLoader;
 use Configula\Loader\ConfigLoaderInterface;
-use Configula\Loader\FileLoader;
+use Configula\Loader\DecidingFileLoader;
+use DirectoryIterator;
+use SplFileInfo;
 
 /**
  * Config Facade Class
@@ -49,7 +51,7 @@ class ConfigFactory
      *
      * Pass in an iterable list of multiple loaders, file names, or arrays of values
      *
-     * @param iterable|array[]|string[]|\SplFileInfo[]|ConfigLoaderInterface $items
+     * @param iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface $items
      * @return ConfigValues
      */
     public static function loadMultiple(iterable $items): ConfigValues
@@ -62,8 +64,8 @@ class ConfigFactory
                 case is_array($item):
                     $loaders[] = new ArrayValuesLoader($item);
                     break;
-                case is_string($item) OR $item instanceof \SplFileInfo:
-                    $loaders[] = new FileLoader($item);
+                case is_string($item) OR $item instanceof SplFileInfo:
+                    $loaders[] = new DecidingFileLoader($item);
                     break;
                 default:
                     throw new ConfigLogicException(sprintf(
@@ -83,7 +85,7 @@ class ConfigFactory
      *
      * Missing or unreadable files are ignored.
      *
-     * @param iterable|string[]|\SplFileInfo[] $files
+     * @param iterable|string[]|SplFileInfo[] $files
      * @return ConfigValues
      */
     public static function loadFiles(iterable $files): ConfigValues
@@ -102,8 +104,8 @@ class ConfigFactory
     {
         // Build an iterator that reads only files in the top-level directory
         $iterator = new CallbackFilterIterator(
-            new \DirectoryIterator($configDirectory),
-            function(\SplFileInfo $info, $key, \DirectoryIterator $iterator) {
+            new DirectoryIterator($configDirectory),
+            function(SplFileInfo $info, $key, DirectoryIterator $iterator) {
                 return $info->isFile() && ! $iterator->isDot();
             }
         );
@@ -125,7 +127,7 @@ class ConfigFactory
             $pathValues = (new FolderLoader($configPath))->load();
         }
         elseif (is_file($configPath)) { // Elseif if file, then just load that single file..
-            $pathValues = (new FileLoader($configPath))->load();
+            $pathValues = (new DecidingFileLoader($configPath))->load();
         }
         else { // Else, no path provided, so empty values
             $pathValues = new ConfigValues([]);

@@ -7,7 +7,7 @@ namespace Configula\Loader;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class IniFileLoaderTest extends FileLoaderInterfaceTest
+class IniFileLoaderTest extends AbstractFileLoaderTest
 {
     /**
      * Get extension without the dot (.)

@@ -8,7 +8,7 @@ use Configula\Exception\ConfigLoaderException;
  * Class JsonFileLoader
  * @package Configula\Loader
  */
-class JsonFileLoader extends AbstractFileLoader
+class JsonFileLoader extends FileLoader
 {
     /**
      * Parse the contents

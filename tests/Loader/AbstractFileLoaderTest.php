@@ -1,75 +1,78 @@
 <?php
 
+
 namespace Configula\Loader;
+
 
 use Configula\Exception\ConfigLoaderException;
 use PHPUnit\Framework\TestCase;
 
-class AbstractFileLoaderTest extends TestCase
+abstract class AbstractFileLoaderTest extends TestCase
 {
-    public const EXPECTED_EXTENSION = '.txt';
+    const LOADER_DIRECTORY = __DIR__ . '/../fixtures';
 
-
-    public function testLoadReturnsConfigValuesIfFileExists(): void
+    public function testGoodFileReturnsExpectedItems()
     {
-        $values = $this->getLoader()->load();
-        $this->assertGreaterThan(0, count($values));
+        $goodFilePath = $this->getTestFilePath('config');
+        if (! is_readable($goodFilePath)) {
+            $this->fail('Missing expected "good" test case for file type: ' . $this->getExt());
+        }
+
+        $loader = $this->getObject($goodFilePath);
+        $values = $loader->load();
+
+        $this->assertEquals('value', $values->get('a'));
+        $this->assertEquals([1, 2, 3], $values->get('b'));
     }
 
-    public function testLoadReturnsEmptyConfigValuesIfFileNotExistsAndNotRequired(): void
+    public function testBadFileThrowsLoaderException()
     {
-        @unlink($this->getTestFilePath()); // remove the file
-        $values = $this->getLoader(false)->load();
-        $this->assertEquals(0, count($values));
-    }
+        $badFilePath = $this->getTestFilePath('bad');
+        if (! is_readable($badFilePath)) {
+            $this->markTestSkipped('Missing expected "bad" test case for file type: ' . $this->getExt());
+        }
 
-    public function testLoadThrowsExceptionIfFileNotExistsAndIsRequired(): void
-    {
         $this->expectException(ConfigLoaderException::class);
-        @unlink($this->getTestFilePath()); // remove the file
-        $this->getLoader(true)->load();
+        $loader = $this->getObject($badFilePath);
+        $loader->load();
     }
 
-    protected function getFileContents(): string
+    public function testEmptyFileReturnsEmptyConfig()
     {
-        return 'a: Apple, b: Banana';
-    }
+        $emptyFilePath = $this->getTestFilePath('empty');
+        if (! is_readable($emptyFilePath)) {
+            $this->markTestSkipped('Missing expected "empty" test case for file type: ' . $this->getExt());
+        }
 
-    /**
-     * Get test file path
-     */
-    final protected static function getTestFilePath()
-    {
-        return sys_get_temp_dir() . '/__php_configula_test_config.' . ltrim(static::EXPECTED_EXTENSION, '.');
-    }
-
-    protected function setUp(): void
-    {
-        file_put_contents($this->getTestFilePath(), $this->getFileContents());
-    }
-
-    protected function tearDown(): void
-    {
-        @unlink($this->getTestFilePath());
+        $loader = $this->getObject($emptyFilePath);
+        $this->assertSame(0, $loader->load()->count());
     }
 
     /**
-     * @param bool $required
-     * @return AbstractFileLoader
+     * Get extension without the dot (.)
+     *
+     * @return string
      */
-    protected function getLoader(bool $required = true): AbstractFileLoader
-    {
-        return new class($this->getTestFilePath(), $required) extends AbstractFileLoader {
+    abstract protected function getExt(): string;
 
-            /**
-             * Parse the contents
-             * @param string $rawFileContents
-             * @return array
-             */
-            protected function parse(string $rawFileContents): array
-            {
-                return ['a' => 'Apple', 'b' => 'Banana'];
-            }
-        };
+    /**
+     * @param string $filename
+     * @return FileLoaderInterface
+     */
+    abstract protected function getObject(string $filename): FileLoaderInterface;
+
+    /**
+     * @param string $baseFileName
+     * @return string
+     */
+    protected function getTestFilePath(string $baseFileName): string
+    {
+        return sprintf(
+            "%s/%s/%s.%s",
+            static::LOADER_DIRECTORY,
+            $this->getExt(),
+            $baseFileName,
+            $this->getExt()
+        );
     }
 }

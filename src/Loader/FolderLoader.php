@@ -4,16 +4,25 @@ namespace Configula\Loader;
 
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 /**
  * Config Folder Files Loader
  *
  * This provides v2.x functionality/compatibility to v3.x
  *
+ * Loads all known
+ *
  * @package Configula\Loader
  */
 class FolderLoader implements ConfigLoaderInterface
 {
+    protected const DIST_FILES = 1;
+    protected const NORMAL_FILES = 2;
+    protected const LOCAL_FILES = 3;
+
     /**
      * @var string
      */
@@ -25,15 +34,25 @@ class FolderLoader implements ConfigLoaderInterface
     private $defaults;
 
     /**
+     * @var array
+     */
+    private $extensionMap;
+
+    /**
      * ConfigFolderFilesLoader constructor.
      *
      * @param string $path
      * @param array $defaultValues
+     * @param array $extensionMap
      */
-    public function __construct(string $path, array $defaultValues = [])
-    {
+    public function __construct(
+        string $path,
+        array $defaultValues = [],
+        array $extensionMap = DecidingFileLoader::DEFAULT_EXTENSION_MAP
+    ) {
         $this->path     = $path;
         $this->defaults = $defaultValues;
+        $this->extensionMap = $extensionMap;
     }
 
     /**
@@ -63,36 +82,29 @@ class FolderLoader implements ConfigLoaderInterface
          * If the file has '.dist', we should load it sooner
          * If the file has neither, we should load it normally
          *
-         * @var \SplFileInfo $file
+         * @var SplFileInfo $file
          */
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path)) as $file) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path)) as $file) {
 
             isset($fileCount) ? $fileCount++ : $fileCount = 0;
-
-            $ext      = strtolower($file->getExtension());
-            $basename = rtrim($file->getBasename($ext), '.');
+            $basename = rtrim($file->getBasename(strtolower($file->getExtension())), '.');
 
             if (strcasecmp(substr($basename, -6), '.local') == 0) {
-                $fileList[3][] = $file;
+                $fileList[self::LOCAL_FILES][] = $file;
             }
             elseif (strcasecmp(substr($basename, -5), '.dist') == 0) {
-                $fileList[1][] = $file;
+                $fileList[self::DIST_FILES][] = $file;
             }
             else {
-                $fileList[2][] = $file;
+                $fileList[self::NORMAL_FILES][] = $file;
             }
         }
 
         ksort($fileList, SORT_NUMERIC);
 
-        // Iterate over the list and load each file
-        foreach ($fileList as $set) {
-            /** @var \SplFileInfo $file */
-            foreach ($set as $file) {
-                if ($newConfig = (new FileLoader((string) $file))->load()) {
-                    $config = $config->merge($newConfig);
-                }
-            }
+        // Iterate over 'dist', regular, and 'local', in that order
+        foreach ($fileList as $set => $files) {
+            $config = $config->merge((new FileListLoader($files, $this->extensionMap))->load());
         }
 
         return $config;

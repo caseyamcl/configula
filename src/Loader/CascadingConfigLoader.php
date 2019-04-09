@@ -12,16 +12,16 @@ use Configula\ConfigValues;
 class CascadingConfigLoader implements ConfigLoaderInterface
 {
     /**
-     * @var array|ConfigLoaderInterface[]
+     * @var iterable|ConfigLoaderInterface[]
      */
     private $loaders;
 
     /**
      * CascadingLoader constructor.
      *
-     * @param array|ConfigLoaderInterface[] $loaders  Loaders, in the order that you want to load them
+     * @param iterable|ConfigLoaderInterface[] $loaders  Loaders, in the order that you want to load them
      */
-    public function __construct(array $loaders)
+    public function __construct(iterable $loaders)
     {
         $this->loaders = $loaders;
     }
