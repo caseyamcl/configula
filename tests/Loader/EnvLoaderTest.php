@@ -3,6 +3,7 @@
 namespace Configula\Loader;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 /**
  * Class EnvLoaderTest
@@ -18,7 +19,14 @@ class EnvLoaderTest extends TestCase
 
     public function testLoadReturnsEverythingInEnvironmentWithDefaultParameters(): void
     {
-        $this->assertEquals(getenv(), (new EnvLoader())->load()->getArrayCopy());
+        $rMethod = new ReflectionMethod(EnvLoader::class, 'prepareVal');
+        $rMethod->setAccessible(true);
+
+        $expected = array_map(function($val) use ($rMethod) {
+            return $rMethod->invoke(new EnvLoader(), $val);
+        }, getenv());
+
+        $this->assertEquals($expected, (new EnvLoader())->load()->getArrayCopy());
     }
 
     /**
