@@ -3,6 +3,7 @@
 namespace Configula;
 
 use CallbackFilterIterator;
+use Configula\Exception\ConfigFileNotFoundException;
 use Configula\Exception\ConfigLogicException;
 use Configula\Loader\ArrayValuesLoader;
 use Configula\Loader\CascadingConfigLoader;
@@ -64,14 +65,11 @@ class ConfigFactory
                 case is_array($item):
                     $loaders[] = new ArrayValuesLoader($item);
                     break;
-                case is_string($item) OR $item instanceof SplFileInfo:
+                case is_string($item) or $item instanceof SplFileInfo:
                     $loaders[] = new DecidingFileLoader($item);
                     break;
                 default:
-                    throw new ConfigLogicException(sprintf(
-                        'Invalid config source: %s',
-                        gettype($item)
-                    ));
+                    throw new ConfigLogicException(sprintf('Invalid config source: ' . gettype($item)));
             }
         }
 
@@ -94,7 +92,7 @@ class ConfigFactory
     }
 
     /**
-     * Build configuration by reading a single directory of files (ignores sub-directories)
+     * Build configuration by reading a single directory of files (non-recursive; ignores sub-directories)
      *
      * @param string $configDirectory
      * @param array $defaults
@@ -116,11 +114,11 @@ class ConfigFactory
     /**
      * Build configuration by recursively reading a directory of files
      *
-     * @param string|null $configPath Directory or file path
+     * @param string $configPath Directory or file path
      * @param array $defaults
      * @return ConfigValues
      */
-    public static function loadPath(string $configPath = null, array $defaults = []): ConfigValues
+    public static function loadPath(string $configPath = '', array $defaults = []): ConfigValues
     {
         // If path, use default behavior..
         if (is_dir($configPath)) {
@@ -129,8 +127,10 @@ class ConfigFactory
         elseif (is_file($configPath)) { // Elseif if file, then just load that single file..
             $pathValues = (new DecidingFileLoader($configPath))->load();
         }
-        else { // Else, no path provided, so empty values
+        elseif ($configPath === '') { // Else, no path provided, so empty values
             $pathValues = new ConfigValues([]);
+        } else {
+            throw new ConfigFileNotFoundException('Cannot resolve config path: ' . $configPath);
         }
 
         // Merge defaults and return

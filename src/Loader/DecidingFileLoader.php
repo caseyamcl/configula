@@ -64,11 +64,11 @@ class DecidingFileLoader implements FileLoaderInterface
                 /** @noinspection PhpUndefinedMethodInspection */
                 return (new $className($file->getRealPath()))->load();
             } catch (Error $e) {
-                if (! is_a(FileLoader::class, $className, true)) {
+                if (! is_a($className,FileLoader::class, true)) {
                     throw new ConfigLoaderException(sprintf(
                         'File loader class %s must be instance of %s',
                         $className,
-                        FileLoaderInterface::class
+                        FileLoader::class
                     ));
                 } else {
                     throw $e;

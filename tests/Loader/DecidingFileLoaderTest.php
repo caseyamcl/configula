@@ -5,6 +5,8 @@ namespace Configula\Loader;
 use Configula\Exception\ConfigFileNotFoundException;
 use Configula\Exception\ConfigLoaderException;
 use Configula\Exception\UnmappedFileExtensionException;
+use Configula\fixtures\ErrorTriggeringFileLoader;
+use Error;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -43,6 +45,15 @@ class DecidingFileLoaderTest extends TestCase
         $this->expectException(ConfigLoaderException::class);
         $this->expectExceptionMessage('must be instance of');
         (new DecidingFileLoader(__DIR__ . '/../fixtures/ini/config.ini', ['ini' => stdClass::class]))->load();
+    }
+
+    public function testLoadWithExceptionPassesError()
+    {
+        $this->expectException(Error::class);
+        (new DecidingFileLoader(
+            __DIR__ . '/../fixtures/ini/bad.ini',
+            ['ini' => ErrorTriggeringFileLoader::class]
+        ))->load();
     }
 
     /**

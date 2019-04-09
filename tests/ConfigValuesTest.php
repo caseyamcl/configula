@@ -207,20 +207,10 @@ class ConfigValuesTest extends TestCase
         $config($path);
     }
 
-    /**
-     *
-     */
     public function testGetArrayCopyReturnsExpectedArray(): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertSame(static::getTestValues(), $config->getArrayCopy());
-    }
-
-    public function testGetItemsReturnsArray(): void
-    {
-        $config = new ConfigValues(static::getTestValues());
-        /** @noinspection PhpDeprecationInspection */
-        $this->assertSame(static::getTestValues(), $config->getItems());
     }
 
     public function testCountReturnsCountOfAllPaths(): void
@@ -280,5 +270,29 @@ class ConfigValuesTest extends TestCase
         $this->assertEquals('Apple', $config->get('a'));
         // Original should not contain added value
         $this->assertFalse($config->has('baz'));
+    }
+
+    // --------------------------------------------------------------
+
+    public function testGetItemsReturnsArray(): void
+    {
+        $config = new ConfigValues(static::getTestValues());
+        /** @noinspection PhpDeprecationInspection */
+        $this->assertSame(static::getTestValues(), $config->getItems());
+    }
+
+    public function testValidReturnsExpected(): void
+    {
+        $config = new ConfigValues(['a' => 'A']);
+        $this->assertTrue($config->valid('a'));
+        $this->assertFalse($config->valid('b'));
+    }
+
+    public function testGetItemReturnsExpected(): void
+    {
+        $config = new ConfigValues(['a' => 'A', 'c' => ['d' => 'E']]);
+        $this->assertSame('A', $config->getItem('a'));
+        $this->assertSame('E', $config->getItem('c.d'));
+        $this->assertNull($config->getItem('b'));
     }
 }
