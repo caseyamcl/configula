@@ -5,20 +5,27 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [3.0.0] (unreleased)
 ### Added
-- Created `get()` method as shortcut to `getValue()`
+- Added this changelog
 - Added `__invoke()` method
 - Added `find()` method
 - Added Validator and Symfony Configuration Validator Bridge
-- `Config::build()` command to replace old constructor behavior
-- Added this changelog
 - Added `ConfigFactory` to replace v2 functionality and add additional utility methods
+- Added `COnfigValues`
 ### Changed
-- All configuration loading has been moved into separate classes
+- Main config class changed from `Config` to `ConfigValues`
+- Configula now requires PHP v7.2 or newer.  Use v2.0 for PHP5.x/7.0/7.1 support
+- All configuration loading has been moved into separate classes.
 - Invalid files or other load errors now throw a `ConfigLoaderException`
-- Configula now required PHP v7.1 or newer.  Use v2.0 for PHP5.x support
 - Switched from PSR-0 to PSR-4
-- Constructor now accepts an array of values instead of a file path
+- `ConfigValues` constructor now accepts an array of values instead of a file path
 - `Config::getValue()` object now throws exception if invalid configuration value desired and no default value specified
 - Drivers no longer have to be named after the file extension they support
+- `ConfigValues` now implements `IteratorAggregate` instead of `Iterator`
+### Removed
+- Removed `Config(Values)::loadConfig()`.  Use loaders now.
+- Removed `Config(Values)::loadConfgFile()`.  Use loaders now.
+- Removed `Config(Values)::parseConfigFile()`.
 ### Deprecated
-- `ConfigValues::getItems()` is now deprecated.  Use `ConfigValues::getArrayCopy()` instead
+- `ConfigValues::getItems()` is now deprecated.  Use `ConfigValues::getArrayCopy()` instead.
+- `ConfigValues::getItem()` is now deprecated.  Use `ConfigValues::get()` instead.
+- `ConfigValues::valid()` is now deprecated.  Use `ConfigValues::has()` instead.
