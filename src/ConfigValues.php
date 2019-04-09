@@ -50,41 +50,6 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     }
 
     /**
-     * Magic method - Get a value or path, or throw an exception
-     *
-     * @param string $path  Accepts '.' path notation for nested values
-     * @return mixed
-     * @throws ConfigValueNotFoundException  If the config value is not found
-     */
-    public function __get(string $path)
-    {
-        return $this->get($path);
-    }
-
-    /**
-     * Magic method - Check if a value or path exists
-     *
-     * @param string $path  Accepts '.' path notation for nested values
-     * @return bool
-     */
-    public function __isset(string $path): bool
-    {
-        return $this->has($path);
-    }
-
-    /**
-     * Magic method - Get a value or path, or throw an exception
-     *
-     * @param string $path  Accepts '.' path notation for nested values
-     * @param string $default
-     * @return array|mixed|null
-     */
-    public function __invoke(string $path, $default = self::NOT_SET)
-    {
-        return $this->get($path, $default);
-    }
-
-    /**
      * Get a values
      *
      * @param string $path  Accepts '.' path notation for nested values
@@ -160,22 +125,46 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
         return $this->values->export();
     }
 
-    /**
-     * Get an array copy of config values
-     *
-     * @deprecated Use getArrayCopy instead
-     * @return array
-     */
-    public function getItems(): array
-    {
-        @trigger_error(
-            'ConfigValues::getItems() is deprecated since version 3.0 and will be removed in 4.0. '
-            . 'Use ConfigValues::getArrayCopy() instead.',
-            E_USER_DEPRECATED
-        );
+    // --------------------------------------------------------------
+    // Magic Method Access
 
-        return $this->getArrayCopy();
+    /**
+     * Magic method - Get a value or path, or throw an exception
+     *
+     * @param string $path  Accepts '.' path notation for nested values
+     * @return mixed
+     * @throws ConfigValueNotFoundException  If the config value is not found
+     */
+    public function __get(string $path)
+    {
+        return $this->get($path);
     }
+
+    /**
+     * Magic method - Check if a value or path exists
+     *
+     * @param string $path  Accepts '.' path notation for nested values
+     * @return bool
+     */
+    public function __isset(string $path): bool
+    {
+        return $this->has($path);
+    }
+
+    /**
+     * Magic method - Get a value or path, or throw an exception
+     *
+     * @param string $path  Accepts '.' path notation for nested values
+     * @param string $default
+     * @return array|mixed|null
+     */
+    public function __invoke(string $path, $default = self::NOT_SET)
+    {
+        return $this->get($path, $default);
+    }
+
+    // --------------------------------------------------------------
+    // Merging
 
     /**
      * Merge config values and return a new Config instance
@@ -204,6 +193,63 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     }
 
     // --------------------------------------------------------------
+    // Deprecated methods
+
+    /**
+     *
+     * @deprecated use get() or find() instead
+     * @param string $path
+     * @param string $default
+     * @return array|mixed|null
+     */
+    public function getItem(string $path, $default = null)
+    {
+        @trigger_error(
+            'ConfigValues::getItem() is deprecated since version 3.0 and will be removed in 4.0. '
+            . 'Use ConfigValues::get() or ConfigValues::find() instead.',
+            E_USER_DEPRECATED
+        );
+
+        return $this->get($path, $default);
+    }
+
+    /**
+     * Get an array copy of config values
+     *
+     * @deprecated Use getArrayCopy instead
+     * @return array
+     */
+    public function getItems(): array
+    {
+        @trigger_error(
+            'ConfigValues::getItems() is deprecated since version 3.0 and will be removed in 4.0. '
+            . 'Use ConfigValues::getArrayCopy() instead.',
+            E_USER_DEPRECATED
+        );
+
+        return $this->getArrayCopy();
+    }
+
+    /**
+     * Check if a value exists
+     *
+     * @deprecated Use has() instead
+     * @param string $path
+     * @return bool
+     */
+    public function valid(string $path): bool
+    {
+        @trigger_error(
+            'ConfigValues::valid() is deprecated since version 3.0 and will be removed in 4.0. '
+            . 'Use ConfigValues::has() instead.',
+            E_USER_DEPRECATED
+        );
+
+        return $this->has($path);
+    }
+
+    // --------------------------------------------------------------
+    // Iterating and counting interfaces
 
     /**
      * Iterator access
