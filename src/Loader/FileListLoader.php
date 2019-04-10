@@ -29,7 +29,7 @@ class FileListLoader implements ConfigLoaderInterface
      * FileListLoader constructor.
      *
      * @param iterable|SplFileInfo[]|string[] $files
-     * @param array $extensionMap
+     * @param array                           $extensionMap
      */
     public function __construct(iterable $files, array $extensionMap = DecidingFileLoader::DEFAULT_EXTENSION_MAP)
     {
@@ -52,8 +52,7 @@ class FileListLoader implements ConfigLoaderInterface
             try {
                 $newValues = (new DecidingFileLoader($fileInfo->getRealPath(), $this->extensionMap))->load();
                 $values = $values->merge($newValues);
-            }
-            catch (ConfigFileNotFoundException | UnmappedFileExtensionException $e) {
+            } catch (ConfigFileNotFoundException | UnmappedFileExtensionException $e) {
                 // pass..
             }
         }

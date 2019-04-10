@@ -8,6 +8,7 @@ use Configula\Exception\ConfigLoaderException;
 
 /**
  * Class AbstractFileLoader
+ *
  * @package Configula\Loader
  */
 abstract class FileLoader implements FileLoaderInterface
@@ -23,8 +24,9 @@ abstract class FileLoader implements FileLoaderInterface
 
     /**
      * AbstractFileLoader constructor.
+     *
      * @param string $filePath
-     * @param bool $required    If TRUE, this file is required to exist
+     * @param bool   $required If TRUE, this file is required to exist
      */
     public function __construct(string $filePath, bool $required = true)
     {
@@ -55,7 +57,8 @@ abstract class FileLoader implements FileLoaderInterface
 
     /**
      * Parse the contents
-     * @param string $rawFileContents
+     *
+     * @param  string $rawFileContents
      * @return array
      */
     abstract protected function parse(string $rawFileContents): array;

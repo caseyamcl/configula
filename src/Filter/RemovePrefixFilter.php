@@ -28,7 +28,7 @@ class RemovePrefixFilter
     }
 
     /**
-     * @param ConfigValues $values
+     * @param  ConfigValues $values
      * @return ConfigValues
      */
     public function __invoke(ConfigValues $values): ConfigValues

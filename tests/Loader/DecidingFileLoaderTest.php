@@ -18,7 +18,7 @@ use stdClass;
 class DecidingFileLoaderTest extends TestCase
 {
     /**
-     * @param string $filePath
+     * @param        string $filePath
      * @dataProvider goodFileProvider
      */
     public function testGoodFilesReturnExpectedResults(string $filePath): void

@@ -56,6 +56,5 @@ class ExtractTopLevelItemFilterTest extends TestCase
         ];
 
         (new ExtractTopLevelItemFilter('pre'))->__invoke(new ConfigValues($test));
-
     }
 }

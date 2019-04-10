@@ -38,8 +38,8 @@ class DecidingFileLoader implements FileLoaderInterface
     /**
      * FileLoader constructor.
      *
-     * @param string $filePath
-     * @param array|string[] $extensionMap  Keys are case-insensitive extensions; values are class names
+     * @param string         $filePath
+     * @param array|string[] $extensionMap Keys are case-insensitive extensions; values are class names
      */
     public function __construct(string $filePath, array $extensionMap = self::DEFAULT_EXTENSION_MAP)
     {
@@ -61,25 +61,31 @@ class DecidingFileLoader implements FileLoaderInterface
             $className = $this->extensionMap[strtolower($file->getExtension())];
 
             try {
-                /** @noinspection PhpUndefinedMethodInspection */
+                /**
+                 * @noinspection PhpUndefinedMethodInspection
+                 */
                 return (new $className($file->getRealPath()))->load();
             } catch (Error $e) {
-                if (! is_a($className,FileLoader::class, true)) {
-                    throw new ConfigLoaderException(sprintf(
-                        'File loader class %s must be instance of %s',
-                        $className,
-                        FileLoader::class
-                    ));
+                if (! is_a($className, FileLoader::class, true)) {
+                    throw new ConfigLoaderException(
+                        sprintf(
+                            'File loader class %s must be instance of %s',
+                            $className,
+                            FileLoader::class
+                        )
+                    );
                 } else {
                     throw $e;
                 }
             }
         } else {
-            throw new UnmappedFileExtensionException(sprintf(
-                "Error parsing file (no loader for extension '%s'): %s",
-                $file->getExtension(),
-                (string) $file
-            ));
+            throw new UnmappedFileExtensionException(
+                sprintf(
+                    "Error parsing file (no loader for extension '%s'): %s",
+                    $file->getExtension(),
+                    (string) $file
+                )
+            );
         }
     }
 }

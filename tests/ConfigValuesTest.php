@@ -63,7 +63,7 @@ class ConfigValuesTest extends TestCase
      * @dataProvider existingDataProvider
      *
      * @param string $path
-     * @param mixed $expected
+     * @param mixed  $expected
      */
     public function testFindReturnsValueIfExists(string $path, $expected): void
     {
@@ -73,7 +73,7 @@ class ConfigValuesTest extends TestCase
 
     /**
      * @dataProvider nonExistentDataProvider
-     * @param string $path
+     * @param        string $path
      */
     public function testFindReturnsNullIfValueNotExists(string $path): void
     {
@@ -83,18 +83,17 @@ class ConfigValuesTest extends TestCase
 
     /**
      * @dataProvider existingDataProvider
-     * @param string $path
+     * @param        string $path
      */
     public function testHasReturnsTrueForExistentValues(string $path)
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertTrue($config->has($path));
-
     }
 
     /**
      * @dataProvider nonExistentDataProvider
-     * @param string $path
+     * @param        string $path
      */
     public function testHasReturnsFalseForNonExistentValues(string $path): void
     {
@@ -105,7 +104,7 @@ class ConfigValuesTest extends TestCase
     /**
      * @dataProvider existingDataProvider
      * @dataProvider nonExistentDataProvider
-     * @param string $path
+     * @param        string $path
      */
     public function testHasValueReturnsExpectedResult(string $path): void
     {
@@ -124,14 +123,13 @@ class ConfigValuesTest extends TestCase
 
     /**
      * @dataProvider nonExistentDataProvider
-     * @param string $nonExistentPath
+     * @param        string $nonExistentPath
      */
     public function testArrayAccessThrowsExceptionWhenValueNotExists(string $nonExistentPath): void
     {
         $this->expectException(ConfigValueNotFoundException::class);
         $config = new ConfigValues(static::getTestValues());
         $config->get($nonExistentPath);
-
     }
 
     public function testArrayAccessReturnsExpectedValueForIsset()
@@ -162,11 +160,11 @@ class ConfigValuesTest extends TestCase
     public function testMagicGetMethodReturnsExpectedValueWhenExists(string $path, $expected): void
     {
         $config = new ConfigValues(static::getTestValues());
-        $this->assertSame($expected,$config->$path);
+        $this->assertSame($expected, $config->$path);
     }
 
     /**
-     * @param string $path
+     * @param        string $path
      * @dataProvider nonExistentDataProvider
      */
     public function testMagicGetMethodThrowsExceptionWhenValueNotExists(string $path): void
@@ -188,7 +186,7 @@ class ConfigValuesTest extends TestCase
 
     /**
      * @dataProvider existingDataProvider
-     * @param string $path
+     * @param        string $path
      */
     public function testMagicInvokeMethodBehavesSameAsGetWhenValueExists(string $path)
     {
@@ -198,7 +196,7 @@ class ConfigValuesTest extends TestCase
 
     /**
      * @dataProvider nonExistentDataProvider
-     * @param string $path
+     * @param        string $path
      */
     public function testMagicInvokeMethodThrowsExceptionWhenValueNotExists(string $path)
     {
@@ -277,7 +275,9 @@ class ConfigValuesTest extends TestCase
     public function testGetItemsReturnsArray(): void
     {
         $config = new ConfigValues(static::getTestValues());
-        /** @noinspection PhpDeprecationInspection */
+        /**
+ * @noinspection PhpDeprecationInspection
+*/
         $this->assertSame(static::getTestValues(), $config->getItems());
     }
 

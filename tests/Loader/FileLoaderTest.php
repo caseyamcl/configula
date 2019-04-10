@@ -63,7 +63,7 @@ class FileLoaderTest extends TestCase
     }
 
     /**
-     * @param bool $required
+     * @param  bool $required
      * @return FileLoader
      */
     protected function getLoader(bool $required = true): FileLoader
@@ -72,7 +72,8 @@ class FileLoaderTest extends TestCase
 
             /**
              * Parse the contents
-             * @param string $rawFileContents
+             *
+             * @param  string $rawFileContents
              * @return array
              */
             protected function parse(string $rawFileContents): array

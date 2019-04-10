@@ -26,7 +26,7 @@ class ConfigFactory
     /**
      * Build configuration from array
      *
-     * @param array $items
+     * @param  array $items
      * @return ConfigValues
      */
     public static function fromArray(array $items): ConfigValues
@@ -39,7 +39,7 @@ class ConfigFactory
      *
      * This is the same as simply calling `$loader->load()`
      *
-     * @param ConfigLoaderInterface $loader
+     * @param  ConfigLoaderInterface $loader
      * @return ConfigValues
      */
     public static function load(ConfigLoaderInterface $loader): ConfigValues
@@ -52,7 +52,7 @@ class ConfigFactory
      *
      * Pass in an iterable list of multiple loaders, file names, or arrays of values
      *
-     * @param iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface $items
+     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface $items
      * @return ConfigValues
      */
     public static function loadMultiple(iterable $items): ConfigValues
@@ -83,7 +83,7 @@ class ConfigFactory
      *
      * Missing or unreadable files are ignored.
      *
-     * @param iterable|string[]|SplFileInfo[] $files
+     * @param  iterable|string[]|SplFileInfo[] $files
      * @return ConfigValues
      */
     public static function loadFiles(iterable $files): ConfigValues
@@ -94,8 +94,8 @@ class ConfigFactory
     /**
      * Build configuration by reading a single directory of files (non-recursive; ignores sub-directories)
      *
-     * @param string $configDirectory
-     * @param array $defaults
+     * @param  string $configDirectory
+     * @param  array  $defaults
      * @return ConfigValues
      */
     public static function loadSingleDirectory(string $configDirectory, array $defaults = []): ConfigValues
@@ -103,7 +103,7 @@ class ConfigFactory
         // Build an iterator that reads only files in the top-level directory
         $iterator = new CallbackFilterIterator(
             new DirectoryIterator($configDirectory),
-            function(SplFileInfo $info, $key, DirectoryIterator $iterator) {
+            function (SplFileInfo $info, $key, DirectoryIterator $iterator) {
                 return $info->isFile() && ! $iterator->isDot();
             }
         );
@@ -114,8 +114,8 @@ class ConfigFactory
     /**
      * Build configuration by recursively reading a directory of files
      *
-     * @param string $configPath Directory or file path
-     * @param array $defaults
+     * @param  string $configPath Directory or file path
+     * @param  array  $defaults
      * @return ConfigValues
      */
     public static function loadPath(string $configPath = '', array $defaults = []): ConfigValues
@@ -123,11 +123,9 @@ class ConfigFactory
         // If path, use default behavior..
         if (is_dir($configPath)) {
             $pathValues = (new FolderLoader($configPath))->load();
-        }
-        elseif (is_file($configPath)) { // Elseif if file, then just load that single file..
+        } elseif (is_file($configPath)) { // Elseif if file, then just load that single file..
             $pathValues = (new DecidingFileLoader($configPath))->load();
-        }
-        elseif ($configPath === '') { // Else, no path provided, so empty values
+        } elseif ($configPath === '') { // Else, no path provided, so empty values
             $pathValues = new ConfigValues([]);
         } else {
             throw new ConfigFileNotFoundException('Cannot resolve config path: ' . $configPath);

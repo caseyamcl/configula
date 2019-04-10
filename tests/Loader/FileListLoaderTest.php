@@ -18,7 +18,6 @@ class FileListLoaderTest extends TestCase
         $this->assertEquals('value', $values->get('a')); // this is the same across all config files
         $this->assertEquals('d', $values->get('c_one')); // this was from ini and doesn't get clobbered
         $this->assertEquals('e', $values->get('c.d'));   // the value of 'c' gets clobbered in the yml
-
     }
 
     public function testLoadIgnoresMissingAndUnmappedFiles(): void

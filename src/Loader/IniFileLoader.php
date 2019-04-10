@@ -8,6 +8,7 @@ use Throwable;
 
 /**
  * Class IniFileLoader
+ *
  * @package Configula\Loader
  */
 class IniFileLoader implements FileLoaderInterface
@@ -24,8 +25,9 @@ class IniFileLoader implements FileLoaderInterface
 
     /**
      * IniFileLoader constructor.
+     *
      * @param string $filePath
-     * @param bool $processSections
+     * @param bool   $processSections
      */
     public function __construct(string $filePath, bool $processSections = true)
     {
@@ -42,8 +44,7 @@ class IniFileLoader implements FileLoaderInterface
     {
         try {
             $values = parse_ini_file($this->filePath, $this->processSections, INI_SCANNER_TYPED) ?: [];
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             throw new ConfigLoaderException("Error parsing INI file: " . $this->filePath);
         }
 

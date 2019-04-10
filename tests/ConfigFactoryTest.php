@@ -17,7 +17,6 @@ class ConfigFactoryTest extends TestCase
         $this->assertSame('A', $values->get('a'));
         $this->assertSame('B', $values->get('b'));
         $this->assertSame('C', $values->get('c'));
-
     }
 
     public function testLoad()

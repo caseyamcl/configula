@@ -34,12 +34,12 @@ class EnvLoader implements ConfigLoaderInterface
     /**
      * Load from environment looking only for those values with a specified prefix (and remove prefix)
      *
-     * @param string $prefix Specify a prefix, and only environment variables with this prefix will be read
-     *                        (e.g. "MYAPP_" means that this will only read env vars starting with "MYAPP_")'
-     *                        Values will be
-     * @param null|string $delimiter  Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     * @param  string      $prefix    Specify a prefix, and only environment variables with this prefix will be read
+     *                                (e.g. "MYAPP_" means that this will only read env vars starting with
+     *                                "MYAPP_")' Values will be
+     * @param  null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
      *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
-     * @param bool $toLower  Convert all keys to lower-case
+     * @param  bool        $toLower   Convert all keys to lower-case
      * @return ConfigValues
      */
     public static function loadUsingPrefix(string $prefix, string $delimiter = '', bool $toLower = false)
@@ -55,10 +55,10 @@ class EnvLoader implements ConfigLoaderInterface
     /**
      * Environment Loader Constructor
      *
-     * @param string $regex           Optionally filter values based on some regex pattern
-     * @param null|string $delimiter  Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
-     *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
-     * @param bool $toLower  Convert all keys to lower-case
+     * @param string      $regex     Optionally filter values based on some regex pattern
+     * @param null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     *                               would become the key, "MYSQL.HOST" (empty string to not delimit)
+     * @param bool        $toLower   Convert all keys to lower-case
      */
     public function __construct(string $regex = '', string $delimiter = '', bool $toLower = false)
     {
@@ -75,7 +75,6 @@ class EnvLoader implements ConfigLoaderInterface
         $configValues = new Data();
 
         foreach (getenv() as $valName => $valVal) {
-
             if ($this->regex && ! preg_match($this->regex, $valName)) {
                 continue;
             }
@@ -91,7 +90,7 @@ class EnvLoader implements ConfigLoaderInterface
     /**
      * Prepare string value
      *
-     * @param string $value
+     * @param  string $value
      * @return mixed
      */
     private function prepareVal(string $value)

@@ -21,7 +21,7 @@ class PhpFileLoaderTest extends AbstractFileLoaderTest
     }
 
     /**
-     * @param string $filename
+     * @param  string $filename
      * @return FileLoaderInterface
      */
     protected function getObject(string $filename): FileLoaderInterface

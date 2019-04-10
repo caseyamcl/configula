@@ -3,7 +3,6 @@
 
 namespace Configula\Loader;
 
-
 use Configula\Exception\ConfigLoaderException;
 use PHPUnit\Framework\TestCase;
 
@@ -56,13 +55,13 @@ abstract class AbstractFileLoaderTest extends TestCase
     abstract protected function getExt(): string;
 
     /**
-     * @param string $filename
+     * @param  string $filename
      * @return FileLoaderInterface
      */
     abstract protected function getObject(string $filename): FileLoaderInterface;
 
     /**
-     * @param string $baseFileName
+     * @param  string $baseFileName
      * @return string
      */
     protected function getTestFilePath(string $baseFileName): string

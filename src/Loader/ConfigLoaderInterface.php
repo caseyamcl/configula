@@ -7,6 +7,7 @@ use Configula\Exception\ConfigLoaderException;
 
 /**
  * Interface ConfigLoaderInterface
+ *
  * @package FandF\Config
  */
 interface ConfigLoaderInterface

@@ -19,7 +19,7 @@ class CascadingConfigLoader implements ConfigLoaderInterface
     /**
      * CascadingLoader constructor.
      *
-     * @param iterable|ConfigLoaderInterface[] $loaders  Loaders, in the order that you want to load them
+     * @param iterable|ConfigLoaderInterface[] $loaders Loaders, in the order that you want to load them
      */
     public function __construct(iterable $loaders)
     {

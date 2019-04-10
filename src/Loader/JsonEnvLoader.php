@@ -26,8 +26,9 @@ class JsonEnvLoader implements ConfigLoaderInterface
 
     /**
      * JsonEnvLoader constructor.
+     *
      * @param string $envValueName
-     * @param bool $asAssoc
+     * @param bool   $asAssoc
      */
     public function __construct(string $envValueName, bool $asAssoc = false)
     {

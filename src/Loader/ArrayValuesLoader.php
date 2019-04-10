@@ -6,6 +6,7 @@ use Configula\ConfigValues;
 
 /**
  * Class ArrayValuesLoader
+ *
  * @package Configula\Loader
  */
 class ArrayValuesLoader implements ConfigLoaderInterface
@@ -17,6 +18,7 @@ class ArrayValuesLoader implements ConfigLoaderInterface
 
     /**
      * ArrayValuesLoader constructor.
+     *
      * @param array $configValues
      */
     public function __construct(array $configValues)

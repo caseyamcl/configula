@@ -7,6 +7,7 @@ use Configula\Exception\ConfigLoaderException;
 
 /**
  * Class PhpFileLoader
+ *
  * @package Configula\Loader
  */
 class PhpFileLoader implements FileLoaderInterface
@@ -18,6 +19,7 @@ class PhpFileLoader implements FileLoaderInterface
 
     /**
      * IniFileLoader constructor.
+     *
      * @param string $filePath
      */
     public function __construct(string $filePath)
@@ -32,19 +34,21 @@ class PhpFileLoader implements FileLoaderInterface
      */
     public function load(): ConfigValues
     {
+
         if (is_readable($this->filePath)) {
             ob_start();
-            include($this->filePath);
+
+            /** @noinspection PhpIncludeInspection */
+            include $this->filePath;
+
             ob_end_clean();
         }
 
         if (isset($config) && is_array($config)) {
             return new ConfigValues($config);
-        }
-        elseif (trim(file_get_contents($this->filePath)) === "") {
+        } elseif (trim(file_get_contents($this->filePath)) === "") {
             return new ConfigValues([]);
-        }
-        else {
+        } else {
             throw new ConfigLoaderException("Missing or invalid \$config array in file: " . $this->filePath);
         }
     }

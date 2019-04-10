@@ -22,9 +22,12 @@ class EnvLoaderTest extends TestCase
         $rMethod = new ReflectionMethod(EnvLoader::class, 'prepareVal');
         $rMethod->setAccessible(true);
 
-        $expected = array_map(function($val) use ($rMethod) {
-            return $rMethod->invoke(new EnvLoader(), $val);
-        }, getenv());
+        $expected = array_map(
+            function ($val) use ($rMethod) {
+                return $rMethod->invoke(new EnvLoader(), $val);
+            },
+            getenv()
+        );
 
         $this->assertEquals($expected, (new EnvLoader())->load()->getArrayCopy());
     }
@@ -60,8 +63,6 @@ class EnvLoaderTest extends TestCase
             array_map('strtolower', array_keys(static::DEFAULT_ENV_VARS)),
             array_keys($values->getArrayCopy())
         );
-
-
     }
 
     /**
@@ -129,7 +130,6 @@ class EnvLoaderTest extends TestCase
         $this->assertSame(false, $values->get('FALSE'));
         $this->assertSame(null, $values->get('NULL'));
         $this->assertSame('somestuff', $values->get('STR'));
-
     }
 
     protected function setupEnv(): void

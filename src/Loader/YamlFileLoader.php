@@ -22,8 +22,8 @@ class YamlFileLoader extends FileLoader
     /**
      * YamlFileLoader constructor.
      *
-     * @param string $yamlFilePath
-     * @param bool $required
+     * @param string      $yamlFilePath
+     * @param bool        $required
      * @param Parser|null $yamlParser
      */
     public function __construct(string $yamlFilePath, bool $required = true, Parser $yamlParser = null)
@@ -35,7 +35,7 @@ class YamlFileLoader extends FileLoader
     /**
      * Parse the contents
      *
-     * @param string $rawFileContents
+     * @param  string $rawFileContents
      * @return array
      */
     protected function parse(string $rawFileContents): array

@@ -14,9 +14,9 @@ class ArrayUtils
     /**
      * Flatten and iterate
      *
-     * @param array $array
-     * @param string $delimiter
-     * @param string $basePath
+     * @param  array  $array
+     * @param  string $delimiter
+     * @param  string $basePath
      * @return Generator|mixed[]
      */
     public static function flattenAndIterate(array $array, string $delimiter = '.', string $basePath = ''): Generator

@@ -31,7 +31,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Construct from other config values
      *
-     * @param ConfigValues $configValues
+     * @param  ConfigValues $configValues
      * @return ConfigValues|static
      */
     public static function fromConfigValues(ConfigValues $configValues)
@@ -52,8 +52,8 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Get a values
      *
-     * @param string $path  Accepts '.' path notation for nested values
-     * @param mixed $default
+     * @param  string $path    Accepts '.' path notation for nested values
+     * @param  mixed  $default
      * @return array|mixed|null
      */
     public function get(string $path, $default = self::NOT_SET)
@@ -82,7 +82,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * This is different than the get() method in that it will not throw an exception if the value doesn't exist.
      *
-     * @param string $path  Accepts '.' path notation for nested values
+     * @param  string $path Accepts '.' path notation for nested values
      * @return array|mixed|null
      */
     public function find(string $path)
@@ -93,7 +93,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Check if value exists (even if it is NULL)
      *
-     * @param string $path
+     * @param  string $path
      * @return bool
      */
     public function has(string $path): bool
@@ -106,7 +106,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * Returns FALSE if value is NULL, empty array, or empty string
      *
-     * @param string $path
+     * @param  string $path
      * @return bool
      */
     public function hasValue(string $path): bool
@@ -131,7 +131,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Magic method - Get a value or path, or throw an exception
      *
-     * @param string $path  Accepts '.' path notation for nested values
+     * @param  string $path Accepts '.' path notation for nested values
      * @return mixed
      * @throws ConfigValueNotFoundException  If the config value is not found
      */
@@ -143,7 +143,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Magic method - Check if a value or path exists
      *
-     * @param string $path  Accepts '.' path notation for nested values
+     * @param  string $path Accepts '.' path notation for nested values
      * @return bool
      */
     public function __isset(string $path): bool
@@ -154,8 +154,8 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Magic method - Get a value or path, or throw an exception
      *
-     * @param string $path  Accepts '.' path notation for nested values
-     * @param string $default
+     * @param  string $path    Accepts '.' path notation for nested values
+     * @param  string $default
      * @return array|mixed|null
      */
     public function __invoke(string $path, $default = self::NOT_SET)
@@ -171,7 +171,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * This is a recursive merge.  Any sub-arrays will be cascade-merged.
      *
-     * @param ConfigValues $config
+     * @param  ConfigValues $config
      * @return static|ConfigValues
      */
     public function merge(ConfigValues $config): ConfigValues
@@ -184,7 +184,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * This is a recursive merge.  Any sub-arrays will be cascade-merged.
      *
-     * @param array $values
+     * @param  array $values
      * @return static|ConfigValues
      */
     public function mergeValues(array $values): ConfigValues
@@ -198,9 +198,9 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      *
      * @deprecated use get() or find() instead
-     * @param string $path
-     * @param string $default
-     * @return array|mixed|null
+     * @param      string $path
+     * @param      string $default
+     * @return     array|mixed|null
      */
     public function getItem(string $path, $default = null)
     {
@@ -217,7 +217,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      * Get an array copy of config values
      *
      * @deprecated Use getArrayCopy instead
-     * @return array
+     * @return     array
      */
     public function getItems(): array
     {
@@ -234,8 +234,8 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      * Check if a value exists
      *
      * @deprecated Use has() instead
-     * @param string $path
-     * @return bool
+     * @param      string $path
+     * @return     bool
      */
     public function valid(string $path): bool
     {
@@ -266,7 +266,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Array-access to check if configuration value exists
      *
-     * @param mixed $offset
+     * @param  mixed $offset
      * @return bool
      */
     public function offsetExists($offset): bool
@@ -277,7 +277,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Array-access to a configuration value
      *
-     * @param mixed $offset
+     * @param  mixed $offset
      * @return mixed
      */
     public function offsetGet($offset)

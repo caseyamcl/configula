@@ -42,8 +42,8 @@ class FolderLoader implements ConfigLoaderInterface
      * ConfigFolderFilesLoader constructor.
      *
      * @param string $path
-     * @param array $defaultValues
-     * @param array $extensionMap
+     * @param array  $defaultValues
+     * @param array  $extensionMap
      */
     public function __construct(
         string $path,
@@ -66,7 +66,7 @@ class FolderLoader implements ConfigLoaderInterface
         $config = new ConfigValues($this->defaults);
 
         // Check valid path
-        if (! is_readable($this->path) OR ! is_dir($this->path)) {
+        if (! is_readable($this->path) or ! is_dir($this->path)) {
             throw new ConfigLoaderException(
                 'Cannot read from folder path (does it exist? is it a directory?): ' . $this->path
             );
@@ -85,17 +85,14 @@ class FolderLoader implements ConfigLoaderInterface
          * @var SplFileInfo $file
          */
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path)) as $file) {
-
             isset($fileCount) ? $fileCount++ : $fileCount = 0;
             $basename = rtrim($file->getBasename(strtolower($file->getExtension())), '.');
 
             if (strcasecmp(substr($basename, -6), '.local') == 0) {
                 $fileList[self::LOCAL_FILES][] = $file;
-            }
-            elseif (strcasecmp(substr($basename, -5), '.dist') == 0) {
+            } elseif (strcasecmp(substr($basename, -5), '.dist') == 0) {
                 $fileList[self::DIST_FILES][] = $file;
-            }
-            else {
+            } else {
                 $fileList[self::NORMAL_FILES][] = $file;
             }
         }

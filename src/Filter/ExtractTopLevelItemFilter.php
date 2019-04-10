@@ -31,7 +31,7 @@ class ExtractTopLevelItemFilter
     /**
      * Remove top-level item and elevate its children to the top level
      *
-     * @param ConfigValues $values
+     * @param  ConfigValues $values
      * @return ConfigValues
      */
     public function __invoke(ConfigValues $values): ConfigValues
@@ -41,15 +41,16 @@ class ExtractTopLevelItemFilter
 
             // Elevate all of the sub-items from the array that are children of the prefix to remove
             foreach ($items[$this->topLevelItemName] as $k => $v) {
-
                 // If item already exists in root node, throw exception
                 if (isset($items[$k])) {
-                    throw new ConfigLoaderException(sprintf(
-                        'Name collision (%s) when removing %s.%s from config values',
-                        $k,
-                        $this->topLevelItemName,
-                        $k
-                    ));
+                    throw new ConfigLoaderException(
+                        sprintf(
+                            'Name collision (%s) when removing %s.%s from config values',
+                            $k,
+                            $this->topLevelItemName,
+                            $k
+                        )
+                    );
                 }
 
                 $items[$k] = $v;

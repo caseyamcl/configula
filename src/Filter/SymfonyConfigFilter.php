@@ -8,6 +8,7 @@ use Symfony\Component\Config\Definition\Processor;
 
 /**
  * Class SymfonyConfigFilter
+ *
  * @package Configula\Util
  */
 class SymfonyConfigFilter
@@ -25,8 +26,8 @@ class SymfonyConfigFilter
     /**
      * Filter method allows single-call static usage of this class
      *
-     * @param ConfigurationInterface $configuration
-     * @param ConfigValues $values
+     * @param  ConfigurationInterface $configuration
+     * @param  ConfigValues           $values
      * @return ConfigValues
      */
     public static function filter(ConfigurationInterface $configuration, ConfigValues $values)
@@ -39,7 +40,7 @@ class SymfonyConfigFilter
      * SymfonyConfigFilter constructor.
      *
      * @param ConfigurationInterface $configTree
-     * @param Processor|null $processor
+     * @param Processor|null         $processor
      */
     public function __construct(ConfigurationInterface $configTree, Processor $processor = null)
     {
@@ -50,7 +51,7 @@ class SymfonyConfigFilter
     /**
      * Process configuration through Symfony
      *
-     * @param ConfigValues $values
+     * @param  ConfigValues $values
      * @return ConfigValues
      */
     public function __invoke(ConfigValues $values): ConfigValues
