@@ -13,7 +13,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - Added `COnfigValues`
 ### Changed
 - Main config class changed from `Config` to `ConfigValues`
-- Configula now requires PHP v7.2 or newer.  Use v2.0 for PHP5.x/7.0/7.1 support
+- Configula now requires PHP v7.1 or newer.  Use v2.0 for PHP5.x/7.0 support
 - All configuration loading has been moved into separate classes.
 - Invalid files or other load errors now throw a `ConfigLoaderException`
 - Switched from PSR-0 to PSR-4

@@ -2,13 +2,14 @@ language: php
 
 ## Versions to test
 php:
+  - '7.1'
   - '7.2'
   - '7.3'
 
 ## Use lowest stable versions for oldest version test
 matrix:
   include:
-    - php: '7.2'
+    - php: '7.1'
       env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
 
 ## Cache composer

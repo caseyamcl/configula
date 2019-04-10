@@ -66,8 +66,8 @@ class SymfonyConfigFilterTest extends TestCase
              */
             public function getConfigTreeBuilder()
             {
-                $builder = new TreeBuilder('config');
-                $builder->getRootNode()
+                $builder = new TreeBuilder();
+                $builder->root('config')
                     ->children()
                     ->booleanNode('foo')->isRequired()->end()
                     ->scalarNode('bar')->isRequired()->end()
