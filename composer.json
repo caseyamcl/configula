@@ -1,7 +1,7 @@
 {
     "name": "caseyamcl/configula",
     "type": "library",
-    "description": "A simple, flexible, read-only config library for PHP 7.1+",
+    "description": "A simple, flexible, read-only config library for PHP 7.2+",
     "keywords": ["config", "configuration"],
     "homepage": "https://github.com/caseyamcl/Configula",
     "license": "MIT",
@@ -37,6 +37,11 @@
         "psr-4": { "Configula\\": "tests/" }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "check-style": "vendor/bin/phpcs src tests",
+        "fix-style": "vendor/bin/phpcbf src tests"
+    },
+    "config": {
+        "sort-packages": true
     }
 }
