@@ -26,6 +26,22 @@ any PHP application.
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
 * Code quality standards: PSR-2, 100% Unit Test Coverage
 
+
+## Installation
+
+```bash
+composer require caseyamcl/configula
+```
+
+## Need PHP v5.* compatibility?
+
+Configula Version 2.x is compatible with PHP v5.3+.  If you need PHP 5.x compatibility, instruct Composer to use
+the **2.x** version of this library instead of the current one:
+
+```
+composer require caseyamcl/configula:^2.4
+```
+
 ## Upgrading?
 
 Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x to Version 3.
@@ -60,7 +76,7 @@ The `Configula\ConfigValues` object provides several ways to access your configu
 
 ```php
 // Throws exception if value does not exist
-$config->get('some_value');  
+$config->get('some_value');
 
 // Returns NULL if value does not exist
 $config->find('some_value');
@@ -72,6 +88,41 @@ $config->has('some_value');
 $config->hasValue('some_value');   
 
 ```
+   
+Accessing values using dot notation:
+
+```php
+// Here is a nested array:
+$values = [
+    'debug' => true,
+    'db' => [
+        'platform' => 'mysql',
+        'credentials' => [
+            'username' => 'some',
+            'password' => 'thing'
+        ]
+    ],
+];
+
+// Load it into Configula
+$config = new \Configula\ConfigValues($values);
+
+// Access top-level item
+$values->get('debug'); // bool; TRUE
+
+// Access nested item
+$values->get('db.platform'); // string; 'mysql'
+
+// Access deeply nested item
+$values->get('db.credentials.username'); // string: 'some'
+
+// Get item as array
+$values->get('db'); // array with sub-values
+
+// has/hasValue work too
+$values->has('db.credentials.key'); // false
+$values->hasValue('db.credentials.key); // false
+```
         
 Property-like access to your config settings:
 
@@ -81,11 +132,15 @@ $config = Config::loadPath('/path/to/config/files');
 
 // Throws exception if value does not exist
 $some_value = $config->some_key;
+
+// Returns TRUE or FALSE
+isset($config->some_key);
 ```
 
 Iterator access to your config settings:
 
 ```php
+// Basic iteration
 foreach ($config as $item => $value) {
     echo "<li>{$item} is {$value}</li>";
 }
@@ -115,116 +170,31 @@ $config['some_key'] = 'foobar';
 unset($config['some_key']);   
 ```
 
+## Merging Configuration
 
-## Installation
-
-### Installation via Composer:
-
-```bash
-composer require caseyamcl/configula
-```
-
-### Non-composer installation
-
-This is not recommended, but it is possible: 
-
-1. Add the `src/` directory to your application (`cp -r src/* /PATH/TO/YOUR/APP/configula`)
-2. Either use `require` statements for ALL classes in this library, or use a 
-   [PSR-4 compatible autoloader](http://www.php-fig.org/psr/psr-4/) like [this one](https://packagist.org/packages/keradus/psr4autoloader).
-  
-## Need PHP v5.* compatibility?
-
-Configula Version 2.x is compatible with PHP v5.3+.  If you need PHP 5.x compatibility, instruct Composer to use
-the **2.x** version of this library instead of the current one:
-
-```
-composer require caseyamcl/configula:^2.4
-```
-
-## Basic usage
-
-1.  Create a folder in your application for storing configuration files.
-2.  Populate the folder with configuration files.  See [Config Folder Layout](#config-folder-layout) section 
-    below for more details.
-3.  Instantiate a Configula instance, and pass the path as the first parameter:
-
-        $config = \Configula\ConfigFactory::loadPath('/path/to/app/config');
-
-4.  Configuration values become properties of the Configula object (if the value does not exist, an exception is thrown):  
-
-        $myValue = $config->my_config_setting;
-
-5.  Alternatively, use the `get()` method, which accepts an optional default value:
-
-        $myValue = $config->get('my_config_setting', 'default_to_fall_back_on');
-
-6. Or, you can use the `find()` method, which returns NULL if the value is not found:
-
-        $myValue = $config->find('my_config_setting'); // Will return NULL if value not set
-        
-7. Or, you can call the object like a function, which acts like `get()`:
-
-        $myValue = $config('my_config_setting', 'optional_default_value');  
-
-8.  Finally, you can access the object as if it were an array (if the value does not exist, an exception is thrown):
-
-        $myValue = $config['my_config_setting'];
-
-9. Nested values are accessible using dot notation:
-
-        $myValue = $config['dbs.default.host'];
-        // or...
-        $myValue = $config->get('dbs.default.host');
-
-10.  `foreach()` and `count()` also work, since Configula implements those interfaces:
-
-        foreach ($config as $settingName => $settingValue) {
-            echo "{$settingName} is {$settingValue}";
-        }
-        echo "There are " . count($config) . " settings total";
-
-11.  To get all config settings as an array, use the `getArrayCopy()` method:
-
-        $allValues = $config->getArrayCopy();
-
-12.  If you would like to preload the config object with default values, pass an array as the second parameter to the
-    `loadPath` method:
-
-        //Values in the config files will override the default values
-        $defaults = ['foo' => 'bar', 'baz' => 'biz'];
-        $config = \Configula\ConfigFactory::loadPath('/path/to/app/config', $defaults);
-
-13. If you would like to use Configula with only default values, use the `fromArray` method:
-
-        //The default values will be the only config options available
-        $values = array('foo' => 'bar', 'baz' => 'biz');
-        $config = \Configula\ConfigFactory::fromArray($values);
-
-### Immutability
-
-The `ConfigValues` object, once instantiated, is immutable, meaning that it is read-only.  You can not alter the config 
-values.  You can, however, merge values into a new instance of the object using `ConfigValues::merge()` method.
+Since `Configula\ConfigValues` is an immutable object, you cannot mutate the configuration
+once it is set.  However, you can merge values and get a new copy of the object using the `merge`
+or `mergeValues` methods:
 
 ```php
-$values = array('foo' => 'bar', 'baz' => 'biz');
-$config = \Configula\ConfigFactory::build($values);
+use Configula\ConfigValues;
 
-$config = $config->mergeValues(['another' => 'value']);
+$config = new ConfigValues(['foo' => 'bar, 'baz' => 'biz');
 
-// Config new contains
-// 'foo', 'baz', and 'another' items
+// Merge configuration using merge()
+$newConfig = $config->merge(new ConfigValues(['baz' => 'buzz', 'cad' => 'cuzz]));
 
-// You can also merge any ConfigValues instance 
-$config = $config->merge(\Configula\ConfigFactory::path('/some/path'));
-
+// For convenience, you can pass in an array using mergeValues()
+$newConfig = $config->merge(['baz' => 'buzz', 'cad' => ['some' => 'thing']]);
 ```
 
-## Default Behavior
+Configula performs a *deep merge*.  TODO: Details here..
 
-Prior versions of this library were very opinionated about loading files.  This behavior is preserved with the
-`ConfigFactory::loadPath()` loader.
+## Iterator
 
-### Config Folder Layout
+TODO: Iterator behavior (flattens)
+
+### Using the Folder Loader - Config Folder Layout
 
 By default, Configula will load files with the following extensions:
 
@@ -233,8 +203,9 @@ By default, Configula will load files with the following extensions:
 * `yaml` or `yml` - Uses the [Symfony YAML parser](https://symfony.com/doc/current/components/yaml.html)
 * `ini` - Uses the built-in PHP `parse_ini_file()` function
 
-The `ConfigFactory::loadPath()` loader will traverse directories in your configuration path recursively.  If you want
-to avoid scanning recursively, see below. 
+The `ConfigFactory::loadPath()` loader will traverse directories in your configuration path recursively.
+
+The `ConfigFactory::loadSingleDirectory` will load your configuration in a single directory non-recursively.
 
 ### Local Configuration Files
 
@@ -291,8 +262,10 @@ values will be merged in the following order (values in files later in the list 
 
 ## Handling Errors
 
-All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch all possible errors
-thrown during loading and reading of configuration values.
+All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch all errors thrown 
+during loading and reading of configuration values.
+
+TODO: Update this...
 
 * If something goes wrong when loading configuration values, a `Config\Exception\ConfigLoaderException` is thrown.
 * If you attempt to read a configuration value that does not exist, and you have not provided a default value at
@@ -313,25 +286,18 @@ $config->find('non_existent_value');
 $config->get('non_existent_value', null);
 ```
 
-## Advanced Loading Options
-
-You can load configuration from any source, using any strategy you wish.  Configula comes with pre-built support
-for a few common strategies, or you can create your own combination of loaders to load configuration however you wish.
-
-### Using the `ConfigFactory::loadMultiple()` method
-
-
-
-### Loading environment variables
+## Loading environment variables
 
 There are two common ways that configuration is generally stored in environment:
 
 1. As multiple environment variables (perhaps loaded by phpDotEnv or Symfony dotEnv, or exposed by Heroku/Kubernetes/etc.).
 2. As a single environment variable with a JSON-encoded value, which exposes the entire configuration tree.
 
-Configula supports both.
+Configula supports both.  You can also write your own loader if your environment is different.
 
-#### Loading multiple environment variables
+### Loading multiple environment variables
+
+TODO: Update this
 
 Configula supports loading environment variables as configuration values using values in the `$_ENV` array.  This
 is the [12 Factor App](https://12factor.net/config) way of doing things.
@@ -390,12 +356,11 @@ the `EnvLoader` by passing `null` and `false` as the 2nd and third arguments, re
 ```php
 use Configula\Loader\EnvLoader;
 
-
 $values = (new EnvLoader('MYAPP_', null, false));
 echo $values('MYSQL_USER'); // foobar
 ``` 
 
-#### Loading a single JSON-encoded environment variable
+### Loading a single JSON-encoded environment variable
 
 Use the `JsonEnvLoader` to load a JSON environment variable:
 
@@ -412,9 +377,9 @@ echo $values->foo;
 echo $values['bar'];
 ```
 
-### Mixing and matching loaders
+## Mixing and matching loaders
 
-todo: this..
+todo: this.. (use loadMultiple)
 
 ## Extending the `ConfigValues` class to make accessing configuration easy
 
