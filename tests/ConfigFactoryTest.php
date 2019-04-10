@@ -82,8 +82,6 @@ class ConfigFactoryTest extends TestCase
         $this->assertEquals([1, 2, 3], $values->get('b')); // from config.yaml
     }
 
-
-
     public function testLoadPathWorksWithFolder()
     {
         $values = ConfigFactory::loadPath(__DIR__ . '/fixtures/folder', ['foo' => 'bar']);
@@ -116,7 +114,7 @@ class ConfigFactoryTest extends TestCase
         $values = ConfigFactory::loadSingleDirectory(__DIR__ . '/fixtures/folder', ['foo' => 'bar']);
         $this->assertEquals('bar', $values->get('foo'));
         $this->assertEquals('a_from_config_ini', $values->get('a'));
-        $this->assertEquals('c_from_config_local_yml', $values->get('c'));
+        $this->assertEquals('c_from_config_local_yml', $values->get('c')); // clobbers c_from_config_ini
         $this->assertFalse($values->has('b'));  // subfolder should not be loaded, so no 'b' value
     }
 }

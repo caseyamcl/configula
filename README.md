@@ -19,10 +19,10 @@ any PHP application.
 * Optionally use in combination with [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html)
   to validate configuration values and/or cache them
 * Creates an immutable object to access your configuration values in your application:
-    * Array-access
+    * Array-access (read-only)
     * `get(val)` and `has(val)` methods
     * Magic methods (`__get(val)`, `__isset(val)`, and `__invoke(val)`)
-    * Implements `Iterator` and `Countable` interfaces
+    * Implements `Traversable` and `Countable` interfaces
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
 * Code quality standards: PSR-2, 100% Unit Test Coverage
 
@@ -30,40 +30,91 @@ any PHP application.
 
 Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x to Version 3.
  
-## Quick Start
+## Loading Configuration
   
-Simple usage:
+Loading configuration is done via one or more of the many loaders:
 
 ```php
 use Configula\ConfigFactory as Config;
 
-//Access configuration values
-$config = Config::loadPath('/path/to/config/files');
-$some_value = $config->get('some_key');
+// Load all .yml, .php, .json, and .ini files from directory (recursive)
+// Supports '.local' and '.dist' modifiers to load config in correct order
+$config = Config::loadPath('/path/to/config/files', ['optional' => 'defaults', ...]);
+
+// Load all .yml, .php, .json, and .in files from directory (non-recursive)
+$config = Config::loadSingleDirectory('/path/to/config/files', ['optional' => 'defaults', ...]);
+
+// Load from array
+$config = Config::loadFromArray(['some' => 'values']);
+
+// Chain loaders -- performs deep merge
+$config = Config::loadFromArray(['some' => 'values'])
+    ->merge(Config::loadPath('/some/path'))
+    ->merge(Configula\Loader\EnvLoader::loadUsingPrefix('MY_APP'));
+
+```
+
+## Accessing Values
+
+The `Configula\ConfigValues` object provides several ways to access your configuration values:
+
+```php
+// Throws exception if value does not exist
+$config->get('some_value');  
+
+// Returns NULL if value does not exist
+$config->find('some_value');
+ 
+// Return TRUE or FALSE
+$config->has('some_value');
+  
+// Return TRUE if value exists and is not empty (NULL, [], "")
+$config->hasValue('some_value');   
+
 ```
         
 Property-like access to your config settings:
 
 ```php
-use Configula\ConfigFactory as Config;
-
 //Access configuration values
 $config = Config::loadPath('/path/to/config/files');
+
+// Throws exception if value does not exist
 $some_value = $config->some_key;
 ```
 
-Array and iterator access to your config settings:
+Iterator access to your config settings:
 
 ```php
-use Configula\ConfigFactory as Config;
-
-//Access conifguration values
-$config = Config::load('/path/to/config/files');
-
 foreach ($config as $item => $value) {
     echo "<li>{$item} is {$value}</li>";
 }
 ```
+
+Magic invoke method access to your config settings:
+
+```php
+// Throws exception if value does not exist
+$value = $config('some_value'); 
+
+// Returns default value if value does not exist
+$value = $config('some_value', 'default');
+```
+
+Array access to your config settings:
+
+```php
+// Throws exception if value does not exist
+$some_value = $config['some_key'];    
+
+// Returns TRUE or FALSE
+$exists = isset($config['some_key']); 
+
+// Always throws exception (config is immutable)
+$config['some_key'] = 'foobar'; 
+unset($config['some_key']);   
+```
+
 
 ## Installation
 

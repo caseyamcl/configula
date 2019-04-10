@@ -16,8 +16,11 @@
 
 namespace Configula\Loader;
 
+use CallbackFilterIterator;
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
+use Configula\Util\LocalDistFileIterator;
+use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -33,10 +36,6 @@ use SplFileInfo;
  */
 class FolderLoader implements ConfigLoaderInterface
 {
-    protected const DIST_FILES = 1;
-    protected const NORMAL_FILES = 2;
-    protected const LOCAL_FILES = 3;
-
     /**
      * @var string
      */
@@ -45,28 +44,28 @@ class FolderLoader implements ConfigLoaderInterface
     /**
      * @var array
      */
-    private $defaults;
+    private $extensionMap;
 
     /**
-     * @var array
+     * @var bool
      */
-    private $extensionMap;
+    private $recursive;
 
     /**
      * ConfigFolderFilesLoader constructor.
      *
      * @param string $path
-     * @param array  $defaultValues
-     * @param array  $extensionMap
+     * @param bool $recursive
+     * @param array $extensionMap
      */
     public function __construct(
         string $path,
-        array $defaultValues = [],
+        bool $recursive = true,
         array $extensionMap = DecidingFileLoader::DEFAULT_EXTENSION_MAP
     ) {
-        $this->path     = $path;
-        $this->defaults = $defaultValues;
+        $this->path = $path;
         $this->extensionMap = $extensionMap;
+        $this->recursive = $recursive;
     }
 
     /**
@@ -76,9 +75,6 @@ class FolderLoader implements ConfigLoaderInterface
      */
     public function load(): ConfigValues
     {
-        // Config values
-        $config = new ConfigValues($this->defaults);
-
         // Check valid path
         if (! is_readable($this->path) or ! is_dir($this->path)) {
             throw new ConfigLoaderException(
@@ -86,37 +82,14 @@ class FolderLoader implements ConfigLoaderInterface
             );
         }
 
-        // File list
-        $fileList = [];
+        // Build either a recursive directory iterator a single directory (files only) iterator
+        $innerIterator = $this->recursive
+            ? new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path))
+            : new CallbackFilterIterator(new FilesystemIterator($this->path), function (SplFileInfo $info) {
+                return $info->isFile();
+            });
 
-        /**
-         * Build file list
-         *
-         * If the file has '.local', we should load it later
-         * If the file has '.dist', we should load it sooner
-         * If the file has neither, we should load it normally
-         *
-         * @var SplFileInfo $file
-         */
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path)) as $file) {
-            $basename = rtrim($file->getBasename(strtolower($file->getExtension())), '.');
-
-            if (strcasecmp(substr($basename, -6), '.local') == 0) {
-                $fileList[self::LOCAL_FILES][] = $file;
-            } elseif (strcasecmp(substr($basename, -5), '.dist') == 0) {
-                $fileList[self::DIST_FILES][] = $file;
-            } else {
-                $fileList[self::NORMAL_FILES][] = $file;
-            }
-        }
-
-        ksort($fileList, SORT_NUMERIC);
-
-        // Iterate over 'dist', regular, and 'local', in that order
-        foreach ($fileList as $set => $files) {
-            $config = $config->merge((new FileListLoader($files, $this->extensionMap))->load());
-        }
-
-        return $config;
+        // Use FileListLoader to load configuration respecting local/dist extension ordering
+        return (new FileListLoader(new LocalDistFileIterator($innerIterator)))->load();
     }
 }

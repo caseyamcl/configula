@@ -16,7 +16,6 @@
 
 namespace Configula;
 
-use CallbackFilterIterator;
 use Configula\Exception\ConfigFileNotFoundException;
 use Configula\Exception\ConfigLogicException;
 use Configula\Loader\ArrayValuesLoader;
@@ -25,7 +24,6 @@ use Configula\Loader\FileListLoader;
 use Configula\Loader\FolderLoader;
 use Configula\Loader\ConfigLoaderInterface;
 use Configula\Loader\DecidingFileLoader;
-use DirectoryIterator;
 use SplFileInfo;
 
 /**
@@ -114,15 +112,7 @@ class ConfigFactory
      */
     public static function loadSingleDirectory(string $configDirectory, array $defaults = []): ConfigValues
     {
-        // Build an iterator that reads only files in the top-level directory
-        $iterator = new CallbackFilterIterator(
-            new DirectoryIterator($configDirectory),
-            function (SplFileInfo $info, $key, DirectoryIterator $iterator) {
-                return $info->isFile() && ! $iterator->isDot();
-            }
-        );
-
-        return (new ConfigValues($defaults))->merge(static::loadFiles($iterator));
+        return (new ConfigValues($defaults))->merge((new FolderLoader($configDirectory, false))->load());
     }
 
     /**
