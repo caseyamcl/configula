@@ -23,9 +23,18 @@ class FileLoaderTest extends TestCase
         $this->assertEquals(0, count($values));
     }
 
+    public function testLoadThowsExceptionIfFileIsNotReadableAndIsRequired(): void
+    {
+        $this->expectException(ConfigLoaderException::class);
+        $this->expectExceptionMessage('Could not read');
+        chmod($this->getTestFilePath(), 0200); // set to write only
+        $this->getLoader(true)->load();
+    }
+
     public function testLoadThrowsExceptionIfFileNotExistsAndIsRequired(): void
     {
         $this->expectException(ConfigLoaderException::class);
+        $this->expectExceptionMessage('not found');
         @unlink($this->getTestFilePath()); // remove the file
         $this->getLoader(true)->load();
     }
