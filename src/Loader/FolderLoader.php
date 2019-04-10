@@ -99,7 +99,6 @@ class FolderLoader implements ConfigLoaderInterface
          * @var SplFileInfo $file
          */
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path)) as $file) {
-            isset($fileCount) ? $fileCount++ : $fileCount = 0;
             $basename = rtrim($file->getBasename(strtolower($file->getExtension())), '.');
 
             if (strcasecmp(substr($basename, -6), '.local') == 0) {
