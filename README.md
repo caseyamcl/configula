@@ -3,7 +3,10 @@
 Configula is a configuration library for PHP 7.1+. 
 
 
-[![Build Status](https://travis-ci.org/caseyamcl/configula.png?branch=master)](https://travis-ci.org/caseyamcl/Configula)
+[![Build Status][ico-travis]][link-travis]
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Software License][ico-license]](LICENSE.md)
+[![Total Downloads][ico-downloads]][link-downloads]
 
 Use this library when you want to load configuration from the filesystem, environment, and other sources.  It implements
 your configuration values as an immutable object in PHP.  It is a framework-independent tool, and can be easily used in 
@@ -749,3 +752,37 @@ $config = ConfigFactory::load(new MyLoader());
 // ..or use it directly.
 $config = (new MyLoader())->load();
 ```
+
+## Change log
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+## Testing
+
+``` bash
+$ composer test
+```
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
+
+## Credits
+
+- [Casey McLaughlin][link-author]
+- [All Contributors][link-contributors]
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+[ico-travis]: https://img.shields.io/travis/caseyamcl/configula/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/caseyamcl/configula.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/caseyamcl/configula.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+
+[link-packagist]: https://packagist.org/packages/caseyamcl/configula
+[link-travis]: https://travis-ci.org/caseyamcl/configula
+[link-downloads]: https://packagist.org/packages/caseyamcl/configula
+[link-author]: https://github.com/caseyamcl
+[link-contributors]: ../../contributors
