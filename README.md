@@ -26,7 +26,6 @@ any PHP application.
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
 * Code quality standards: PSR-2, 100% Unit Test Coverage
 
-
 ## Installation
 
 ```bash
@@ -48,7 +47,7 @@ Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x to Ver
  
 ## Loading Configuration
   
-Loading configuration is done via one or more of the many loaders:
+You can use the `Configula\ConfigFactory` to load configuration from files, the environment or other sources: 
 
 ```php
 use Configula\ConfigFactory as Config;
@@ -58,6 +57,7 @@ use Configula\ConfigFactory as Config;
 $config = Config::loadPath('/path/to/config/files', ['optional' => 'defaults', ...]);
 
 // Load all .yml, .php, .json, and .in files from directory (non-recursive)
+// Supports '.local' and '.dist' modifiers to load config in correct order
 $config = Config::loadSingleDirectory('/path/to/config/files', ['optional' => 'defaults', ...]);
 
 // Load from array
@@ -67,29 +67,43 @@ $config = Config::loadFromArray(['some' => 'values']);
 $config = Config::loadFromArray(['some' => 'values'])
     ->merge(Config::loadPath('/some/path'))
     ->merge(Configula\Loader\EnvLoader::loadUsingPrefix('MY_APP'));
-
 ```
+
+Or, if you are loading an array, you can instantiate `Configula\ConfigValues` directly:
+
+```php
+$config = new Configula\ConfigValues(['array' => 'values' ...]);
+```
+
+Or, you can manually invoke any of the loaders in the `Configula\Laoder` namespace:
+
+```php
+$config = (new Configula\Loader\FileListLoader(['file-1.yml', 'file-2.json']))->load();
+```
+
 
 ## Accessing Values
 
 The `Configula\ConfigValues` object provides several ways to access your configuration values:
 
 ```php
-// Throws exception if value does not exist
+// get method - throws exception if value does not exist
 $config->get('some_value');
 
-// Returns NULL if value does not exist
+// find method - returns NULL if value does not exist
 $config->find('some_value');
  
-// Return TRUE or FALSE
+// has method - returns TRUE or FALSE
 $config->has('some_value');
   
-// Return TRUE if value exists and is not empty (NULL, [], "")
+// hasValue method - returns TRUE if value exists and is not empty (NULL, [], "")
 $config->hasValue('some_value');   
 
 ```
    
-Accessing values using dot notation:
+### Accessing values using dot notation
+
+Configula supports accessing values via dot-notation (e.g `some.nested.var`):
 
 ```php
 // Here is a nested array:
@@ -127,7 +141,7 @@ $values->hasValue('db.credentials.key); // false
 Property-like access to your config settings:
 
 ```php
-//Access configuration values
+// Access configuration values
 $config = Config::loadPath('/path/to/config/files');
 
 // Throws exception if value does not exist
@@ -165,7 +179,7 @@ $some_value = $config['some_key'];
 // Returns TRUE or FALSE
 $exists = isset($config['some_key']); 
 
-// Always throws exception (config is immutable)
+// Not allowed; always throws exception (config is immutable)
 $config['some_key'] = 'foobar'; 
 unset($config['some_key']);   
 ```
@@ -188,15 +202,59 @@ $newConfig = $config->merge(new ConfigValues(['baz' => 'buzz', 'cad' => 'cuzz]))
 $newConfig = $config->merge(['baz' => 'buzz', 'cad' => ['some' => 'thing']]);
 ```
 
-Configula performs a *deep merge*.  TODO: Details here..
+Configula performs a *deep merge*.  Nested arrays are traversed and the last value always takes precedence.
+
+Note that Configula does not deep merge nested objects, only arrays.
 
 ## Iterator
 
-TODO: Iterator behavior (flattens)
+The built-in `ConfigValues::getIterator()` method flattens nested values when iterating:
 
-### Using the Folder Loader - Config Folder Layout
+```php
+// Here is a nested array
+$config = new Configula\ConfigValues([
+    'debug' => true,
+    'db' => [
+        'platform' => 'mysql',
+        'credentials' => [
+            'username' => 'some',
+            'password' => 'thing'
+        ]
+    ],
+]);
 
-By default, Configula will load files with the following extensions:
+foreach ($config as $path => $value) {
+    echo "\n" . $path . ": " . $value;
+}
+
+// Output:
+//
+// debug: 1
+// db.platform: mysql
+// db.credentials.username: some
+// db.credentials.password: thing
+// 
+
+```
+
+If you want to iterate only the top-level items in your configuration, you can use the `getArrayCopy()` method:
+
+```php
+foreach ($config->getArrayCopy() as $path => $value) {
+    echo "\n" . $path . ": " . $value;
+}
+
+// Output:
+//
+// debug: 1
+// db: Array
+//
+
+```
+
+## Using the Folder Loader - Config Folder Layout
+
+By default, the FileLoader, FileListLoader, and FolderLoader in Configula will load files with the following extensions:
 
 * `php` - Configula will look for an array called `$config` in this file.
 * `json` - Uses the built-in PHP `json_decode()` function
@@ -205,21 +263,21 @@ By default, Configula will load files with the following extensions:
 
 The `ConfigFactory::loadPath()` loader will traverse directories in your configuration path recursively.
 
-The `ConfigFactory::loadSingleDirectory` will load your configuration in a single directory non-recursively.
+The `ConfigFactory::loadSingleDirectory()` will load your configuration in a single directory non-recursively.
 
 ### Local Configuration Files
 
-In some cases, you may want to have local configuration files that override the default configuration files.  
+In some cases, you may want to have local configuration files that override the default configuration files.
 
 There are two ways to do this:
 
 1. prefix the default configuration file extension with `.dist`(e.g. `config.dist.yml`), and name the local
    configuration file normally: `config.yml`
-2. Name the default configuration file normally (e.g. `config.yml`) and prefix `.local` to the extension for the local
+2. name the default configuration file normally (e.g. `config.yml`) and prefix `.local` to the extension for the local
    configuration file: `config.local.yml`.
 
-Either way will work, and you could even combine approaches if you want (not recommended, obviously).  
-The file iterator will always cascade merge files in this order:
+Either way will work, and you could even combine approaches if you want.  The file iterator will always cascade merge 
+files in this order:
 
 * `FILENAME.dist.EXT`
 * `FILENAME.EXT`
@@ -265,13 +323,18 @@ values will be merged in the following order (values in files later in the list 
 All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch all errors thrown 
 during loading and reading of configuration values.
 
-TODO: Update this...
+Loading Exceptions:
 
-* If something goes wrong when loading configuration values, a `Config\Exception\ConfigLoaderException` is thrown.
-* If you attempt to read a configuration value that does not exist, and you have not provided a default value at
-  runtime, a `Configula\Exception\ConfigValueNotFoundException` is thrown.
-* If you try to set config values through the array interface, or pass invalid values to the config loader, a
-  `Configula\Exception\ConfigLogicException` is thrown.
+* `ConfigLoaderException` is thrown when an error occurs during loading configuration.
+* `ConfigFileNotFoundException` is thrown when a required configuration file or path is missing.  It is generally
+  thrown from the `FileLoader` loader when the `$required` constructor parameter is set to `true`. 
+* `UnmappedFileExtensionException` is thrown from the `DecidingFileLoader` for files with unrecognized extensions.
+
+Config Value Exceptions:
+ 
+* `ConfigValueNotFoundException` is thrown when trying to reference a non-existent configuration value name and
+  no default value is specified.
+* `ConfigLogicException` is thrown when attempting to mutate configuration via array
 
 ```php
 // All of these throw a ConfigValueNotFoundException

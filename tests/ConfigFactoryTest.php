@@ -17,8 +17,8 @@
 namespace Configula;
 
 use Configula\Exception\ConfigFileNotFoundException;
-use Configula\Exception\ConfigLogicException;
 use Configula\Loader\ArrayValuesLoader;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use stdClass;
@@ -60,7 +60,7 @@ class ConfigFactoryTest extends TestCase
 
     public function testLoadMultipleThrowsExceptionWithInvalidInput()
     {
-        $this->expectException(ConfigLogicException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $sources = [
             new ArrayValuesLoader(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D']),

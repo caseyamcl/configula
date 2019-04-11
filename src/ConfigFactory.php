@@ -17,13 +17,13 @@
 namespace Configula;
 
 use Configula\Exception\ConfigFileNotFoundException;
-use Configula\Exception\ConfigLogicException;
 use Configula\Loader\ArrayValuesLoader;
 use Configula\Loader\CascadingConfigLoader;
 use Configula\Loader\FileListLoader;
 use Configula\Loader\FolderLoader;
 use Configula\Loader\ConfigLoaderInterface;
 use Configula\Loader\DecidingFileLoader;
+use InvalidArgumentException;
 use SplFileInfo;
 
 /**
@@ -81,7 +81,10 @@ class ConfigFactory
                     $loaders[] = new DecidingFileLoader($item);
                     break;
                 default:
-                    throw new ConfigLogicException(sprintf('Invalid config source: ' . gettype($item)));
+                    throw new InvalidArgumentException(sprintf(
+                        'Invalid config source (allowed: array, string (filepath), \SplFileInfo, or config loader): %s',
+                        gettype($item)
+                    ));
             }
         }
 
