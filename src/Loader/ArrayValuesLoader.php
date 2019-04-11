@@ -16,6 +16,7 @@
 
 namespace Configula\Loader;
 
+use Configula\ConfigLoaderInterface;
 use Configula\ConfigValues;
 
 /**

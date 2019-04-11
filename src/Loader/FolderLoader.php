@@ -17,6 +17,7 @@
 namespace Configula\Loader;
 
 use CallbackFilterIterator;
+use Configula\ConfigLoaderInterface;
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
 use Configula\Util\LocalDistFileIterator;
@@ -61,7 +62,7 @@ class FolderLoader implements ConfigLoaderInterface
     public function __construct(
         string $path,
         bool $recursive = true,
-        array $extensionMap = DecidingFileLoader::DEFAULT_EXTENSION_MAP
+        array $extensionMap = FileLoader::DEFAULT_EXTENSION_MAP
     ) {
         $this->path = $path;
         $this->extensionMap = $extensionMap;

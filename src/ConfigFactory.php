@@ -17,13 +17,11 @@
 namespace Configula;
 
 use Configula\Exception\ConfigFileNotFoundException;
-use Configula\Loader\ArrayValuesLoader;
 use Configula\Loader\CascadingConfigLoader;
+use Configula\Loader\EnvLoader;
 use Configula\Loader\FileListLoader;
 use Configula\Loader\FolderLoader;
-use Configula\Loader\ConfigLoaderInterface;
-use Configula\Loader\DecidingFileLoader;
-use InvalidArgumentException;
+use Configula\Loader\FileLoader;
 use SplFileInfo;
 
 /**
@@ -69,26 +67,7 @@ class ConfigFactory
      */
     public static function loadMultiple(iterable $items): ConfigValues
     {
-        foreach ($items as $item) {
-            switch (true) {
-                case $item instanceof ConfigLoaderInterface:
-                    $loaders[] = $item;
-                    break;
-                case is_array($item):
-                    $loaders[] = new ArrayValuesLoader($item);
-                    break;
-                case is_string($item) or $item instanceof SplFileInfo:
-                    $loaders[] = new DecidingFileLoader($item);
-                    break;
-                default:
-                    throw new InvalidArgumentException(sprintf(
-                        'Invalid config source (allowed: array, string (filepath), \SplFileInfo, or config loader): %s',
-                        gettype($item)
-                    ));
-            }
-        }
-
-        return (new CascadingConfigLoader($loaders ?? []))->load();
+        return CascadingConfigLoader::build($items)->load();
     }
 
     /**
@@ -131,7 +110,7 @@ class ConfigFactory
         if (is_dir($configPath)) {
             $pathValues = (new FolderLoader($configPath))->load();
         } elseif (is_file($configPath)) { // Elseif if file, then just load that single file..
-            $pathValues = (new DecidingFileLoader($configPath))->load();
+            $pathValues = (new FileLoader($configPath))->load();
         } elseif ($configPath === '') { // Else, no path provided, so empty values
             $pathValues = new ConfigValues([]);
         } else {
@@ -140,5 +119,38 @@ class ConfigFactory
 
         // Merge defaults and return
         return (new ConfigValues($defaults))->merge($pathValues);
+    }
+
+    /**
+     * Load from environment looking only for those values with a specified prefix (and remove prefix)
+     *
+     * @param  string      $prefix    Specify a prefix, and only environment variables with this prefix will be read
+     *                                (e.g. "MYAPP_" means that this will only read env vars starting with
+     *                                "MYAPP_")' Values will be
+     * @param  null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
+     * @param  bool        $toLower   Convert all keys to lower-case
+     *
+     * @return ConfigValues
+     */
+    public static function loadEnv(string $prefix = '', string $delimiter = '', bool $toLower = false): ConfigValues
+    {
+        return ($prefix)
+            ? EnvLoader::loadUsingPrefix($prefix, $delimiter, $toLower)
+            : (new EnvLoader('', $delimiter, $toLower))->load();
+    }
+
+    /**
+     * Load configuration from environment variables using regex
+     *
+     * @param string      $regex     Optionally filter values based on some regex pattern
+     * @param null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     *                               would become the key, "MYSQL.HOST" (empty string to not delimit)
+     * @param bool        $toLower   Convert all keys to lower-case
+     * @return ConfigValues
+     */
+    public static function loadEnvRegex(string $regex, string $delimiter = '', bool $toLower = false): ConfigValues
+    {
+        return (new EnvLoader($regex, $delimiter, $toLower))->load();
     }
 }

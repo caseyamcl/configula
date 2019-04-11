@@ -14,22 +14,22 @@
  * ------------------------------------------------------------------
  */
 
-namespace Configula\fixtures;
+namespace Configula;
 
-use Configula\Loader\AbstractFileLoader;
-use Error;
+use Configula\Exception\ConfigLoaderException;
 
-class ErrorTriggeringFileLoader extends AbstractFileLoader
+/**
+ * Interface ConfigLoaderInterface
+ *
+ * @package FandF\Config
+ */
+interface ConfigLoaderInterface
 {
-
     /**
-     * Parse the contents
+     * Load config
      *
-     * @param  string $rawFileContents
-     * @return array
+     * @return ConfigValues
+     * @throws ConfigLoaderException  If loading fails for whatever reason, throw this exception
      */
-    protected function parse(string $rawFileContents): array
-    {
-        throw new Error('This is a test');
-    }
+    public function load(): ConfigValues;
 }

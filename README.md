@@ -66,7 +66,7 @@ $config = Config::loadFromArray(['some' => 'values']);
 // Chain loaders -- performs deep merge
 $config = Config::loadFromArray(['some' => 'values'])
     ->merge(Config::loadPath('/some/path'))
-    ->merge(Configula\Loader\EnvLoader::loadUsingPrefix('MY_APP'));
+    ->merge(Config::loadEnv('MY_APP'));
 ```
 
 Or, if you are loading an array, you can instantiate `Configula\ConfigValues` directly:
@@ -318,38 +318,7 @@ values will be merged in the following order (values in files later in the list 
 - /subfolder/database.yml
 ```
 
-## Handling Errors
-
-All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch all errors thrown 
-during loading and reading of configuration values.
-
-Loading Exceptions:
-
-* `ConfigLoaderException` is thrown when an error occurs during loading configuration.
-* `ConfigFileNotFoundException` is thrown when a required configuration file or path is missing.  It is generally
-  thrown from the `FileLoader` loader when the `$required` constructor parameter is set to `true`. 
-* `UnmappedFileExtensionException` is thrown from the `DecidingFileLoader` for files with unrecognized extensions.
-
-Config Value Exceptions:
- 
-* `ConfigValueNotFoundException` is thrown when trying to reference a non-existent configuration value name and
-  no default value is specified.
-* `ConfigLogicException` is thrown when attempting to mutate configuration via array
-
-```php
-// All of these throw a ConfigValueNotFoundException
-$config->get('non_existent_value');
-$config['non_existent_value'];
-$config->non_existent_value;
-
-// This will not throw an exception if the value doesn't exist
-$config->find('non_existent_value');
-
-// Nor will this (because a default is provided)
-$config->get('non_existent_value', null);
-```
-
-## Loading environment variables
+## Loading from environment variables
 
 There are two common ways that configuration is generally stored in environment:
 
@@ -360,68 +329,101 @@ Configula supports both.  You can also write your own loader if your environment
 
 ### Loading multiple environment variables
 
-TODO: Update this
-
-Configula supports loading environment variables as configuration values using values in the `$_ENV` array.  This
-is the [12 Factor App](https://12factor.net/config) way of doing things.
+Configula supports loading environment variables as configuration values using `getenv()`.  This is the 
+[12 Factor App](https://12factor.net/config) way of doing things.
 
 Common use-cases for this loader include:
 
-1. Loading system environment as config values (note: [`E` must be in your variables-order PHP INI setting](http://php.net/manual/en/reserved.variables.environment.php#98113))
+1. Loading system environment as config values
 2. Loading values using [phpDotEnv](https://github.com/vlucas/phpdotenv) or [Symfony dotEnv](https://symfony.com/doc/current/components/dotenv.html)
-3. Accessing values injected into the environment by a cloud provider (Kubernetes, Docker, Heroku, etc.) 
+3. Accessing values injected into the environment by a cloud provider (Kubernetes, Docker, Heroku, etc.)
 
 By default, this loader will transform your environment variable names as follows:
 
 1. Underscores ("_") will be converted into dots (".")
 2. Characters will be converted to lower-case
 
-Default Behavior:
-
-```
-MYSQL_USERNAME="..."   --> becomes --> $config->get('mysql.username')
-MYSQL_PASSWORD="..."   --> becomes --> $config->get('mysql.password')
-MYSQL_HOST_PORT="..."  --> becomes --> $config->get('mysql.host.port')
-MYSQL_HOST_NAME="..."  --> becomes --> $config->get('mysql.host.name')
-```
-
-Usage:
-
-```
-use Configula\Loader\EnvLoader;
-
-$configValues = (new EnvLoader())->load();
-echo $configValues('mysql.host.port');
-```
-
-You can specify a prefix so that Configula will read only environment values that begin with a
-specific string.  In this case, the prefix is stripped from the resulting config value name
-For example:
-
-```
-MYAPP_MYSQL_USER = 'foobar'
-MYAPP_MYSQL_HOST = 'localhost'
-USER_NAME        = 'bob'
-```
+The default behavior is to load the configuration values directly:
 
 ```php
-use Configula\Loader\EnvLoader;
+$config = ConfigFactory::loadEnv();
+```
 
-$configValues = (new EnvLoader('MYAPP_'))->load();
-echo $configValues('mysql.user'); // foobar
-echo $configValues('mysql.host'); // localhost
-echo $configValues('user.name');  // Throws Exception (Config Value)
-``` 
+Result:
 
-If you want to preserve the exact formatting of the environment variable names, instantiate
-the `EnvLoader` by passing `null` and `false` as the 2nd and third arguments, respectively:
+```
+MYAPP_MYSQL_USERNAME="..."   --> becomes --> $config->get('MYAPP_MYSQL_USERNAME')
+MYAPP_MYSQL_PASSWORD="..."   --> becomes --> $config->get('MYAPP_MYSQL_PASSWORD')
+MYAPP_MYSQL_HOST_PORT="..."  --> becomes --> $config->get('MYAPP_MYSQL_HOST_PORT')
+MYAPP_MYSQL_HOST_NAME="..."  --> becomes --> $config->get('MYAPP_MYSQL_HOST_NAME')
+SERVER_NAME="..."            --> becomes --> $config->get('SERVER_NAME')
+etc..
+```
+
+You can load *ONLY* environment variables with a specific prefix.  Configula will remove the prefix
+when loading the configuration:
 
 ```php
-use Configula\Loader\EnvLoader;
+$config = ConfigFactory::loadEnv('MYAPP_');
+```
 
-$values = (new EnvLoader('MYAPP_', null, false));
-echo $values('MYSQL_USER'); // foobar
-``` 
+Result:
+
+```
+MYAPP_MYSQL_USERNAME="..."   --> becomes --> $config->get('MYSQL_USERNAME')
+MYAPP_MYSQL_PASSWORD="..."   --> becomes --> $config->get('MYSQL_PASSWORD')
+MYAPP_MYSQL_HOST_PORT="..."  --> becomes --> $config->get('MYSQL_HOST_PORT')
+MYAPP_MYSQL_HOST_NAME="..."  --> becomes --> $config->get('MYSQL_HOST_NAME')
+SERVER_NAME="..."            --> ignored
+etc..
+```
+
+You can convert a flat list into nested config values by passing a delimiter to break on:  
+
+```php
+$config = ConfigFactory::loadEnv('MYAPP_', '_');
+```
+
+Result:
+
+```
+MYAPP_MYSQL_USERNAME="..."   --> becomes --> $config->get('MYSQL.USERNAME')
+MYAPP_MYSQL_PASSWORD="..."   --> becomes --> $config->get('MYSQL.PASSWORD')
+MYAPP_MYSQL_HOST_PORT="..."  --> becomes --> $config->get('MYSQL.HOST.PORT')
+MYAPP_MYSQL_HOST_NAME="..."  --> becomes --> $config->get('MYSQL.HOST.NAME')
+```
+
+You can transform all of the values to lower-case by passing TRUE as the last argument:
+
+```php
+$config = ConfigFactory::loadEnv('MYAPP_', '_', true);
+```
+
+Result:
+
+```
+MYAPP_MYSQL_USERNAME="..."   --> becomes --> $config->get('mysql.username')
+MYAPP_MYSQL_PASSWORD="..."   --> becomes --> $config->get('mysql.password')
+MYAPP_MYSQL_HOST_PORT="..."  --> becomes --> $config->get('mysql.host.port')
+MYAPP_MYSQL_HOST_NAME="..."  --> becomes --> $config->get('mysql.host.name')
+```
+
+Instead of using a prefix, you can pass a regex string to limit returned values:
+
+```php
+$config = ConfigFactory::LoadEnvRegex('/.+_MYAPP_.+/', '_', true);
+```
+
+Result:
+
+```
+MYAPP_MYSQL_USERNAME="..."   --> becomes --> $config->get('myapp.mysql.username')
+MYAPP_MYSQL_PASSWORD="..."   --> becomes --> $config->get('myapp.mysql.password')
+MYAPP_MYSQL_HOST_PORT="..."  --> becomes --> $config->get('myapp.mysql.host.port')
+EMAIL_MYAPP_SERVER="..."     --> becomes --> $config->get('email.myapp.server')
+SERVER_NAME="..."            --> ignored
+```
+
 
 ### Loading a single JSON-encoded environment variable
 
@@ -440,14 +442,69 @@ echo $values->foo;
 echo $values['bar'];
 ```
 
-## Mixing and matching loaders
+## Loading from multiple loaders
 
-todo: this.. (use loadMultiple)
+You can use the `Configula\ConfigFactory::loadMultiple()` to load from multiple sources and merge results.
+This method accepts an iterator where each value is one of the following:
+
+* Instance of `Configula\ConfigLoader\ConfigLoaderInterface`
+* Array of configuration values
+* String or instance of `SplFileInfo` that is a path to a file or directory
+
+Any other value in the iterator will trigger an `\InvalidArgument` exception
+
+```php
+use Configula\ConfigFactory as Config;
+use Configula\Loader;
+
+$config = Config::loadMultiple([
+    new Loader\EnvLoader('My_APP'),
+    ['some' => 'values'],
+    '/path/to/some/file.yml',
+    new \SplFileInfo('/path/to/another/file.json')
+]);
+
+Alternatively, you can pass an iterator of `Configula\ConfigLoaderInterface` instances to
+`Configula\Loader\CascadingConfigLoader`.
+```
+
+## Handling Errors
+
+All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch all errors thrown 
+during loading and reading of configuration values.
+
+### Loading Exceptions:
+
+* `ConfigLoaderException` is thrown when an error occurs during loading configuration.
+* `ConfigFileNotFoundException` is thrown when a required configuration file or path is missing.  It is generally
+  thrown from the `FileLoader` loader when the `$required` constructor parameter is set to `true`. 
+* `UnmappedFileExtensionException` is thrown from the `DecidingFileLoader` for files with unrecognized extensions.
+
+### Config Value Exceptions:
+ 
+* `ConfigValueNotFoundException` is thrown when trying to reference a non-existent configuration value name and
+  no default value is specified.
+* `ConfigLogicException` is thrown when attempting to mutate configuration via array
+* `InvalidConfigValueException` is not thrown from any Configula class directly, but provided as an option for
+  implementing libraries (see "_Extending the `ConfigValues` class_" below).
+
+```php
+// These throw a ConfigValueNotFoundException
+$config->get('non_existent_value');
+$config['non_existent_value'];
+$config->non_existent_value;
+
+// This will not throw an exception, but instead return NULL
+$config->find('non_existent_value');
+
+// This will not throw an exception, but instead return 'default'
+$config->get('non_existent_value', 'default');
+```
 
 ## Extending the `ConfigValues` class to make accessing configuration easy
 
 While it is entirely possible to use the `Configula\ConfigValues` class directly , you might also want to provide 
-some application-specific methods to load configuration values.  This provides a better developer experience. 
+some application-specific methods to load configuration values.  This creates a better developer experience. 
 
 ```php
 use Configula\ConfigValues;
@@ -637,6 +694,6 @@ use Configula\ConfigFactory;
 // use the factory..
 $config = ConfigFactory::load(new MyLoader());
 
-// ..or don't..
+// ..or use it directly.
 $config = (new MyLoader())->load();
 ```

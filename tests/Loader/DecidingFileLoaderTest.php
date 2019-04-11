@@ -37,7 +37,7 @@ class DecidingFileLoaderTest extends TestCase
      */
     public function testGoodFilesReturnExpectedResults(string $filePath): void
     {
-        $values = (new DecidingFileLoader($filePath))->load();
+        $values = (new FileLoader($filePath))->load();
         $this->assertEquals('value', $values->get('a'));
         $this->assertEquals([1, 2, 3], $values->get('b'));
     }
@@ -45,26 +45,26 @@ class DecidingFileLoaderTest extends TestCase
     public function testNonExistentFileThrowsException()
     {
         $this->expectException(ConfigFileNotFoundException::class);
-        (new DecidingFileLoader(__DIR__ . '/non-existent.yml'))->load();
+        (new FileLoader(__DIR__ . '/non-existent.yml'))->load();
     }
 
     public function testNonMappedProviderThrowsException()
     {
         $this->expectException(UnmappedFileExtensionException::class);
-        (new DecidingFileLoader(__DIR__ . '/../fixtures/ini/config.ini', []))->load();
+        (new FileLoader(__DIR__ . '/../fixtures/ini/config.ini', []))->load();
     }
 
     public function testInvalidLoaderClassThrowsException()
     {
         $this->expectException(ConfigLoaderException::class);
         $this->expectExceptionMessage('must be instance of');
-        (new DecidingFileLoader(__DIR__ . '/../fixtures/ini/config.ini', ['ini' => stdClass::class]))->load();
+        (new FileLoader(__DIR__ . '/../fixtures/ini/config.ini', ['ini' => stdClass::class]))->load();
     }
 
     public function testLoadWithExceptionPassesError()
     {
         $this->expectException(Error::class);
-        (new DecidingFileLoader(
+        (new FileLoader(
             __DIR__ . '/../fixtures/ini/bad.ini',
             ['ini' => ErrorTriggeringFileLoader::class]
         ))->load();

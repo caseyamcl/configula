@@ -16,7 +16,10 @@
 
 namespace Configula\Loader;
 
+use Configula\ConfigLoaderInterface;
 use Configula\ConfigValues;
+use InvalidArgumentException;
+use SplFileInfo;
 
 /**
  * Class CascadingLoader
@@ -29,6 +32,40 @@ class CascadingConfigLoader implements ConfigLoaderInterface
      * @var iterable|ConfigLoaderInterface[]
      */
     private $loaders;
+
+    /**
+     *
+     * Pass in an iterable list of multiple loaders, file names, or arrays of values
+     *
+     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface $items
+     * @return CascadingConfigLoader
+     */
+    public static function build(iterable $items): CascadingConfigLoader
+    {
+        foreach ($items as $item) {
+            switch (true) {
+                case $item instanceof ConfigLoaderInterface:
+                    $loaders[] = $item;
+                    break;
+                case is_array($item):
+                    $loaders[] = new ArrayValuesLoader($item);
+                    break;
+                case is_string($item) && file_exists($item):
+                    $loaders[] = new FileLoader($item);
+                    break;
+                case $item instanceof SplFileInfo:
+                    $loaders[] = ($item->isDir()) ? new FolderLoader($item) : new FileLoader($item);
+                    break;
+                default:
+                    throw new InvalidArgumentException(sprintf(
+                        'Invalid config source (allowed: array, string (filepath), \SplFileInfo, or config loader): %s',
+                        gettype($item)
+                    ));
+            }
+        }
+
+        return new static($loaders ?? []);
+    }
 
     /**
      * CascadingLoader constructor.

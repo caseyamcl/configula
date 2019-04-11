@@ -16,6 +16,8 @@
 
 namespace Configula\Loader;
 
+use Configula\ConfigLoaderInterface;
+
 /**
  * Interface FileLoaderInterface
  *

@@ -16,6 +16,7 @@
 
 namespace Configula\Loader;
 
+use Configula\ConfigLoaderInterface;
 use Configula\ConfigValues;
 use Configula\Exception\ConfigFileNotFoundException;
 use Configula\Exception\ConfigLoaderException;
@@ -45,7 +46,7 @@ class FileListLoader implements ConfigLoaderInterface
      * @param iterable|SplFileInfo[]|string[] $files
      * @param array                           $extensionMap
      */
-    public function __construct(iterable $files, array $extensionMap = DecidingFileLoader::DEFAULT_EXTENSION_MAP)
+    public function __construct(iterable $files, array $extensionMap = FileLoader::DEFAULT_EXTENSION_MAP)
     {
         $this->files = $files;
         $this->extensionMap = $extensionMap;
@@ -64,7 +65,7 @@ class FileListLoader implements ConfigLoaderInterface
         foreach ($this->files as $file) {
             $fileInfo = ($file instanceof SplFileInfo) ? $file : new SplFileInfo($file);
             try {
-                $newValues = (new DecidingFileLoader($fileInfo->getRealPath(), $this->extensionMap))->load();
+                $newValues = (new FileLoader($fileInfo->getRealPath(), $this->extensionMap))->load();
                 $values = $values->merge($newValues);
             } catch (ConfigFileNotFoundException | UnmappedFileExtensionException $e) {
                 // pass..

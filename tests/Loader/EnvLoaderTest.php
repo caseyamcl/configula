@@ -26,7 +26,7 @@ use ReflectionMethod;
  */
 class EnvLoaderTest extends TestCase
 {
-    protected const DEFAULT_ENV_VARS = [
+    public const DEFAULT_ENV_VARS = [
         'SOME_FOOBAR_APP_THING' => 1,
         'FOOBAR_APP_ANOTHER'    => 2
     ];
@@ -123,6 +123,13 @@ class EnvLoaderTest extends TestCase
         $this->setupEnv();
         $values = EnvLoader::loadUsingPrefix('FOOBAR', '_', true);
         $this->assertEquals(['app' => ['another' => 2]], $values->getArrayCopy());
+    }
+
+    public function testLoadUsingPrefixWorksWithMultiLevelDelimiter()
+    {
+        $this->setupEnv();
+        $values = EnvLoader::loadUsingPrefix('FOOBAR_APP', '_');
+        $this->assertEquals(2, $values->get('ANOTHER'));
     }
 
     /**

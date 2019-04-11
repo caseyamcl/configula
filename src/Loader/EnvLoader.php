@@ -16,8 +16,9 @@
 
 namespace Configula\Loader;
 
+use Configula\ConfigLoaderInterface;
 use Configula\ConfigValues;
-use Configula\Filter\ExtractTopLevelItemFilter;
+use Configula\Filter\ExtractTopLevelItemsFilter;
 use Configula\Filter\RemovePrefixFilter;
 use Dflydev\DotAccessData\Data;
 
@@ -62,7 +63,7 @@ class EnvLoader implements ConfigLoaderInterface
         $values = (new static("/^{$prefix}/", $delimiter, $toLower))->load();
 
         return $delimiter
-            ? (new ExtractTopLevelItemFilter($toLower ? strtolower($prefix) : $prefix))->__invoke($values)
+            ? (new ExtractTopLevelItemsFilter($toLower ? strtolower($prefix) : $prefix, $delimiter))->__invoke($values)
             : (new RemovePrefixFilter($toLower ? strtolower($prefix) : $prefix))->__invoke($values);
     }
 

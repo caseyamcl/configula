@@ -18,6 +18,8 @@ namespace Configula;
 
 use Configula\Exception\ConfigFileNotFoundException;
 use Configula\Loader\ArrayValuesLoader;
+use Configula\Loader\EnvLoader;
+use Configula\Loader\EnvLoaderTest;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
@@ -116,5 +118,42 @@ class ConfigFactoryTest extends TestCase
         $this->assertEquals('a_from_config_ini', $values->get('a'));
         $this->assertEquals('c_from_config_local_yml', $values->get('c')); // clobbers c_from_config_ini
         $this->assertFalse($values->has('b'));  // subfolder should not be loaded, so no 'b' value
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testLoadEnv()
+    {
+        // Pre-test
+        if ((new EnvLoader('/FOOBAR_APP/'))->load()->count() !== 0) {
+            $this->markTestSkipped('Skipping (there are environment variables with "FOOBAR_APP" in them already?!)');
+        }
+
+        foreach (EnvLoaderTest::DEFAULT_ENV_VARS as $name => $val) {
+            putenv(sprintf("%s=%s", $name, $val));
+        }
+
+        $values = ConfigFactory::loadEnv('FOOBAR_APP', '_', true);
+        $this->assertSame(2, $values->get('another'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testLoadEnvRegex()
+    {
+        // Pre-test
+        if ((new EnvLoader('/FOOBAR_APP/'))->load()->count() !== 0) {
+            $this->markTestSkipped('Skipping (there are environment variables with "FOOBAR_APP" in them already?!)');
+        }
+
+        foreach (EnvLoaderTest::DEFAULT_ENV_VARS as $name => $val) {
+            putenv(sprintf("%s=%s", $name, $val));
+        }
+
+        $values = ConfigFactory::loadEnvRegex('/FOOBAR_APP/', '_', true);
+        $this->assertSame(1, $values->get('some.foobar.app.thing'));
+        $this->assertSame(2, $values->get('foobar.app.another'));
     }
 }

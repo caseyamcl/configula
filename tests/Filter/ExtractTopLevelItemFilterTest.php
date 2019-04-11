@@ -38,7 +38,7 @@ class ExtractTopLevelItemFilterTest extends TestCase
             'foo' => 'bar'
         ];
 
-        $values = (new ExtractTopLevelItemFilter('pre'))->__invoke(new ConfigValues($test));
+        $values = (new ExtractTopLevelItemsFilter('pre'))->__invoke(new ConfigValues($test));
         $this->assertEquals('A', $values->get('a'));
         $this->assertEquals('B', $values->get('b'));
     }
@@ -50,7 +50,7 @@ class ExtractTopLevelItemFilterTest extends TestCase
             'foo' => 'bar'
         ];
 
-        $values = (new ExtractTopLevelItemFilter('pre'))->__invoke(new ConfigValues($test));
+        $values = (new ExtractTopLevelItemsFilter('pre'))->__invoke(new ConfigValues($test));
         $this->assertEquals($test, $values->getArrayCopy());
     }
 
@@ -69,6 +69,6 @@ class ExtractTopLevelItemFilterTest extends TestCase
             'foo' => 'bar'
         ];
 
-        (new ExtractTopLevelItemFilter('pre'))->__invoke(new ConfigValues($test));
+        (new ExtractTopLevelItemsFilter('pre'))->__invoke(new ConfigValues($test));
     }
 }

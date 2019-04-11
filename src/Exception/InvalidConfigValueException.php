@@ -14,23 +14,16 @@
  * ------------------------------------------------------------------
  */
 
-namespace Configula\Loader;
-
-use Configula\ConfigValues;
-use Configula\Exception\ConfigLoaderException;
+namespace Configula\Exception;
 
 /**
- * Interface ConfigLoaderInterface
+ * Invalid Config Value Exception
+ *
+ * This is not used in Configula, but provided for implementing libraries (see Configula documentation)
  *
  * @package FandF\Config
  */
-interface ConfigLoaderInterface
+class InvalidConfigValueException extends ConfigException
 {
-    /**
-     * Load config
-     *
-     * @return ConfigValues
-     * @throws ConfigLoaderException  If loading fails for whatever reason, throw this exception
-     */
-    public function load(): ConfigValues;
+    // pass..
 }

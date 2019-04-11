@@ -78,11 +78,11 @@ class FileLoaderTest extends TestCase
 
     /**
      * @param  bool $required
-     * @return FileLoader
+     * @return AbstractFileLoader
      */
-    protected function getLoader(bool $required = true): FileLoader
+    protected function getLoader(bool $required = true): AbstractFileLoader
     {
-        return new class($this->getTestFilePath(), $required) extends FileLoader {
+        return new class($this->getTestFilePath(), $required) extends AbstractFileLoader {
 
             /**
              * Parse the contents

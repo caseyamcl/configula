@@ -23,7 +23,7 @@ use Configula\Exception\ConfigLoaderException;
  *
  * @package Configula\Loader
  */
-class JsonFileLoader extends FileLoader
+class JsonFileLoader extends AbstractFileLoader
 {
     /**
      * Parse the contents

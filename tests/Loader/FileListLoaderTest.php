@@ -43,7 +43,7 @@ class FileListLoaderTest extends TestCase
             __DIR__ . '/../fixtures/nope/config.nope' // This file doesn't exist and should be ignored
         ];
 
-        $extensionMap = DecidingFileLoader::DEFAULT_EXTENSION_MAP;
+        $extensionMap = FileLoader::DEFAULT_EXTENSION_MAP;
         unset($extensionMap['yml']);
 
         $values = (new FileListLoader($files, $extensionMap))->load();

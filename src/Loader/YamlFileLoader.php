@@ -26,7 +26,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @package FandF\Config
  */
-class YamlFileLoader extends FileLoader
+class YamlFileLoader extends AbstractFileLoader
 {
     /**
      * @var Parser
