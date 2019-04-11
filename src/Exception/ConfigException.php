@@ -23,7 +23,7 @@ use RuntimeException;
  *
  * @package FandF\Config
  */
-class ConfigException extends RuntimeException
+abstract class ConfigException extends RuntimeException
 {
     // pass..
 }
