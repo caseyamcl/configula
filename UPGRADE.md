@@ -5,7 +5,7 @@ with minimal code changes as follows:
 
 ## Class name changes
 
-`Configula\Config` has now become `Config\ConfigValues`.  Update all references.
+`Configula\Config` has now become `Configula\ConfigValues`.  Update all references.
 
 ## Loading configuration
 
