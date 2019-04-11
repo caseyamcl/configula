@@ -3,6 +3,10 @@ composer.lock
 composer.phar
 vendor
 
+# Test stuff
+.phpunit.result.cache
+build/
+
 # IDE Settings
 .idea
 .codio

@@ -1,0 +1,4 @@
+/* This file should be ignored */
+{
+    "a": "a-from-unmapped"
+}
