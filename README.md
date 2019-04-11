@@ -15,12 +15,12 @@ any PHP application.
     * Load values from _.php_, _.ini_, _.json_, and _.yml_ configuration file types
     * Load values from the environment, and _.env_ files using a DotEnv library ([vlucas](https://github.com/vlucas/phpdotenv) or [Symfony](https://github.com/symfony/dotenv))
     * Easily write your own loaders to support other file types and sources
-* Cascade/merge values from multiple sources (e.g. array, files, environment, etc) 
+* Cascade/deep merge values from multiple sources (e.g. array, files, environment, etc) 
 * Optionally use in combination with [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html)
   to validate configuration values and/or cache them
 * Creates an immutable object to access your configuration values in your application:
     * Array-access (read-only)
-    * `get(val)` and `has(val)` methods
+    * `get(val)`, `has(val)`, and `hasValue(val)` methods
     * Magic methods (`__get(val)`, `__isset(val)`, and `__invoke(val)`)
     * Implements `Traversable` and `Countable` interfaces
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
@@ -41,7 +41,7 @@ the **2.x** version of this library instead of the current one:
 composer require caseyamcl/configula:^2.4
 ```
 
-## Upgrading?
+## Upgrading from v2.x?
 
 Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x to Version 3.
  
@@ -75,7 +75,7 @@ Or, if you are loading an array, you can instantiate `Configula\ConfigValues` di
 $config = new Configula\ConfigValues(['array' => 'values' ...]);
 ```
 
-Or, you can manually invoke any of the loaders in the `Configula\Laoder` namespace:
+Or, you can manually invoke any of the loaders in the `Configula\Loader` namespace:
 
 ```php
 $config = (new Configula\Loader\FileListLoader(['file-1.yml', 'file-2.json']))->load();
@@ -89,6 +89,9 @@ The `Configula\ConfigValues` object provides several ways to access your configu
 ```php
 // get method - throws exception if value does not exist
 $config->get('some_value');
+
+// get method with default - returns default if value does not exist
+$config->get('some_value', 'default');
 
 // find method - returns NULL if value does not exist
 $config->find('some_value');
@@ -131,14 +134,14 @@ $values->get('db.platform'); // string; 'mysql'
 $values->get('db.credentials.username'); // string: 'some'
 
 // Get item as array
-$values->get('db'); // array with sub-values
+$values->get('db'); // array ['platform' => 'mysql', 'credentials' => ...]
 
 // has/hasValue work too
 $values->has('db.credentials.key'); // false
-$values->hasValue('db.credentials.key); // false
+$values->hasValue('db.credentials.key'); // false
 ```
         
-Property-like access to your config settings:
+Property-like access to your config settings via `__get()` and `__isset()`:
 
 ```php
 // Access configuration values
@@ -151,16 +154,19 @@ $some_value = $config->some_key;
 isset($config->some_key);
 ```
 
-Iterator access to your config settings:
+Iterator and count access to your config settings:
 
 ```php
 // Basic iteration
 foreach ($config as $item => $value) {
     echo "<li>{$item} is {$value}</li>";
 }
+
+// Count
+count($config) /* or */ $config->count();
 ```
 
-Magic invoke method access to your config settings:
+Callable access to your config settings via `__invoke()`:
 
 ```php
 // Throws exception if value does not exist
@@ -180,8 +186,8 @@ $some_value = $config['some_key'];
 $exists = isset($config['some_key']); 
 
 // Not allowed; always throws exception (config is immutable)
-$config['some_key'] = 'foobar'; 
-unset($config['some_key']);   
+$config['some_key'] = 'foobar'; // Configula\Exception\ConfigLogicException
+unset($config['some_key']);     // Configula\Exception\ConfigLogicException
 ```
 
 ## Merging Configuration
@@ -193,7 +199,7 @@ or `mergeValues` methods:
 ```php
 use Configula\ConfigValues;
 
-$config = new ConfigValues(['foo' => 'bar, 'baz' => 'biz');
+$config = new ConfigValues(['foo' => 'bar', 'baz' => 'biz');
 
 // Merge configuration using merge()
 $newConfig = $config->merge(new ConfigValues(['baz' => 'buzz', 'cad' => 'cuzz]));
@@ -206,9 +212,10 @@ Configula performs a *deep merge*.  Nested arrays are traversed and the last val
 
 Note that Configula does not deep merge nested objects, only arrays.
 
-## Iterator
+## Iterator and Count
 
-The built-in `ConfigValues::getIterator()` method flattens nested values when iterating:
+The built-in `ConfigValues::getIterator()` and `ConfigValues::count()` methods flattens nested values when iterating
+or counting:
 
 ```php
 // Here is a nested array
@@ -223,6 +230,8 @@ $config = new Configula\ConfigValues([
     ],
 ]);
 
+// ---------------------
+
 foreach ($config as $path => $value) {
     echo "\n" . $path . ": " . $value;
 }
@@ -234,6 +243,10 @@ foreach ($config as $path => $value) {
 // db.credentials.username: some
 // db.credentials.password: thing
 // 
+
+echo count($config);
+
+// Output: 4
 
 ```
 
@@ -254,24 +267,25 @@ foreach ($config->getArrayCopy() as $path => $value) {
 
 ## Using the Folder Loader - Config Folder Layout
 
-By default, the FileLoader, FileListLoader, and FolderLoader in Configula will load files with the following extensions:
+The folder loaders in Configula will load files with the following extensions (you can add your own loaders
+or override built-in ones; see below):
 
 * `php` - Configula will look for an array called `$config` in this file.
 * `json` - Uses the built-in PHP `json_decode()` function
 * `yaml` or `yml` - Uses the [Symfony YAML parser](https://symfony.com/doc/current/components/yaml.html)
 * `ini` - Uses the built-in PHP `parse_ini_file()` function
 
-The `ConfigFactory::loadPath()` loader will traverse directories in your configuration path recursively.
+The `ConfigFactory::loadPath($path)` method will traverse directories in your configuration path recursively.
 
-The `ConfigFactory::loadSingleDirectory()` will load your configuration in a single directory non-recursively.
+The `ConfigFactory::loadSingleDirectory($path)` method will load your configuration in a single directory 
+non-recursively.
 
 ### Local Configuration Files
 
-In some cases, you may want to have local configuration files that override the default configuration files.
+In some cases, you may want to have local configuration files that override the default configuration files.  There are 
+two ways to do this:
 
-There are two ways to do this:
-
-1. prefix the default configuration file extension with `.dist`(e.g. `config.dist.yml`), and name the local
+1. prefix the default configuration file extension with `.dist` (e.g. `config.dist.yml`), and name the local
    configuration file normally: `config.yml`
 2. name the default configuration file normally (e.g. `config.yml`) and prefix `.local` to the extension for the local
    configuration file: `config.local.yml`.
@@ -292,7 +306,7 @@ CONFIGDIR/*
 !CONFIGDIR/*.dist.*
 
 # or, if ignoring .local files...
-CONFIDIR/*.local.*
+CONFIGDIR/*.local.*
 ```
 
 ### Example
@@ -309,7 +323,7 @@ Consider the following directory layout
 ```
 
 If you use `ConfigFactory::loadPath('/my/app/config')`, the files will be parsed according to their extension and
-values will be merged in the following order (values in files later in the list clobber earlier values):
+values will be merged in the following order (values in files that are later in the list will clobber earlier values):
 
 ```
 - /config.dist.php
@@ -327,7 +341,7 @@ There are two common ways that configuration is generally stored in environment:
 
 Configula supports both.  You can also write your own loader if your environment is different.
 
-### Loading multiple environment variables
+## Loading multiple environment variables
 
 Configula supports loading environment variables as configuration values using `getenv()`.  This is the 
 [12 Factor App](https://12factor.net/config) way of doing things.
@@ -338,10 +352,7 @@ Common use-cases for this loader include:
 2. Loading values using [phpDotEnv](https://github.com/vlucas/phpdotenv) or [Symfony dotEnv](https://symfony.com/doc/current/components/dotenv.html)
 3. Accessing values injected into the environment by a cloud provider (Kubernetes, Docker, Heroku, etc.)
 
-By default, this loader will transform your environment variable names as follows:
-
-1. Underscores ("_") will be converted into dots (".")
-2. Characters will be converted to lower-case
+### Default environment variable loading
 
 The default behavior is to load the configuration values directly:
 
@@ -359,6 +370,8 @@ MYAPP_MYSQL_HOST_NAME="..."  --> becomes --> $config->get('MYAPP_MYSQL_HOST_NAME
 SERVER_NAME="..."            --> becomes --> $config->get('SERVER_NAME')
 etc..
 ```
+
+### Load only environment variables with prefix
 
 You can load *ONLY* environment variables with a specific prefix.  Configula will remove the prefix
 when loading the configuration:
@@ -378,10 +391,12 @@ SERVER_NAME="..."            --> ignored
 etc..
 ```
 
+### Convert environment variables to nested configuration
+
 You can convert a flat list into nested config values by passing a delimiter to break on:  
 
 ```php
-$config = ConfigFactory::loadEnv('MYAPP_', '_');
+$config = ConfigFactory::loadEnv('MYAPP', '_');
 ```
 
 Result:
@@ -392,6 +407,17 @@ MYAPP_MYSQL_PASSWORD="..."   --> becomes --> $config->get('MYSQL.PASSWORD')
 MYAPP_MYSQL_HOST_PORT="..."  --> becomes --> $config->get('MYSQL.HOST.PORT')
 MYAPP_MYSQL_HOST_NAME="..."  --> becomes --> $config->get('MYSQL.HOST.NAME')
 ```
+
+This allows you to access nested values as an array:
+
+```php
+$config = ConfigFactory::loadEnv('MY_APP', '_');
+$dbConfig = $config->get('mysql.host');
+
+// $dbConfig: ['host' => '...', 'port' => '...']
+```
+
+### Transform environment variables to lower-case
 
 You can transform all of the values to lower-case by passing TRUE as the last argument:
 
@@ -407,6 +433,8 @@ MYAPP_MYSQL_PASSWORD="..."   --> becomes --> $config->get('mysql.password')
 MYAPP_MYSQL_HOST_PORT="..."  --> becomes --> $config->get('mysql.host.port')
 MYAPP_MYSQL_HOST_NAME="..."  --> becomes --> $config->get('mysql.host.name')
 ```
+
+### Loading environment variables with regex pattern
 
 Instead of using a prefix, you can pass a regex string to limit returned values:
 
@@ -424,10 +452,9 @@ EMAIL_MYAPP_SERVER="..."     --> becomes --> $config->get('email.myapp.server')
 SERVER_NAME="..."            --> ignored
 ```
 
+## Loading a single JSON-encoded environment variable
 
-### Loading a single JSON-encoded environment variable
-
-Use the `JsonEnvLoader` to load a JSON environment variable:
+Use the `Configula\Loader\JsonEnvLoader` to load a JSON environment variable:
 
 ```
 MY_ENV_VAR = '{"foo: "bar", "baz": "biz"}'
@@ -439,7 +466,7 @@ use Configula\Loader\JsonEnvLoader;
 $values = (new JsonEnvLoader('MY_ENV_VAR'))->load();
 
 echo $values->foo;
-echo $values['bar'];
+echo $values->get('foo'); // "bar"
 ```
 
 ## Loading from multiple loaders
@@ -458,10 +485,10 @@ use Configula\ConfigFactory as Config;
 use Configula\Loader;
 
 $config = Config::loadMultiple([
-    new Loader\EnvLoader('My_APP'),
-    ['some' => 'values'],
-    '/path/to/some/file.yml',
-    new \SplFileInfo('/path/to/another/file.json')
+    new Loader\EnvLoader('My_APP'),                 // Instance of LoaderInterface
+    ['some' => 'values'],                           // Array of config vaules
+    '/path/to/some/file.yml',                       // Path to file (must exist)
+    new \SplFileInfo('/path/to/another/file.json')  // SplFileInfo
 ]);
 
 Alternatively, you can pass an iterator of `Configula\ConfigLoaderInterface` instances to
@@ -470,8 +497,8 @@ Alternatively, you can pass an iterator of `Configula\ConfigLoaderInterface` ins
 
 ## Handling Errors
 
-All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch all errors thrown 
-during loading and reading of configuration values.
+All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch certain types of
+Configula errors during loading and reading of configuration values.
 
 ### Loading Exceptions:
 
@@ -479,6 +506,10 @@ during loading and reading of configuration values.
 * `ConfigFileNotFoundException` is thrown when a required configuration file or path is missing.  It is generally
   thrown from the `FileLoader` loader when the `$required` constructor parameter is set to `true`. 
 * `UnmappedFileExtensionException` is thrown from the `DecidingFileLoader` for files with unrecognized extensions.
+
+*NOTE:* Configula does NOT catch non-Configula exceptions and convert them to Configula exceptions.  If you wan to
+catch all conceivable errors when loading configuration, you should surround your configuration loading code
+with a `try...catch (\Throwable $e)`.
 
 ### Config Value Exceptions:
  
@@ -501,9 +532,9 @@ $config->find('non_existent_value');
 $config->get('non_existent_value', 'default');
 ```
 
-## Extending the `ConfigValues` class to make accessing configuration easy
+## Extending the `ConfigValues` class (for IDE type-hinting)
 
-While it is entirely possible to use the `Configula\ConfigValues` class directly , you might also want to provide 
+While it is entirely possible to use the `Configula\ConfigValues` class directly, you might also want to provide 
 some application-specific methods to load configuration values.  This creates a better developer experience. 
 
 ```php
@@ -554,7 +585,7 @@ use Configula\ConfigFactory;
 // Build it
 $config = AppConfig::fromConfigValues(ConfigFactory::loadPath('/some/path'));
 
-// Use it
+// Use it (and enjoy the type-hinting in your IDE)
 $config->getEncryptionKey();
 $config->isDevMode();
 // etc...
@@ -622,12 +653,14 @@ $config = ConfigFactory::loadPath('/path/to/config');
 
 // Validate the configuration by filtering it through the allowed values
 // If anything goes wrong here, a Symfony exception will be thrown (not a Configula exception)
-SymfonyConfigFilter::filter($configTree, $config);
+$config = SymfonyConfigFilter::filter($configTree, $config);
 ```
 
 ## Writing your own loader
 
 In addition to using the built-in loaders, you can write your own loader.  There are two ways to do this:
+
+### Create your own file loader
 
 Extend the `Configula\Loader\AbstractFileLoader` to write your own loader that reads data from a file.
 
@@ -663,6 +696,25 @@ $config = ConfigFactory::load(new MyFileLoader('/path/to/file'));
 // ..or don't..
 $config = (new MyFileLoader('/path/to/file'))->load();
 ```
+
+If you want to use the `FolderLoader` and automatically map your new type to a file extension, you can do so:
+
+```php
+
+use Configula\Loader\FileLoader;
+use Configula\Loader\FolderLoader;
+
+// Map my custom file loader to the 'conf' extension type (case-insensitive)
+$extensionMap = array_merge(FileLoader::DEFAULT_EXTENSION_MAP, [
+    'conf' => MyFileLoader::class
+]);
+
+// Now any files encountered in the folder with .conf extension will use my custom file loader
+$config = (new FolderLoader('/path/to/folder', true, $extensionMap))->load();
+
+``` 
+
+### Create your own custom loader
 
 Create your own implementation of `Configula\Loader\ConfigLoaderInterface`, and you can load configuration from anywhere:
 
