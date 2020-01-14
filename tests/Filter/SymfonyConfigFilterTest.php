@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -13,6 +14,8 @@
  *
  * ------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 namespace Configula\Filter;
 
@@ -66,14 +69,29 @@ class SymfonyConfigFilterTest extends TestCase
              */
             public function getConfigTreeBuilder()
             {
-                $builder = new TreeBuilder();
-                $builder->root('config')
-                    ->children()
-                    ->booleanNode('foo')->isRequired()->end()
-                    ->scalarNode('bar')->isRequired()->end()
-                    ->end();
+                // Symfony 3.4 backwards compatibility measure needs to be maintained until
+                // support for Symfony 3.4 ends (refer to https://symfony.com/releases)
+                if (method_exists(TreeBuilder::class, 'getRootNode')) {
+                    $builder = new TreeBuilder('test');
+                    $builder->getRootNode()
+                        ->children()
+                        ->booleanNode('foo')->isRequired()->end()
+                        ->scalarNode('bar')->isRequired()->end()
+                        ->end();
 
-                return $builder;
+                    return $builder;
+                } else { // Symfony v3.4 compatibility (remove when support ends)
+                    /** @noinspection PhpParamsInspection */
+                    $builder = new TreeBuilder();
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    $builder->root('config')
+                        ->children()
+                        ->booleanNode('foo')->isRequired()->end()
+                        ->scalarNode('bar')->isRequired()->end()
+                        ->end();
+
+                    return $builder;
+                }
             }
         };
     }
