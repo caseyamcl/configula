@@ -12,6 +12,6 @@
     <!-- Ignore fixtures in test fixtures directory (there are some purposeful errors) -->
     <exclude-pattern>tests/fixtures/php/.+</exclude-pattern>
 
-    <!-- Use the PSR2 Standard-->
-    <rule ref="PSR2" />
+    <!-- Use the PSR12 Standard-->
+    <rule ref="PSR12" />
 </ruleset>
