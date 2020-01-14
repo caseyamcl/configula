@@ -3,7 +3,7 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## UNRELEASED
+## [3.1.0] (2020-01-14)
 ### Added
 - PHP 7.4 test in `travis.ci`
 - Support for Symfony v5
