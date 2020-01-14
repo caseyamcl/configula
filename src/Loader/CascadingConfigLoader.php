@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -13,6 +14,8 @@
  *
  * ------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 namespace Configula\Loader;
 
@@ -54,7 +57,7 @@ class CascadingConfigLoader implements ConfigLoaderInterface
                     $loaders[] = new FileLoader($item);
                     break;
                 case $item instanceof SplFileInfo:
-                    $loaders[] = ($item->isDir()) ? new FolderLoader($item) : new FileLoader($item);
+                    $loaders[] = ($item->isDir()) ? new FolderLoader($item) : new FileLoader((string) $item);
                     break;
                 default:
                     throw new InvalidArgumentException(sprintf(

@@ -3,6 +3,17 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## UNRELEASED
+### Added
+- PHP 7.4 test in `travis.ci`
+- Support for Symfony v5
+- `.editorconfig` file (to make developers' lives easier :)
+- Strict types declaration on every file (`declare(strict_types=1);`)
+### Changed
+- Update to PSR-12 coding standard (from PSR-2)
+### Fixed
+- Explicitly cast results to string in order to facilitate strict types
+
 ## [3.0.0] (2019-04-11)
 ### Added
 - Added this changelog

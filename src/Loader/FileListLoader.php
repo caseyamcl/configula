@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -13,6 +14,8 @@
  *
  * ------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 namespace Configula\Loader;
 
@@ -65,7 +68,7 @@ class FileListLoader implements ConfigLoaderInterface
         foreach ($this->files as $file) {
             $fileInfo = ($file instanceof SplFileInfo) ? $file : new SplFileInfo($file);
             try {
-                $newValues = (new FileLoader($fileInfo->getRealPath(), $this->extensionMap))->load();
+                $newValues = (new FileLoader((string) $fileInfo->getRealPath(), $this->extensionMap))->load();
                 $values = $values->merge($newValues);
             } catch (ConfigFileNotFoundException | UnmappedFileExtensionException $e) {
                 // pass..

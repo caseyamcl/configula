@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -13,6 +14,8 @@
  *
  * ------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 namespace Configula\Loader;
 
@@ -78,7 +81,7 @@ class FileLoader implements FileLoaderInterface
                 /**
                  * @noinspection PhpUndefinedMethodInspection
                  */
-                return (new $className($file->getRealPath()))->load();
+                return (new $className((string) $file->getRealPath()))->load();
             } catch (Error $e) {
                 if (! is_a($className, AbstractFileLoader::class, true)) {
                     throw new ConfigLoaderException(
