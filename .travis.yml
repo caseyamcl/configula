@@ -2,14 +2,15 @@ language: php
 
 ## Versions to test
 php:
-  - '7.1'
-  - '7.2'
-  - '7.3'
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
 
 ## Use lowest stable versions for oldest version test
 matrix:
   include:
-    - php: '7.1'
+    - php: 7.1
       env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
 
 ## Cache composer
@@ -23,7 +24,7 @@ before_script:
 
 ## Run tests (codesniffer and PhpUnit)
 script:
-  - vendor/bin/phpcs --standard=psr2 src/
+  - vendor/bin/phpcs --standard=psr12 src/
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
 
 ## Report code coverage to scrutinizer
