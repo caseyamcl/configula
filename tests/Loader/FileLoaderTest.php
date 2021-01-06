@@ -35,7 +35,7 @@ class FileLoaderTest extends TestCase
     {
         @unlink($this->getTestFilePath()); // remove the file
         $values = $this->getLoader(false)->load();
-        $this->assertEquals(0, count($values));
+        $this->assertCount(0, $values);
     }
 
     public function testLoadThowsExceptionIfFileIsNotReadableAndIsRequired(): void

@@ -27,6 +27,6 @@ class ArrayValuesLoaderTest extends TestCase
     {
         $config = (new ArrayValuesLoader(static::$values))->load();
         $this->assertEquals('Pineapple', $config->get('c.p'));
-        $this->assertEquals(4, count($config));
+        $this->assertCount(4, $config);
     }
 }
