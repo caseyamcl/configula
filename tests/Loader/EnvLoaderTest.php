@@ -47,9 +47,6 @@ class EnvLoaderTest extends TestCase
         $this->assertEquals($expected, (new EnvLoader())->load()->getArrayCopy());
     }
 
-    /**
-     *
-     */
     public function testLoadSetsAllValuesToLowerCaseIfSpecified()
     {
         $this->assertEquals(
@@ -148,9 +145,9 @@ class EnvLoaderTest extends TestCase
         $values = EnvLoader::loadUsingPrefix('FOOBAR_');
         $this->assertSame(2, $values->get('INTEGER'));
         $this->assertSame(2.3, $values->get('FLOAT'));
-        $this->assertSame(true, $values->get('TRUE'));
-        $this->assertSame(false, $values->get('FALSE'));
-        $this->assertSame(null, $values->get('NULL'));
+        $this->assertTrue($values->get('TRUE'));
+        $this->assertFalse($values->get('FALSE'));
+        $this->assertNull($values->get('NULL'));
         $this->assertSame('somestuff', $values->get('STR'));
     }
 
