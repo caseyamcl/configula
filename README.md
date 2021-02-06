@@ -54,9 +54,9 @@ the **2.x** version of this library instead of the current one:
 composer require caseyamcl/configula:^2.4
 ```
 
-## Upgrading from v2.x?
+## Upgrading?
 
-Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x to Version 3.
+Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x, 3.x to v4.
  
 ## Loading Configuration
   
