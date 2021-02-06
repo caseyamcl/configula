@@ -2,7 +2,6 @@
 
 Configula is a configuration library for PHP 7.1+. 
 
-[![Build Status][ico-travis]][link-travis]
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Github Build][ico-ghbuild]][link-ghbuild]
@@ -23,13 +22,13 @@ any PHP application.
 * Cascade/deep merge values from multiple sources (e.g. array, files, environment, etc) 
 * Optionally use in combination with [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html)
   to validate configuration values and/or cache them
-* Creates an immutable object to access your configuration values in your application:
+* Creates an immutable object to access configuration values in your application:
     * Array-access (read-only)
     * `get(val)`, `has(val)`, and `hasValue(val)` methods
     * Magic methods (`__get(val)`, `__isset(val)`, and `__invoke(val)`)
     * Implements `Traversable` and `Countable` interfaces
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
-* Code quality standards: PSR-12, 100% Unit Test Coverage
+* Code quality standards: PSR-12, near-complete unit test coverage
 
 ## Installation
 
@@ -154,7 +153,7 @@ $values->get('db'); // array ['platform' => 'mysql', 'credentials' => ...]
 $values->has('db.credentials.key'); // false
 $values->hasValue('db.credentials.key'); // false
 ```
-        
+
 Property-like access to your config settings via `__get()` and `__isset()`:
 
 ```php
@@ -219,7 +218,7 @@ $config = new ConfigValues(['foo' => 'bar', 'baz' => 'biz']);
 $newConfig = $config->merge(new ConfigValues(['baz' => 'buzz', 'cad' => 'cuzz']));
 
 // For convenience, you can pass in an array using mergeValues()
-$newConfig = $config->merge(['baz' => 'buzz', 'cad' => ['some' => 'thing']]);
+$newConfig = $config->mergeValues(['baz' => 'buzz', 'cad' => ['some' => 'thing']]);
 ```
 
 Configula performs a *deep merge*.  Nested arrays are traversed and the last value always takes precedence.
@@ -281,8 +280,7 @@ foreach ($config->getArrayCopy() as $path => $value) {
 
 ## Using the Folder Loader - Config Folder Layout
 
-The folder loaders in Configula will load files with the following extensions (you can add your own loaders
-or override built-in ones; see below):
+The folder loaders in Configula will load files with the following extensions (you can add your own custom loaders; see below):
 
 * `php` - Configula will look for an array called `$config` in this file.
 * `json` - Uses the built-in PHP `json_decode()` function
@@ -316,16 +314,16 @@ and simply add the following to your `.gitignore`
 
 ```bash
 # If keeping .dist files...
-CONFIGDIR/*
-!CONFIGDIR/*.dist.*
+[CONFIGDIR]/*
+[!CONFIGDIR]/*.dist.*
 
 # or, if ignoring .local files...
-CONFIGDIR/*.local.*
+[CONFIGDIR]/*.local.*
 ```
 
 ### Example
 
-Consider the following directory layout
+Consider the following directory layout...
 
 ```
 /my/app/config
@@ -353,7 +351,7 @@ There are two common ways that configuration is generally stored in environment:
 1. As multiple environment variables (perhaps loaded by phpDotEnv or Symfony dotEnv, or exposed by Heroku/Kubernetes/etc.).
 2. As a single environment variable with a JSON-encoded value, which exposes the entire configuration tree.
 
-Configula supports both.  You can also write your own loader if your environment is different.
+Configula supports both. You can also write your own loader if your environment is different.
 
 ## Loading multiple environment variables
 
@@ -791,7 +789,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-downloads]: https://img.shields.io/packagist/dt/caseyamcl/configula.svg
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg
 [ico-ghbuild]: https://github.com/caseyamcl/guzzle_retry_middleware/workflows/Github%20Build/badge.svg
-[ico-phpstan]: https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg
+[ico-phpstan]: https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg
 [ico-coverage]: https://github.com/caseyamcl/guzzle_retry_middleware/blob/master/coverage.svg
 
 [link-packagist]: https://packagist.org/packages/caseyamcl/configula
