@@ -47,7 +47,7 @@ class SymfonyConfigFilter
      * @param  ConfigValues           $values
      * @return ConfigValues
      */
-    public static function filter(ConfigurationInterface $configuration, ConfigValues $values)
+    public static function filter(ConfigurationInterface $configuration, ConfigValues $values): ConfigValues
     {
         $that = new static($configuration);
         return $that($values);
@@ -59,7 +59,7 @@ class SymfonyConfigFilter
      * @param ConfigurationInterface $configTree
      * @param Processor|null         $processor
      */
-    public function __construct(ConfigurationInterface $configTree, Processor $processor = null)
+    final public function __construct(ConfigurationInterface $configTree, Processor $processor = null)
     {
         $this->configTree = $configTree;
         $this->processor = $processor ?: new Processor();
