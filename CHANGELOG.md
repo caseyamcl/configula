@@ -3,18 +3,21 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## UNRELEASED
+## [4.0] (2021-02-06)
 ### Added
 - Support for PHP v8
 - Support for `dflydev/dot-access-data` version 3.0 and newer
 - PHPStan, which replaces Scrutinizer
+- Some additional tests
 ### Changed
 - *BREAKING:* Added `final` keyword for `ConfigValues` constructor, and added `protected init()` method to keep any custom
   logic that was previously in the controller (see <UPGRADE.md>)
 - *BREAKING:* Made all concrete loader classes final (see <UPGRADE.md>)
 - Added support for `vlucas/dotenv` v5.0 and newer
-- Beginning to implement GitHub Workflows in order to replace Travis-CI 
+- Beginning to implement GitHub Workflows in order to replace Travis-CI
+- Refactored logic in `PhpFileLoader` 
 ### Removed 
+- Travis checks and Scrutinizer checks (replaced by GitHub builds and PHPStan)
 - Support for PHP < 7.3
 - Support for PHPUnit < 9.x
 - Support for Symfony v3 and < v4.4
