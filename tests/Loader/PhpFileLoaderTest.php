@@ -17,6 +17,8 @@
 
 namespace Configula\Loader;
 
+use Configula\Exception\ConfigLoaderException;
+
 /**
  * Class PhpFileLoaderTest
  *
@@ -24,6 +26,12 @@ namespace Configula\Loader;
  */
 class PhpFileLoaderTest extends AbstractFileLoaderTest
 {
+    public function testUnreadableFileInPhpFileLoaderThrowsException(): void
+    {
+        $this->expectException(ConfigLoaderException::class);
+        $obj = $this->getObject('/non/existent/filepath.txt');
+        $obj->load();
+    }
 
     /**
      * Get extension without the dot (.)
