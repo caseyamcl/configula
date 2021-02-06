@@ -1,6 +1,6 @@
 # Configula
 
-Configula is a configuration library for PHP 7.1+. 
+Configula is a configuration library for PHP 7.3+. 
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
