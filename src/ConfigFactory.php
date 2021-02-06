@@ -65,7 +65,7 @@ class ConfigFactory
      *
      * Pass in an iterable list of multiple loaders, file names, or arrays of values
      *
-     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface $items
+     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface[] $items
      * @return ConfigValues
      */
     public static function loadMultiple(iterable $items): ConfigValues
@@ -130,7 +130,7 @@ class ConfigFactory
      * @param  string      $prefix    Specify a prefix, and only environment variables with this prefix will be read
      *                                (e.g. "MYAPP_" means that this will only read env vars starting with
      *                                "MYAPP_")' Values will be
-     * @param  null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     * @param  string      $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
      *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
      * @param  bool        $toLower   Convert all keys to lower-case
      *
@@ -147,7 +147,7 @@ class ConfigFactory
      * Load configuration from environment variables using regex
      *
      * @param string      $regex     Optionally filter values based on some regex pattern
-     * @param null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
+     * @param string      $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
      *                               would become the key, "MYSQL.HOST" (empty string to not delimit)
      * @param bool        $toLower   Convert all keys to lower-case
      * @return ConfigValues

@@ -40,7 +40,7 @@ class CascadingConfigLoader implements ConfigLoaderInterface
      *
      * Pass in an iterable list of multiple loaders, file names, or arrays of values
      *
-     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface $items
+     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface[] $items
      * @return CascadingConfigLoader
      */
     public static function build(iterable $items): CascadingConfigLoader
