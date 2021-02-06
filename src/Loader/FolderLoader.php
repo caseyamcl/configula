@@ -58,16 +58,16 @@ final class FolderLoader implements ConfigLoaderInterface
     /**
      * ConfigFolderFilesLoader constructor.
      *
-     * @param string $path
+     * @param string|SplFileInfo $path
      * @param bool $recursive
      * @param array $extensionMap
      */
     public function __construct(
-        string $path,
+        $path,
         bool $recursive = true,
         array $extensionMap = FileLoader::DEFAULT_EXTENSION_MAP
     ) {
-        $this->path = $path;
+        $this->path = (string) $path;
         $this->extensionMap = $extensionMap;
         $this->recursive = $recursive;
     }

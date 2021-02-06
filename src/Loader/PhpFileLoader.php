@@ -71,13 +71,18 @@ final class PhpFileLoader implements FileLoaderInterface
             ob_end_clean();
 
             // If the config file isn't an array, throw an exception
+            /** @phpstan-ignore-next-line Ignore because we are doing some things that PHPStan doesn't understand */
             if (!is_array($config)) {
                 throw new ConfigLoaderException("Missing or invalid \$config array in file: " . $this->filePath);
             }
-
+            /** @phpstan-ignore-next-line Ignore because we are doing some things that PHPStan doesn't understand */
             return new ConfigValues($config);
         } catch (Throwable $e) {
-            throw new ConfigLoaderException("Error loading configuration from file: " . $this->filePath, $e->getCode(), $e);
+            throw new ConfigLoaderException(
+                "Error loading configuration from file: " . $this->filePath,
+                $e->getCode(),
+                $e
+            );
         }
     }
 }

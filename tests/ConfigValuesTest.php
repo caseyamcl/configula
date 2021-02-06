@@ -186,6 +186,7 @@ class ConfigValuesTest extends TestCase
     {
         $this->expectException(ConfigValueNotFoundException::class);
         $config = new ConfigValues(static::getTestValues());
+        /** @phpstan-ignore-next-line Ignore, because we need to attempt to access a value in order to test the error */
         $config->$path;
     }
 

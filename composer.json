@@ -42,7 +42,7 @@
         "test": "vendor/bin/phpunit; vendor/bin/php-coverage-badger build/logs/clover.xml ./coverage.svg",
         "check-style": "vendor/bin/phpcs src tests",
         "fix-style": "vendor/bin/phpcbf src tests",
-        "phpstan": "vendor/bin/phpstan analyse -l 2 src tests"
+        "phpstan": "vendor/bin/phpstan analyse -l 5 src tests"
     },
     "config": {
         "sort-packages": true
