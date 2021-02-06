@@ -1,3 +1,18 @@
+# Upgrading from v3.x to v4.x
+
+Configula v4 introduces PHP8 support, and while there was an attempt to keep breaking changes to a minimum,
+there are a few to address:
+
+## Move custom logic from `ConfigValues::__construct()` into `ConfigValues::init()`
+
+If you sub-class `ConfigValues` and have custom logic in the `__construct()` method, you'll need to move that logic into
+the new `init()` method.  The `ConfigValues::__construct()` is now declared final.
+
+## Refactor any classes that extend concrete `Loader` classes
+
+The `*Loader` classes are all final now, with the exception of `AbstractFileLoader`. If you extend any of them, you may
+need to refactor to use a composition-style rather than inheritance-style design pattern (e.g. decorator, etc.) 
+
 # Upgrading from v2.x to v3.x
 
 Configula v3 is quite different from v2.  But, you can replicate the behavior of Configula v2 
