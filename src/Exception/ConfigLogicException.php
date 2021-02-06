@@ -5,7 +5,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/caseyamcl/configula
- * @version 3.0
+ * @version 4
  * @package caseyamcl/configula
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  *
@@ -23,8 +23,6 @@ namespace Configula\Exception;
  * Config Logic Exception
  *
  * This exception is thrown when you attempt to use use this library incorrectly.
- *
- * @package Configula\Exception
  */
 class ConfigLogicException extends ConfigException
 {

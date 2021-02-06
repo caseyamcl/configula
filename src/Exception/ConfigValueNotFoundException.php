@@ -5,7 +5,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/caseyamcl/configula
- * @version 3.0
+ * @version 4
  * @package caseyamcl/configula
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  *
@@ -22,7 +22,7 @@ namespace Configula\Exception;
 /**
  * Class ConfigValueNotFoundException
  *
- * @package FandF\Config
+ * This is thrown when a configuration value is not found (or doesn't exist)
  */
 class ConfigValueNotFoundException extends ConfigException
 {
