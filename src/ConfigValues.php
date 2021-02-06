@@ -61,9 +61,10 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * @param array $values
      */
-    public function __construct(array $values)
+    final public function __construct(array $values)
     {
         $this->values = new Data($values);
+        $this->init();
     }
 
     /**
@@ -333,5 +334,16 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     public function count(): int
     {
         return count(iterator_to_array($this->getIterator()));
+    }
+
+    /**
+     * Do nothing by default.
+     *
+     * This is to account for the fact that the `__construct()` method is now final, so
+     * additional logic should go in here.
+     */
+    protected function init(): void
+    {
+        // pass..
     }
 }
