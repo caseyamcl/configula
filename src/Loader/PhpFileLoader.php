@@ -63,15 +63,12 @@ final class PhpFileLoader implements FileLoaderInterface
         }
 
         try {
+            $config = null;
+
             ob_start();
             /** @noinspection PhpIncludeInspection */
             include $this->filePath;
             ob_end_clean();
-
-            // If the file didn't generate a $config variable, do it now.
-            if (!isset($config)) {
-                $config = [];
-            }
 
             // If the config file isn't an array, throw an exception
             if (!is_array($config)) {
@@ -80,7 +77,7 @@ final class PhpFileLoader implements FileLoaderInterface
 
             return new ConfigValues($config);
         } catch (Throwable $e) {
-            throw new ConfigLoaderException("Error loading $config from file: " . $this->filePath, $e->getCode(), $e);
+            throw new ConfigLoaderException("Error loading configuration from file: " . $this->filePath, $e->getCode(), $e);
         }
     }
 }
