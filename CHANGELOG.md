@@ -3,6 +3,14 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## UNRELEASED
+### Added
+- Support for PHP v8
+- Support for `dflydev/dot-access-data` version 3.0 and newer
+### Changed
+- Added support for `vlucas/dotenv` v5.0 and newer
+- Beginning to implement GitHub Workflows in order to replace Travis-CI 
+
 ## [3.1.0] (2020-01-14)
 ### Added
 - PHP 7.4 test in `travis.ci`
