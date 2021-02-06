@@ -32,7 +32,7 @@ use SplFileInfo;
  *
  * @package Configula\Loader
  */
-class FileLoader implements FileLoaderInterface
+final class FileLoader implements FileLoaderInterface
 {
     public const DEFAULT_EXTENSION_MAP = [
         'yml'  => YamlFileLoader::class,
@@ -78,9 +78,6 @@ class FileLoader implements FileLoaderInterface
             $className = $this->extensionMap[strtolower($file->getExtension())];
 
             try {
-                /**
-                 * @noinspection PhpUndefinedMethodInspection
-                 */
                 return (new $className((string) $file->getRealPath()))->load();
             } catch (Error $e) {
                 if (! is_a($className, AbstractFileLoader::class, true)) {

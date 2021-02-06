@@ -28,7 +28,7 @@ use Throwable;
  *
  * @package Configula\Loader
  */
-class IniFileLoader implements FileLoaderInterface
+final class IniFileLoader implements FileLoaderInterface
 {
     /**
      * @var string

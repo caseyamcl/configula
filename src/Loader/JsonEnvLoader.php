@@ -30,7 +30,7 @@ use Configula\Exception\ConfigLoaderException;
  *
  * @package Configula\Loader
  */
-class JsonEnvLoader implements ConfigLoaderInterface
+final class JsonEnvLoader implements ConfigLoaderInterface
 {
     /**
      * @var string

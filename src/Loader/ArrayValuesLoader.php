@@ -27,7 +27,7 @@ use Configula\ConfigValues;
  *
  * @package Configula\Loader
  */
-class ArrayValuesLoader implements ConfigLoaderInterface
+final class ArrayValuesLoader implements ConfigLoaderInterface
 {
     /**
      * @var array

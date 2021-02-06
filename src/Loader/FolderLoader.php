@@ -32,13 +32,13 @@ use SplFileInfo;
 /**
  * Config Folder Files Loader
  *
- * This provides v2.x functionality/compatibility to v3.x
+ * This provides v2.x functionality/compatibility to v3.x/v4.x
  *
  * Loads all known
  *
  * @package Configula\Loader
  */
-class FolderLoader implements ConfigLoaderInterface
+final class FolderLoader implements ConfigLoaderInterface
 {
     /**
      * @var string

@@ -21,13 +21,14 @@ namespace Configula\Loader;
 
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
+use Throwable;
 
 /**
  * Class PhpFileLoader
  *
  * @package Configula\Loader
  */
-class PhpFileLoader implements FileLoaderInterface
+final class PhpFileLoader implements FileLoaderInterface
 {
     /**
      * @var string
@@ -51,22 +52,35 @@ class PhpFileLoader implements FileLoaderInterface
      */
     public function load(): ConfigValues
     {
-
-        if (is_readable($this->filePath)) {
-            ob_start();
-
-            /** @noinspection PhpIncludeInspection */
-            include $this->filePath;
-
-            ob_end_clean();
+        // If file is empty, just return empty ConfigValues object
+        if (trim(file_get_contents($this->filePath)) === "") {
+            return new ConfigValues([]);
         }
 
-        if (isset($config) && is_array($config)) {
+        // If file is not readable for any reason (permissions, etc), throw an exception
+        if (! is_readable($this->filePath)) {
+            throw new ConfigLoaderException("Error reading config from file (check permissions?): " . $this->filePath);
+        }
+
+        try {
+            ob_start();
+            /** @noinspection PhpIncludeInspection */
+            include $this->filePath;
+            ob_end_clean();
+
+            // If the file didn't generate a $config variable, do it now.
+            if (!isset($config)) {
+                $config = [];
+            }
+
+            // If the config file isn't an array, throw an exception
+            if (!is_array($config)) {
+                throw new ConfigLoaderException("Missing or invalid \$config array in file: " . $this->filePath);
+            }
+
             return new ConfigValues($config);
-        } elseif (trim(file_get_contents($this->filePath)) === "") {
-            return new ConfigValues([]);
-        } else {
-            throw new ConfigLoaderException("Missing or invalid \$config array in file: " . $this->filePath);
+        } catch (Throwable $e) {
+            throw new ConfigLoaderException("Error loading $config from file: " . $this->filePath, $e->getCode(), $e);
         }
     }
 }

@@ -31,7 +31,7 @@ use SplFileInfo;
  *
  * @package Configula\Loader
  */
-class FileListLoader implements ConfigLoaderInterface
+final class FileListLoader implements ConfigLoaderInterface
 {
     /**
      * @var iterable|SplFileInfo[]|string[]

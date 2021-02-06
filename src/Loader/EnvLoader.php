@@ -32,7 +32,7 @@ use Dflydev\DotAccessData\Data;
  *
  * @package Configula\Loader
  */
-class EnvLoader implements ConfigLoaderInterface
+final class EnvLoader implements ConfigLoaderInterface
 {
     /**
      * @var string
