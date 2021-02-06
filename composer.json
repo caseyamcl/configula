@@ -1,7 +1,7 @@
 {
     "name": "caseyamcl/configula",
     "type": "library",
-    "description": "A simple, flexible, read-only config library for PHP 7.1+",
+    "description": "A simple, but versatile, PHP config loader",
     "keywords": ["config", "configuration"],
     "homepage": "https://github.com/caseyamcl/Configula",
     "license": "MIT",
