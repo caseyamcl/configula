@@ -788,13 +788,13 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-version]: https://img.shields.io/packagist/v/caseyamcl/configula.svg
 [ico-downloads]: https://img.shields.io/packagist/dt/caseyamcl/configula.svg
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg
-[ico-ghbuild]: https://github.com/caseyamcl/guzzle_retry_middleware/workflows/Github%20Build/badge.svg
+[ico-ghbuild]: https://github.com/caseyamcl/configula/workflows/Github%20Build/badge.svg
 [ico-phpstan]: https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg
-[ico-coverage]: https://github.com/caseyamcl/guzzle_retry_middleware/blob/master/coverage.svg
+[ico-coverage]: https://github.com/caseyamcl/configula/blob/master/coverage.svg
 
 [link-packagist]: https://packagist.org/packages/caseyamcl/configula
 [link-downloads]: https://packagist.org/packages/caseyamcl/configula
 [link-author]: https://github.com/caseyamcl
 [link-contributors]: ../../contributors
 [link-phpstan]: https://phpstan.org/
-[link-ghbuild]: https://github.com/caseyamcl/guzzle_retry_middleware/actions?query=workflow%3A%22Github+Build%22
+[link-ghbuild]: https://github.com/caseyamcl/configula/actions?query=workflow%3A%22Github+Build%22
