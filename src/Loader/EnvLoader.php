@@ -92,7 +92,10 @@ final class EnvLoader implements ConfigLoaderInterface
     {
         $configValues = new Data();
 
-        foreach (getenv() as $valName => $valVal) {
+        // Make sure we capture *ALL* environment values
+        $envValues = array_merge(getenv(), $_ENV);
+
+        foreach ($envValues as $valName => $valVal) {
             if ($this->regex && ! preg_match($this->regex, $valName)) {
                 continue;
             }
