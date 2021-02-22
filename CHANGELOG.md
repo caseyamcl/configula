@@ -3,7 +3,7 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## [v.0.1] (2021-02-22)
+## [v4.0.1] (2021-02-22)
 ### Fixed
 - Merge `$_ENV` and `getenv()` arrays in `EnvLoader.php`; fixes an issue with Symfony dotEnv loader
 
