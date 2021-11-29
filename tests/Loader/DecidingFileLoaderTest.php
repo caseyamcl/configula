@@ -43,26 +43,26 @@ class DecidingFileLoaderTest extends TestCase
         $this->assertEquals([1, 2, 3], $values->get('b'));
     }
 
-    public function testNonExistentFileThrowsException()
+    public function testNonExistentFileThrowsException(): void
     {
         $this->expectException(ConfigFileNotFoundException::class);
         (new FileLoader(__DIR__ . '/non-existent.yml'))->load();
     }
 
-    public function testNonMappedProviderThrowsException()
+    public function testNonMappedProviderThrowsException(): void
     {
         $this->expectException(UnmappedFileExtensionException::class);
         (new FileLoader(__DIR__ . '/../fixtures/ini/config.ini', []))->load();
     }
 
-    public function testInvalidLoaderClassThrowsException()
+    public function testInvalidLoaderClassThrowsException(): void
     {
         $this->expectException(ConfigLoaderException::class);
         $this->expectExceptionMessage('must be instance of');
         (new FileLoader(__DIR__ . '/../fixtures/ini/config.ini', ['ini' => stdClass::class]))->load();
     }
 
-    public function testLoadWithExceptionPassesError()
+    public function testLoadWithExceptionPassesError(): void
     {
         $this->expectException(Error::class);
         (new FileLoader(

@@ -35,7 +35,7 @@ class JsonEnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testValidDataReturnsExpectedResults()
+    public function testValidDataReturnsExpectedResults(): void
     {
         putenv('FOOBAR_JSON_DATA=' . json_encode(static::JSON_DATA));
         $values = (new JsonEnvLoader('FOOBAR_JSON_DATA'))->load();
@@ -45,7 +45,7 @@ class JsonEnvLoaderTest extends TestCase
         $this->assertIsString($values->get('a'));
     }
 
-    public function testInvalidDataThrowsLoaderException()
+    public function testInvalidDataThrowsLoaderException(): void
     {
         putenv('FOOBAR_JSON_DATA=asdf1239423-497y8-398289--83--@#_#@*_#*_');
 
@@ -56,7 +56,7 @@ class JsonEnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testValidDataReturnsExpectedResultsWhenArrayOptionEnabled()
+    public function testValidDataReturnsExpectedResultsWhenArrayOptionEnabled(): void
     {
         putenv('FOOBAR_JSON_DATA=' . json_encode(static::JSON_DATA));
         $values = (new JsonEnvLoader('FOOBAR_JSON_DATA', true))->load();

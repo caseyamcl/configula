@@ -50,7 +50,7 @@ class EnvLoaderTest extends TestCase
     /**
      *
      */
-    public function testLoadSetsAllValuesToLowerCaseIfSpecified()
+    public function testLoadSetsAllValuesToLowerCaseIfSpecified(): void
     {
         $this->assertEquals(
             array_map('strtolower', array_keys(getenv())),
@@ -61,7 +61,7 @@ class EnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testLoadLimitsResultsBasedOnRegexString()
+    public function testLoadLimitsResultsBasedOnRegexString(): void
     {
         $this->setupEnv();
         $this->assertEquals(2, (new EnvLoader('/FOOBAR_APP/'))->load()->count());
@@ -70,7 +70,7 @@ class EnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testLoadLowerCasesValuesCorrectly()
+    public function testLoadLowerCasesValuesCorrectly(): void
     {
         $this->setupEnv();
         $values = (new EnvLoader('/FOOBAR_APP/', '', true))->load();
@@ -83,7 +83,7 @@ class EnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testLoadDelimitsCorrectly()
+    public function testLoadDelimitsCorrectly(): void
     {
         $this->setupEnv();
         $values = (new EnvLoader('/FOOBAR_APP/', '_'))->load();
@@ -99,7 +99,7 @@ class EnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testLoadUsingPrefixWorksCorrectly()
+    public function testLoadUsingPrefixWorksCorrectly(): void
     {
         $this->setupEnv();
         $values = EnvLoader::loadUsingPrefix('FOOBAR_');
@@ -109,7 +109,7 @@ class EnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testLoadUsingPrefixWorksWhenLowerCaseEnabled()
+    public function testLoadUsingPrefixWorksWhenLowerCaseEnabled(): void
     {
         $this->setupEnv();
         $values = EnvLoader::loadUsingPrefix('FOOBAR_', '', true);
@@ -119,14 +119,14 @@ class EnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testLoadUsingPrefixWorksWithDelimiter()
+    public function testLoadUsingPrefixWorksWithDelimiter(): void
     {
         $this->setupEnv();
         $values = EnvLoader::loadUsingPrefix('FOOBAR', '_', true);
         $this->assertEquals(['app' => ['another' => 2]], $values->getArrayCopy());
     }
 
-    public function testLoadUsingPrefixWorksWithMultiLevelDelimiter()
+    public function testLoadUsingPrefixWorksWithMultiLevelDelimiter(): void
     {
         $this->setupEnv();
         $values = EnvLoader::loadUsingPrefix('FOOBAR_APP', '_');
@@ -136,7 +136,7 @@ class EnvLoaderTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testPrepareValuesSetsScalarsCorrectly()
+    public function testPrepareValuesSetsScalarsCorrectly(): void
     {
         putenv('FOOBAR_INTEGER=2');
         putenv('FOOBAR_FLOAT=2.3');

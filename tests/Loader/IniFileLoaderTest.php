@@ -34,7 +34,7 @@ class IniFileLoaderTest extends AbstractFileLoaderTest
         return 'ini';
     }
 
-    public function testMultiSectionFile()
+    public function testMultiSectionFile(): void
     {
         $loader = new IniFileLoader($this->getTestFilePath('sections'), true);
         $values = $loader->load();

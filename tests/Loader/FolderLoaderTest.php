@@ -27,14 +27,14 @@ use PHPUnit\Framework\TestCase;
  */
 class FolderLoaderTest extends TestCase
 {
-    public function testFolderLoaderThrowsExceptionForNonexistentDirectory()
+    public function testFolderLoaderThrowsExceptionForNonexistentDirectory(): void
     {
         $this->expectException(ConfigLoaderException::class);
         $this->expectExceptionMessage('is it a directory');
         (new FolderLoader(__DIR__ . '/nonexistent'))->load();
     }
 
-    public function testValuesLoadedInCorrectOrder()
+    public function testValuesLoadedInCorrectOrder(): void
     {
         $values = (new FolderLoader(__DIR__ . '/../fixtures/folder'))->load();
         $this->assertSame('a_from_config_ini', $values->get('a'));

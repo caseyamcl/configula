@@ -39,7 +39,7 @@ abstract class AbstractFileLoaderTest extends TestCase
         $this->assertEquals([1, 2, 3], $values->get('b'));
     }
 
-    public function testBadFileThrowsLoaderException()
+    public function testBadFileThrowsLoaderException(): void
     {
         $badFilePath = $this->getTestFilePath('bad');
         if (! is_readable($badFilePath)) {
@@ -51,7 +51,7 @@ abstract class AbstractFileLoaderTest extends TestCase
         $loader->load();
     }
 
-    public function testEmptyFileReturnsEmptyConfig()
+    public function testEmptyFileReturnsEmptyConfig(): void
     {
         $emptyFilePath = $this->getTestFilePath('empty');
         if (! is_readable($emptyFilePath)) {

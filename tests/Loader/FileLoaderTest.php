@@ -62,7 +62,7 @@ class FileLoaderTest extends TestCase
     /**
      * Get test file path
      */
-    final protected static function getTestFilePath()
+    final protected static function getTestFilePath(): string
     {
         return sys_get_temp_dir() . '/__php_configula_test_config.' . ltrim(static::EXPECTED_EXTENSION, '.');
     }

@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ExtractTopLevelItemFilterTest extends TestCase
 {
-    public function testTopLevelExtractedWhenExists()
+    public function testTopLevelExtractedWhenExists(): void
     {
         $test = [
             'pre' => [
@@ -46,7 +46,7 @@ class ExtractTopLevelItemFilterTest extends TestCase
         $this->assertEquals('B', $values->get('b'));
     }
 
-    public function testNoChangeWhenTopLevelNotExists()
+    public function testNoChangeWhenTopLevelNotExists(): void
     {
         $test = [
             'baz' => 'biz',
@@ -57,7 +57,7 @@ class ExtractTopLevelItemFilterTest extends TestCase
         $this->assertEquals($test, $values->getArrayCopy());
     }
 
-    public function testExceptionThrownWhenCollisionDetected()
+    public function testExceptionThrownWhenCollisionDetected(): void
     {
         $this->expectException(ConfigLoaderException::class);
         $this->expectExceptionMessage('collision');
