@@ -3,7 +3,16 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## [v4.0.1] (2021-02-22)
+## [4.1] (2021-11-29)
+### Added
+- Ability for PhpFileLoader to load arrays directly from included PHP files (thanks @thedumbtechguy!)
+- Support for PHP v8.1
+- Support for Symfony 6
+- Updated PHPStan to v1.2 and fixed code issues
+### Removed
+- Unused `extensionMap` property in `FolderLoader`
+
+## [4.0.1] (2021-02-22)
 ### Fixed
 - Merge `$_ENV` and `getenv()` arrays in `EnvLoader.php`; fixes an issue with Symfony dotEnv loader
 
