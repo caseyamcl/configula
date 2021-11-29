@@ -69,7 +69,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
         }
 
         $values = $this->parse(file_get_contents($this->filePath));
-        return new ConfigValues($values ?? []);
+        return new ConfigValues($values);
     }
 
     /**

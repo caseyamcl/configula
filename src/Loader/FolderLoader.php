@@ -46,11 +46,6 @@ final class FolderLoader implements ConfigLoaderInterface
     private $path;
 
     /**
-     * @var array
-     */
-    private $extensionMap;
-
-    /**
      * @var bool
      */
     private $recursive;
@@ -60,15 +55,10 @@ final class FolderLoader implements ConfigLoaderInterface
      *
      * @param string|SplFileInfo $path
      * @param bool $recursive
-     * @param array $extensionMap
      */
-    public function __construct(
-        $path,
-        bool $recursive = true,
-        array $extensionMap = FileLoader::DEFAULT_EXTENSION_MAP
-    ) {
+    public function __construct($path, bool $recursive = true)
+    {
         $this->path = (string) $path;
-        $this->extensionMap = $extensionMap;
         $this->recursive = $recursive;
     }
 

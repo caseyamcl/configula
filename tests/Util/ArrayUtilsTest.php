@@ -41,11 +41,11 @@ class ArrayUtilsTest extends TestCase
     public function testFlattenAndIterate(): void
     {
         $expectedKeys = ['a', 'b', 'c.p', 'c.w'];
-        $keys = array_keys(iterator_to_array(ArrayUtils::flattenAndIterate(static::$arrayA)));
+        $keys = array_keys(iterator_to_array(ArrayUtils::flattenAndIterate(self::$arrayA)));
         $this->assertEquals($expectedKeys, $keys);
 
         $expectedKeys = ['b', 'c.p', 'c.w'];
-        $keys = array_keys(iterator_to_array(ArrayUtils::flattenAndIterate(static::$arrayB)));
+        $keys = array_keys(iterator_to_array(ArrayUtils::flattenAndIterate(self::$arrayB)));
         $this->assertEquals($expectedKeys, $keys);
     }
 
@@ -63,6 +63,6 @@ class ArrayUtilsTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, ArrayUtils::merge(static::$arrayA, static::$arrayB));
+        $this->assertEquals($expected, ArrayUtils::merge(self::$arrayA, self::$arrayB));
     }
 }
