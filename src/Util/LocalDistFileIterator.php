@@ -21,6 +21,7 @@ namespace Configula\Util;
 
 use Generator;
 use IteratorAggregate;
+use ReturnTypeWillChange;
 use SplFileInfo;
 
 /**
@@ -67,6 +68,7 @@ class LocalDistFileIterator implements IteratorAggregate
     /**
      * @return Generator|SplFileInfo[]
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         $localFiles = [];
