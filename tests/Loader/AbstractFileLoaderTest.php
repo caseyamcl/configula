@@ -23,10 +23,11 @@ use PHPUnit\Framework\TestCase;
 abstract class AbstractFileLoaderTest extends TestCase
 {
     protected const LOADER_DIRECTORY = __DIR__ . '/../fixtures';
+    protected const GOOD_FILE_NAME = 'config';
 
-    public function testGoodFileReturnsExpectedItems()
+    public function testGoodFileReturnsExpectedItems(): void
     {
-        $goodFilePath = $this->getTestFilePath('config');
+        $goodFilePath = $this->getTestFilePath(static::GOOD_FILE_NAME);
         if (! is_readable($goodFilePath)) {
             $this->fail('Missing expected "good" test case for file type: ' . $this->getExt());
         }

@@ -65,17 +65,20 @@ final class PhpFileLoader implements FileLoaderInterface
         try {
             $config = null;
 
+            // Loading the file will either overwrite the $config variable or the file itself will return an array
             ob_start();
-            /** @noinspection PhpIncludeInspection */
-            include $this->filePath;
+            $configFromReturn = include $this->filePath;
             ob_end_clean();
 
-            // If the config file isn't an array, throw an exception
             /** @phpstan-ignore-next-line Ignore because we are doing some things that PHPStan doesn't understand */
+            if (!is_array($config)) {
+                $config = $configFromReturn;
+            }
+
+            // If the config file still isn't an array, throw an exception
             if (!is_array($config)) {
                 throw new ConfigLoaderException("Missing or invalid \$config array in file: " . $this->filePath);
             }
-            /** @phpstan-ignore-next-line Ignore because we are doing some things that PHPStan doesn't understand */
             return new ConfigValues($config);
         } catch (Throwable $e) {
             throw new ConfigLoaderException(
