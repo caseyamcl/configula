@@ -22,9 +22,9 @@ namespace Configula\Exception;
 /**
  * Config Logic Exception
  *
- * This exception is thrown when you attempt to use use this library incorrectly.
+ * This exception is thrown when you attempt to use this library incorrectly.
  */
 class ConfigLogicException extends ConfigException
 {
-    // pass...
+    // pass ...
 }

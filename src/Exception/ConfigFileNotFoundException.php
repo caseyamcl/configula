@@ -28,5 +28,5 @@ namespace Configula\Exception;
  */
 class ConfigFileNotFoundException extends ConfigLoaderException
 {
-
+    // pass ...
 }

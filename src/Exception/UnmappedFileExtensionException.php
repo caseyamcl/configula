@@ -26,5 +26,5 @@ namespace Configula\Exception;
  */
 class UnmappedFileExtensionException extends ConfigLoaderException
 {
-    // pass...
+    // pass ...
 }

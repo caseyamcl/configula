@@ -26,5 +26,5 @@ namespace Configula\Exception;
  */
 class InvalidConfigValueException extends ConfigException
 {
-    // pass..
+    // pass ...
 }

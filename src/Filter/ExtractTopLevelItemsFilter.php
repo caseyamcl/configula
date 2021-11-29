@@ -82,7 +82,7 @@ class ExtractTopLevelItemsFilter
             return $items;
         }
 
-        // Elevate all of the sub-items from the array that are children of the prefix to remove
+        // Elevate all the sub-items from the array that are children of the prefix to remove
         foreach ($items[$key] as $k => $v) {
             // If item already exists in root node, throw exception
             if (isset($items[$k])) {

@@ -26,5 +26,5 @@ namespace Configula\Exception;
  */
 class ConfigValueNotFoundException extends ConfigException
 {
-    // pass..
+    // pass ...
 }

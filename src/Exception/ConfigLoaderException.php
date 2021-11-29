@@ -22,9 +22,11 @@ namespace Configula\Exception;
 /**
  * Class ConfigParseException
  *
+ * Typically, this is thrown when there is a parsing error when loading configuration from various sources
+ *
  * @package Configula\Exception
  */
 class ConfigLoaderException extends ConfigException
 {
-    // Configuration parsing exception
+    // pass ...
 }

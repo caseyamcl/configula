@@ -34,6 +34,7 @@ abstract class AbstractFileLoader implements FileLoaderInterface
      * @var string
      */
     private $filePath;
+
     /**
      * @var bool
      */

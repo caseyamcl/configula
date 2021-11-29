@@ -26,5 +26,5 @@ use RuntimeException;
  */
 abstract class ConfigException extends RuntimeException
 {
-    // pass..
+    // pass ...
 }
