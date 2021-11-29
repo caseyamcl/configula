@@ -431,7 +431,7 @@ $dbConfig = $config->get('mysql.host');
 
 ### Transform environment variables to lower-case
 
-You can transform all of the values to lower-case by passing TRUE as the last argument:
+You can transform all the values to lower-case by passing TRUE as the last argument:
 
 ```php
 $config = ConfigFactory::loadEnv('MYAPP_', '_', true);
