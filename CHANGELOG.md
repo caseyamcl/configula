@@ -3,13 +3,15 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## UNRELEASED
+## [4.2] (2022-08-16)
 ### Added
 - Symfony Config 6.x tests
 - Explicit `XDEBUG_MODE=coverage` environment variable to `composer test` script
 ### Changed
 - Code syntax cleanup and improvements
 - Updated PHPUnit config file (`phpunit.xml.dist`) to v9.x schema
+### Fixed
+- Added attribute to fix PHP Deprecation warning in v8 (thanks @usox!)
 
 ## [4.1] (2021-11-29)
 ### Added
