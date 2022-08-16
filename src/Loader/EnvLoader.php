@@ -60,10 +60,10 @@ final class EnvLoader implements ConfigLoaderInterface
      * @param  bool        $toLower   Convert all keys to lower-case
      * @return ConfigValues
      */
-    public static function loadUsingPrefix(string $prefix, string $delimiter = '', bool $toLower = false)
+    public static function loadUsingPrefix(string $prefix, string $delimiter = '', bool $toLower = false): ConfigValues
     {
         $prefix = preg_quote($prefix);
-        $values = (new static("/^{$prefix}/", $delimiter, $toLower))->load();
+        $values = (new EnvLoader("/^{$prefix}/", $delimiter, $toLower))->load();
 
         return $delimiter
             ? (new ExtractTopLevelItemsFilter($toLower ? strtolower($prefix) : $prefix, $delimiter))->__invoke($values)
@@ -112,7 +112,7 @@ final class EnvLoader implements ConfigLoaderInterface
      * Prepare string value
      *
      * @param  string $value
-     * @return mixed
+     * @return bool|float|int|string|null
      */
     private function prepareVal(string $value)
     {

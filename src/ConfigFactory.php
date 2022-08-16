@@ -112,7 +112,7 @@ class ConfigFactory
         // If path, use default behavior..
         if (is_dir($configPath)) {
             $pathValues = (new FolderLoader($configPath))->load();
-        } elseif (is_file($configPath)) { // Elseif if file, then just load that single file..
+        } elseif (is_file($configPath)) { // Elseif if file, then just load that single file...
             $pathValues = (new FileLoader($configPath))->load();
         } elseif ($configPath === '') { // Else, no path provided, so empty values
             $pathValues = new ConfigValues([]);

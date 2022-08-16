@@ -66,7 +66,7 @@ class LocalDistFileIterator implements IteratorAggregate
     }
 
     /**
-     * @return Generator|SplFileInfo[]
+     * @return Generator<int,SplFileInfo>
      */
     #[ReturnTypeWillChange]
     public function getIterator()

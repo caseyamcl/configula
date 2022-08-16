@@ -24,7 +24,6 @@ class FileLoaderTest extends TestCase
 {
     public const EXPECTED_EXTENSION = '.txt';
 
-
     public function testLoadReturnsConfigValuesIfFileExists(): void
     {
         $values = $this->getLoader()->load();
@@ -84,7 +83,6 @@ class FileLoaderTest extends TestCase
     protected function getLoader(bool $required = true): AbstractFileLoader
     {
         return new class ($this->getTestFilePath(), $required) extends AbstractFileLoader {
-
             /**
              * Parse the contents
              *
