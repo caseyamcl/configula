@@ -300,6 +300,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      * @param  mixed $offset
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
