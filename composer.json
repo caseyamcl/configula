@@ -17,7 +17,7 @@
         "php"     : "^7.3|^8.0",
         "ext-json": "*",
 
-        "symfony/yaml"           : "^4.4|^5.0|^6.0",
+        "symfony/yaml"           : "^4.4|^5.0|^6.0|^7.0",
         "dflydev/dot-access-data": "^1.1|^2.0|^3.0"
     },
     "require-dev": {
