@@ -2,7 +2,7 @@
 
 Configula is a configuration library for PHP 7.1+. 
 
-[![Build Status][ico-travis]][link-travis]
+[![Github Build][ico-ghbuild]][link-ghbuild]
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Total Downloads][ico-downloads]][link-downloads]
@@ -36,7 +36,7 @@ composer require caseyamcl/configula
 
 ## Need PHP v5.* compatibility?
 
-Configula Version 2.x is compatible with PHP v5.3+.  If you need PHP 5.x compatibility, instruct Composer to use
+Configula Version 3.x is compatible with PHP v7.1+.  If you need PHP 5.x compatibility, instruct Composer to use
 the **2.x** version of this library instead of the current one:
 
 ```
@@ -775,13 +775,13 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-travis]: https://img.shields.io/travis/caseyamcl/configula/master.svg?style=flat-square
+[ico-ghbuild]: https://github.com/caseyamcl/configula/workflows/Github%20Build/badge.svg
 [ico-version]: https://img.shields.io/packagist/v/caseyamcl/configula.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/caseyamcl/configula.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
 
+[link-ghbuild]: https://github.com/caseyamcl/configula/actions?query=workflow%3A%22Github+Build%22
 [link-packagist]: https://packagist.org/packages/caseyamcl/configula
-[link-travis]: https://travis-ci.org/caseyamcl/configula
 [link-downloads]: https://packagist.org/packages/caseyamcl/configula
 [link-author]: https://github.com/caseyamcl
 [link-contributors]: ../../contributors
