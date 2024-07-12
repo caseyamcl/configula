@@ -84,7 +84,6 @@ class FileLoaderTest extends TestCase
     protected function getLoader(bool $required = true): AbstractFileLoader
     {
         return new class ($this->getTestFilePath(), $required) extends AbstractFileLoader {
-
             /**
              * Parse the contents
              *

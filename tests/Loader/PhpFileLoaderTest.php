@@ -24,7 +24,6 @@ namespace Configula\Loader;
  */
 class PhpFileLoaderTest extends AbstractFileLoaderTest
 {
-
     /**
      * Get extension without the dot (.)
      *

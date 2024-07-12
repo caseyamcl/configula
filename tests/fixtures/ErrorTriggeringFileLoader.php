@@ -22,7 +22,6 @@ use Error;
 
 class ErrorTriggeringFileLoader extends AbstractFileLoader
 {
-
     /**
      * Parse the contents
      *
