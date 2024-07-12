@@ -3,7 +3,13 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## UNRELEASED
+## [3.2.0] (2024-07-12)
+### Added
+- GitHub builds for v3
+- Support for `dflydev/dot-access-data` v3
+### Fixed
+- Incorrect information in `README.md`
+- Adhere to PSR-12 coding standards 
 ### Removed
 - Old defunct `.scrutinizer.yml` and `.travis.yml` configuration files 
 
