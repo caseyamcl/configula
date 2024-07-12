@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -13,6 +14,8 @@
  *
  * ------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 namespace Configula;
 
@@ -35,7 +38,7 @@ use Traversable;
 class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
 {
     // Silly value, but we need one to reasonably ensure there is no collision with actual data
-    const NOT_SET = '__THe_VALUe___iS__Not_SET_l33t__';
+    public const NOT_SET = '__THe_VALUe___iS__Not_SET_l33t__';
 
     /**
      * @var Data

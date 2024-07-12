@@ -2,7 +2,6 @@
 
 Configula is a configuration library for PHP 7.1+. 
 
-
 [![Build Status][ico-travis]][link-travis]
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -27,7 +26,7 @@ any PHP application.
     * Magic methods (`__get(val)`, `__isset(val)`, and `__invoke(val)`)
     * Implements `Traversable` and `Countable` interfaces
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
-* Code quality standards: PSR-2, 100% Unit Test Coverage
+* Code quality standards: PSR-12, 100% Unit Test Coverage
 
 ## Installation
 
@@ -64,10 +63,10 @@ $config = Config::loadPath('/path/to/config/files', ['optional' => 'defaults', .
 $config = Config::loadSingleDirectory('/path/to/config/files', ['optional' => 'defaults', ...]);
 
 // Load from array
-$config = Config::loadFromArray(['some' => 'values']);
+$config = Config::fromArray(['some' => 'values']);
 
 // Chain loaders -- performs deep merge
-$config = Config::loadFromArray(['some' => 'values'])
+$config = Config::fromArray(['some' => 'values'])
     ->merge(Config::loadPath('/some/path'))
     ->merge(Config::loadEnv('MY_APP'));
 ```
@@ -75,7 +74,7 @@ $config = Config::loadFromArray(['some' => 'values'])
 Or, if you are loading an array, you can instantiate `Configula\ConfigValues` directly:
 
 ```php
-$config = new Configula\ConfigValues(['array' => 'values' ...]);
+$config = new Configula\ConfigValues(['array' => 'values']);
 ```
 
 Or, you can manually invoke any of the loaders in the `Configula\Loader` namespace:
@@ -166,7 +165,7 @@ foreach ($config as $item => $value) {
 }
 
 // Count
-count($config) /* or */ $config->count();
+count($config); /* or */ $config->count();
 ```
 
 Callable access to your config settings via `__invoke()`:
@@ -202,10 +201,10 @@ or `mergeValues` methods:
 ```php
 use Configula\ConfigValues;
 
-$config = new ConfigValues(['foo' => 'bar', 'baz' => 'biz');
+$config = new ConfigValues(['foo' => 'bar', 'baz' => 'biz']);
 
 // Merge configuration using merge()
-$newConfig = $config->merge(new ConfigValues(['baz' => 'buzz', 'cad' => 'cuzz]));
+$newConfig = $config->merge(new ConfigValues(['baz' => 'buzz', 'cad' => 'cuzz']));
 
 // For convenience, you can pass in an array using mergeValues()
 $newConfig = $config->merge(['baz' => 'buzz', 'cad' => ['some' => 'thing']]);
@@ -494,8 +493,8 @@ $config = Config::loadMultiple([
     new \SplFileInfo('/path/to/another/file.json')  // SplFileInfo
 ]);
 
-Alternatively, you can pass an iterator of `Configula\ConfigLoaderInterface` instances to
-`Configula\Loader\CascadingConfigLoader`.
+// Alternatively, you can pass an iterator of `Configula\ConfigLoaderInterface` instances to
+// `Configula\Loader\CascadingConfigLoader`.
 ```
 
 ## Handling Errors
@@ -619,7 +618,7 @@ class ConfigTree implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('config');
+        $rootNode = $treeBuilder->getRootNode();
         
         $rootNode->children()
             ->boolean('devmode')->defaultValue(false)->end()
@@ -636,7 +635,7 @@ class ConfigTree implements ConfigurationInterface
             ->end() // End DB
         -end();
         
-        return $treeBuidler;
+        return $treeBuilder;
     }
 }
 
@@ -679,7 +678,7 @@ class MyFileLoader extends AbstractFileLoader
          * @param string $rawFileContents
          * @return array
          */
-        abstract protected function parse(string $rawFileContents): array
+        protected function parse(string $rawFileContents): array
         {
             // Parse the file contents and return an array of values.
         }
@@ -765,7 +764,7 @@ $ composer test
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -21,7 +22,7 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractFileLoaderTest extends TestCase
 {
-    const LOADER_DIRECTORY = __DIR__ . '/../fixtures';
+    protected const LOADER_DIRECTORY = __DIR__ . '/../fixtures';
 
     public function testGoodFileReturnsExpectedItems()
     {

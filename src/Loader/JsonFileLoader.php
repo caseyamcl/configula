@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -13,6 +14,8 @@
  *
  * ------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 namespace Configula\Loader;
 
@@ -36,7 +39,7 @@ class JsonFileLoader extends AbstractFileLoader
         if (trim($rawFileContents) === '') {
             return [];
         } elseif (! $decoded = @json_decode($rawFileContents)) {
-            throw new ConfigLoaderException("Could not parse JSON file: ". $this->getFilePath());
+            throw new ConfigLoaderException("Could not parse JSON file: " . $this->getFilePath());
         }
 
         return (array) $decoded;

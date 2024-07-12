@@ -1,15 +1,15 @@
 # Upgrading from v2.x to v3.x
 
 Configula v3 is quite different from v2.  But, you can replicate the behavior of Configula v2 
-with minimal code changes by using `Configula\ConfigFactory`:
+with minimal code changes as follows:
 
 ## Class name changes
 
-`Configula\Config` has now become `Config\ConfigValues`.  Update all references.
+`Configula\Config` has now become `Configula\ConfigValues`.  Update all references.
 
 ## Loading configuration
 
-Before upgrade: 
+Before upgrade:
 
 ```php
 use Configula\Config;
@@ -32,7 +32,7 @@ following:
 ```php
 use Configula\ConfigFactory;
 
-$config = ConfigFactory::loadSingleDirectory('/path/to/config/files');
+$config = ConfigFactory::loadSingleDirectory('/path/to/config/files', ['default' => 'values']);
 ```
 
 ## Adding configuration to an existing instance
@@ -65,8 +65,8 @@ After upgrade:
 // same behavior as v2 getItem()
 $config->get('some_item', 'default');
 
-// default is null
-$config->find('some_item'); 
+// returns NULL
+$config->find('non_existent_item'); 
 
 // throws exception
 $config->get('non_existent_item'); 

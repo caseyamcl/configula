@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configula Library
  *
@@ -13,6 +14,8 @@
  *
  * ------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 namespace Configula\Loader;
 
@@ -61,7 +64,7 @@ class JsonEnvLoader implements ConfigLoaderInterface
         $rawContent = getenv($this->envValueName);
 
         if (! $decoded = @json_decode($rawContent, $this->asAssoc)) {
-            throw new ConfigLoaderException("Could not parse JSON from environment variable: ". $this->envValueName);
+            throw new ConfigLoaderException("Could not parse JSON from environment variable: " . $this->envValueName);
         }
 
         return new ConfigValues((array) $decoded);
