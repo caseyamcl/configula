@@ -5,7 +5,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/caseyamcl/configula
- * @version 4
+ * @version 5
  * @package caseyamcl/configula
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  *
