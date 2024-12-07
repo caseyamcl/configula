@@ -10,6 +10,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Fixed
 - Implicit null values in `SymfonyConfigFilter` and `YamlFileLoader` classes
 - `IniFileLoader` behavior (not sure why the tests _ever_ passed)
+- Remove `ReturnTypeWillChange` import statements for those implementors still using PHP7
 
 ## [4.2] (2022-08-16)
 ### Added

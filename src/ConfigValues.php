@@ -26,7 +26,6 @@ use Countable;
 use Dflydev\DotAccessData\Data;
 use Configula\Exception\ConfigValueNotFoundException;
 use IteratorAggregate;
-use ReturnTypeWillChange;
 use Traversable;
 
 /**
@@ -277,7 +276,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * @return iterable|array|Traversable|array
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function getIterator(): iterable
     {
         return ArrayUtils::flattenAndIterate($this->getArrayCopy());
@@ -300,7 +299,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      * @param  mixed $offset
      * @return mixed
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
