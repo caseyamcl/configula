@@ -24,7 +24,8 @@ use RuntimeException;
 /**
  * Invalid Config Value Exception
  *
- * This is not used in Configula, but provided for implementing libraries (see Configula documentation)
+ * This is not used in the Configula source itself, but provided for implementing libraries
+ * (see Configula documentation)
  */
 class InvalidConfigValueException extends RuntimeException implements ConfigExceptionInterface
 {
