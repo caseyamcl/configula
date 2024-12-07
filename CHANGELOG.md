@@ -3,7 +3,7 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## UNRELEASED
+## [3.2.1] (2024-12-07)
 ### Changed
 - Small code fix in ArrayUtils.php (clarity)
 - Lots of code and comment cleanup
