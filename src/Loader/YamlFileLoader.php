@@ -34,7 +34,7 @@ final class YamlFileLoader extends AbstractFileLoader
     public function __construct(
         string $yamlFilePath,
         bool $required = true,
-        private ?Parser $yamlParser = null
+        private readonly ?Parser $yamlParser = null
     ) {
         parent::__construct($yamlFilePath, $required);
     }
