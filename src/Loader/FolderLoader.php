@@ -94,6 +94,6 @@ class FolderLoader implements ConfigLoaderInterface
             });
 
         // Use FileListLoader to load configuration respecting local/dist extension ordering
-        return (new FileListLoader(new LocalDistFileIterator($innerIterator)))->load();
+        return (new FileListLoader(new LocalDistFileIterator($innerIterator), $this->extensionMap))->load();
     }
 }

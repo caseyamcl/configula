@@ -6,6 +6,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## UNRELEASED
 ### Fixed
 - Explicitly typecast argument to FolderLoader constructor in `CascadingConfigLoader.php`
+- Actually use the `extensionMap` property in `FolderLoader.php`
 
 ## [3.2.0] (2024-07-12)
 ### Added
