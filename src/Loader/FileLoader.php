@@ -97,7 +97,7 @@ final class FileLoader implements FileLoaderInterface
                 sprintf(
                     "Error parsing file (no loader for extension '%s'): %s",
                     $file->getExtension(),
-                    (string) $file
+                    $file
                 )
             );
         }

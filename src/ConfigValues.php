@@ -274,7 +274,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * Flattens the structure and implodes paths
      *
-     * @return iterable|array|Traversable|array
+     * @return iterable|array|Traversable
      */
     #[\ReturnTypeWillChange]
     public function getIterator(): iterable

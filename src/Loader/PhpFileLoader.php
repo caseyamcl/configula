@@ -52,7 +52,7 @@ final class PhpFileLoader implements FileLoaderInterface
      */
     public function load(): ConfigValues
     {
-        // If file is not readable for any reason (permissions, etc), throw an exception
+        // If file is not readable for any reason (permissions, etc.), throw an exception
         if (! is_readable($this->filePath)) {
             throw new ConfigLoaderException("Error reading config from file (check permissions?): " . $this->filePath);
         }

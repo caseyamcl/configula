@@ -28,9 +28,9 @@ use SplFileInfo;
  *
  * Iterates over files in the following order:
  *
- * *.dist.EXT  ('.dist' is configurable)
+ * *.dist.EXT  (.dist is configurable)
  * *.EXT
- * *.local.EXT ('.local' is configurable)
+ * *.local.EXT (.local is configurable)
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
@@ -68,7 +68,7 @@ class LocalDistFileIterator implements IteratorAggregate
      * @return Generator<int,SplFileInfo>
      */
     #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Generator
     {
         $localFiles = [];
         $normalFiles = [];

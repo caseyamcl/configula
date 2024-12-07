@@ -54,7 +54,7 @@ final class EnvLoader implements ConfigLoaderInterface
      *
      * @param  string      $prefix    Specify a prefix, and only environment variables with this prefix will be read
      *                                (e.g. "MYAPP_" means that this will only read env vars starting with
-     *                                "MYAPP_")' Values will be
+     *                                "MYAPP_")
      * @param  string      $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
      *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
      * @param  bool        $toLower   Convert all keys to lower-case
@@ -63,7 +63,7 @@ final class EnvLoader implements ConfigLoaderInterface
     public static function loadUsingPrefix(string $prefix, string $delimiter = '', bool $toLower = false): ConfigValues
     {
         $prefix = preg_quote($prefix);
-        $values = (new EnvLoader("/^{$prefix}/", $delimiter, $toLower))->load();
+        $values = (new EnvLoader("/^$prefix/", $delimiter, $toLower))->load();
 
         return $delimiter
             ? (new ExtractTopLevelItemsFilter($toLower ? strtolower($prefix) : $prefix, $delimiter))->__invoke($values)
