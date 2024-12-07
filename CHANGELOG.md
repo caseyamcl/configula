@@ -3,12 +3,11 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## UNRELEASED
+## [5.0] (2024-12-07)
 ### Changed
 - Refactored all code to PHP 8.2 standards
 - Updated all tests to support latest PHPUnit 11
 - Replaced `ConfigException` with `ConfigExceptionInterface`
-
 ### Removed
 - Support for PHP < 8.2
 - Support for PHPUnit < 11
