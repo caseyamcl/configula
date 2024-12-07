@@ -502,8 +502,8 @@ $config = Config::loadMultiple([
 
 ## Handling Errors
 
-All exceptions extend `Configula\Exception\ConfigException`.  You can catch this exception to catch certain types of
-Configula errors during loading and reading of configuration values.
+All exceptions implement `Configula\Exception\ConfigExceptionInterface` and extend `\RuntimeException`.
+You can catch this exception to catch certain types of Configula errors during loading and reading of configuration values.
 
 ### Loading Exceptions:
 
