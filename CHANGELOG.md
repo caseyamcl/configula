@@ -9,6 +9,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - Updated GitHub build `action/checkout` and `action/cache`
 ### Fixed
 - Implicit null values in `SymfonyConfigFilter` and `YamlFileLoader` classes
+- `IniFileLoader` behavior (not sure why the tests _ever_ passed)
 
 ## [4.2] (2022-08-16)
 ### Added

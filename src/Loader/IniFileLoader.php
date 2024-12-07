@@ -59,9 +59,9 @@ final class IniFileLoader implements FileLoaderInterface
      */
     public function load(): ConfigValues
     {
-        try {
-            $values = parse_ini_file($this->filePath, $this->processSections, INI_SCANNER_TYPED) ?: [];
-        } catch (Throwable $e) {
+        $values = @parse_ini_file($this->filePath, $this->processSections, INI_SCANNER_TYPED);
+
+        if ($values === false) {
             throw new ConfigLoaderException("Error parsing INI file: " . $this->filePath);
         }
 
