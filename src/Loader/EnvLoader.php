@@ -35,7 +35,7 @@ use Dflydev\DotAccessData\Data;
 final class EnvLoader implements ConfigLoaderInterface
 {
     private string $regex;
-    private ?string $delimiter;
+    private string $delimiter;
     private bool $toLower;
 
     /**
