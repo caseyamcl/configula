@@ -51,7 +51,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      * @param  ConfigValues $configValues
      * @return ConfigValues|static
      */
-    public static function fromConfigValues(ConfigValues $configValues)
+    public static function fromConfigValues(ConfigValues $configValues): self
     {
         return new static($configValues->getArrayCopy());
     }
@@ -97,7 +97,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
     /**
      * Find a configuration value, or return NULL if not found
      *
-     * This is different than the get() method in that it will not throw an exception if the value doesn't exist.
+     * This is different from the get() method in that it will not throw an exception if the value doesn't exist.
      *
      * @param  string $path Accepts '.' path notation for nested values
      * @return array|mixed|null
@@ -115,7 +115,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      */
     public function has(string $path): bool
     {
-        return isset($this->values->export()[$path]) ? true : $this->values->has($path);
+        return isset($this->values->export()[$path]) || $this->values->has($path);
     }
 
     /**
@@ -175,7 +175,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      * @param  string $default
      * @return array|mixed|null
      */
-    public function __invoke(string $path, $default = self::NOT_SET)
+    public function __invoke(string $path, string $default = self::NOT_SET)
     {
         return $this->get($path, $default);
     }
@@ -216,10 +216,10 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * @deprecated use get() or find() instead
      * @param      string $path
-     * @param      string $default
+     * @param      string|null $default
      * @return     array|mixed|null
      */
-    public function getItem(string $path, $default = null)
+    public function getItem(string $path, ?string $default = null)
     {
         @trigger_error(
             'ConfigValues::getItem() is deprecated since version 3.0 and will be removed in 4.0. '
@@ -273,7 +273,7 @@ class ConfigValues implements IteratorAggregate, Countable, ArrayAccess
      *
      * Flattens the structure and implodes paths
      *
-     * @return iterable|array|Traversable|mixed[]
+     * @return iterable|array|Traversable
      */
     public function getIterator(): iterable
     {

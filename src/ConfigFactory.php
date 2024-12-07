@@ -89,7 +89,7 @@ class ConfigFactory
     }
 
     /**
-     * Build configuration by reading a single directory of files (non-recursive; ignores sub-directories)
+     * Build configuration by reading a single directory of files (non-recursive; ignores subdirectories)
      *
      * @param  string $configDirectory
      * @param  array  $defaults
@@ -109,10 +109,10 @@ class ConfigFactory
      */
     public static function loadPath(string $configPath = '', array $defaults = []): ConfigValues
     {
-        // If path, use default behavior..
+        // If path, use default behavior...
         if (is_dir($configPath)) {
             $pathValues = (new FolderLoader($configPath))->load();
-        } elseif (is_file($configPath)) { // Elseif if file, then just load that single file..
+        } elseif (is_file($configPath)) { // Elseif file, then just load that single file...
             $pathValues = (new FileLoader($configPath))->load();
         } elseif ($configPath === '') { // Else, no path provided, so empty values
             $pathValues = new ConfigValues([]);
@@ -129,7 +129,7 @@ class ConfigFactory
      *
      * @param  string      $prefix    Specify a prefix, and only environment variables with this prefix will be read
      *                                (e.g. "MYAPP_" means that this will only read env vars starting with
-     *                                "MYAPP_")' Values will be
+     *                                "MYAPP_")
      * @param  null|string $delimiter Split variable names on this string into a nested array.  (e.g. "MYSQL_HOST"
      *                                would become the key, "MYSQL.HOST" (empty string to not delimit)
      * @param  bool        $toLower   Convert all keys to lower-case

@@ -55,7 +55,6 @@ class PhpFileLoader implements FileLoaderInterface
         if (is_readable($this->filePath)) {
             ob_start();
 
-            /** @noinspection PhpIncludeInspection */
             include $this->filePath;
 
             ob_end_clean();

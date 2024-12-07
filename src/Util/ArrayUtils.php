@@ -34,7 +34,7 @@ class ArrayUtils
      * @param  array  $array
      * @param  string $delimiter
      * @param  string $basePath
-     * @return Generator|mixed[]
+     * @return Generator|array
      */
     public static function flattenAndIterate(array $array, string $delimiter = '.', string $basePath = ''): Generator
     {

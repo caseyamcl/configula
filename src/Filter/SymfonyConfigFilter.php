@@ -47,7 +47,7 @@ class SymfonyConfigFilter
      * @param  ConfigValues           $values
      * @return ConfigValues
      */
-    public static function filter(ConfigurationInterface $configuration, ConfigValues $values)
+    public static function filter(ConfigurationInterface $configuration, ConfigValues $values): ConfigValues
     {
         $that = new static($configuration);
         return $that($values);

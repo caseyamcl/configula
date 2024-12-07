@@ -78,9 +78,6 @@ class FileLoader implements FileLoaderInterface
             $className = $this->extensionMap[strtolower($file->getExtension())];
 
             try {
-                /**
-                 * @noinspection PhpUndefinedMethodInspection
-                 */
                 return (new $className((string) $file->getRealPath()))->load();
             } catch (Error $e) {
                 if (! is_a($className, AbstractFileLoader::class, true)) {
@@ -100,7 +97,7 @@ class FileLoader implements FileLoaderInterface
                 sprintf(
                     "Error parsing file (no loader for extension '%s'): %s",
                     $file->getExtension(),
-                    (string) $file
+                    $file
                 )
             );
         }

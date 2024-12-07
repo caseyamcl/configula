@@ -65,6 +65,6 @@ class IniFileLoader implements FileLoaderInterface
             throw new ConfigLoaderException("Error parsing INI file: " . $this->filePath);
         }
 
-        return new ConfigValues($values ?? []);
+        return new ConfigValues($values);
     }
 }

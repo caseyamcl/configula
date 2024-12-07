@@ -22,7 +22,7 @@ namespace Configula\Exception;
 /**
  * Config Logic Exception
  *
- * This exception is thrown when you attempt to use use this library incorrectly.
+ * This exception is thrown when you attempt to use this library incorrectly.
  *
  * @package Configula\Exception
  */

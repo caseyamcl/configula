@@ -65,9 +65,9 @@ class LocalDistFileIterator implements IteratorAggregate
     }
 
     /**
-     * @return Generator|SplFileInfo[]
+     * @return Generator<SplFileInfo>
      */
-    public function getIterator()
+    public function getIterator(): Generator
     {
         $localFiles = [];
         $normalFiles = [];
