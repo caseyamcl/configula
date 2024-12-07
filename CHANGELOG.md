@@ -3,6 +3,10 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## UNRELEASED
+### Fixed
+- Explicitly typecast argument to FolderLoader constructor in `CascadingConfigLoader.php`
+
 ## [3.2.0] (2024-07-12)
 ### Added
 - GitHub builds for v3
