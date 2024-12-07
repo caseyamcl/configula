@@ -28,7 +28,7 @@ any PHP application.
     * Magic methods (`__get(val)`, `__isset(val)`, and `__invoke(val)`)
     * Implements `Traversable` and `Countable` interfaces
 * Provides simple dot-based access to nested values (e.g. `$config->get('application.sitename.prefix');`)
-* Code quality standards: PSR-12, near-complete unit test coverage
+* Code quality standards: PSR-12, complete unit test coverage
 
 ## Installation
 
@@ -36,7 +36,11 @@ any PHP application.
 composer require caseyamcl/configula
 ```
 
-## Need PHP v7.x or Symfony v4 compatibility?
+## Upgrading?
+
+Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x, 3.x, or 4.x to v5.
+
+## Need PHP v7.x, 5.x, or older Symfony compatibility?
 
 Configula v5.x is compatible with PHP v8.2+.  
 
@@ -46,10 +50,6 @@ Configula v5.x is compatible with PHP v8.2+.
     ```composer require caseyamcl/configula:^3.2```
 * If you need PHP 5.x support, you can use the **2.x** version of this library (no longer maintained):
     ```composer require caseyamcl/configula:^2.4```
-
-## Upgrading?
-
-Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x, 3.x, or 4.x to v5.
  
 ## Loading Configuration
   
