@@ -23,6 +23,11 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - `IniFileLoader` behavior (not sure why the tests _ever_ passed)
 - Remove `ReturnTypeWillChange` import statements for those implementors still using PHP7
 
+## [4.3.0] (2024-02-03)
+### Added
+- Added support for Symfony v7
+- Added test builds for PHP 8.2 and 8.3
+
 ## [4.2] (2022-08-16)
 ### Added
 - Symfony Config 6.x tests
