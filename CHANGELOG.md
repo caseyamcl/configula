@@ -3,7 +3,7 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## [4.2.1] (2024-12-07)
+## [4.3.1] (2024-12-07)
 ### Changed
 - Added GitHub build action for PHP 8.4
 - Updated GitHub build `action/checkout` and `action/cache`
@@ -12,6 +12,11 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - Implicit null values in `SymfonyConfigFilter` and `YamlFileLoader` classes
 - `IniFileLoader` behavior (not sure why the tests _ever_ passed)
 - Remove `ReturnTypeWillChange` import statements for those implementors still using PHP7
+
+## [4.3.0] (2024-02-03)
+### Added
+- Added support for Symfony v7
+- Added test builds for PHP 8.2 and 8.3
 
 ## [4.2] (2022-08-16)
 ### Added
