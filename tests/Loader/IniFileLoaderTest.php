@@ -22,7 +22,7 @@ namespace Configula\Loader;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class IniFileLoaderTest extends AbstractFileLoaderTest
+class IniFileLoaderTest extends AbstractFileLoaderTester
 {
     /**
      * Get extension without the dot (.)

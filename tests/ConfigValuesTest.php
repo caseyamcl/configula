@@ -20,6 +20,7 @@ namespace Configula;
 use Configula\Exception\ConfigLogicException;
 use Configula\Exception\ConfigValueNotFoundException;
 use Configula\Util\ArrayUtils;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -43,7 +44,7 @@ class ConfigValuesTest extends TestCase
         ];
     }
 
-    public function existingDataProvider(): array
+    public static function existingDataProvider(): array
     {
         return [
             'basic value'            => ['a',       'Apple' ],
@@ -57,7 +58,7 @@ class ConfigValuesTest extends TestCase
     /**
      * @return array
      */
-    public function nonExistentDataProvider(): array
+    public static function nonExistentDataProvider(): array
     {
         return [
             'top-level item does not exist'                     => ['g'],
@@ -74,53 +75,36 @@ class ConfigValuesTest extends TestCase
         $this->assertInstanceOf(ConfigValues::class, $config);
     }
 
-    /**
-     * @dataProvider existingDataProvider
-     *
-     * @param string $path
-     * @param mixed  $expected
-     */
-    public function testFindReturnsValueIfExists(string $path, $expected): void
+    #[DataProvider('existingDataProvider')]
+    public function testFindReturnsValueIfExists(string $path, mixed $expected): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertSame($expected, $config->find($path));
     }
 
-    /**
-     * @dataProvider nonExistentDataProvider
-     * @param        string $path
-     */
+    #[DataProvider('nonExistentDataProvider')]
     public function testFindReturnsNullIfValueNotExists(string $path): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertNull($config->find($path));
     }
 
-    /**
-     * @dataProvider existingDataProvider
-     * @param        string $path
-     */
+    #[DataProvider('existingDataProvider')]
     public function testHasReturnsTrueForExistentValues(string $path)
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertTrue($config->has($path));
     }
 
-    /**
-     * @dataProvider nonExistentDataProvider
-     * @param        string $path
-     */
+    #[DataProvider('nonExistentDataProvider')]
     public function testHasReturnsFalseForNonExistentValues(string $path): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertFalse($config->has($path));
     }
 
-    /**
-     * @dataProvider existingDataProvider
-     * @dataProvider nonExistentDataProvider
-     * @param        string $path
-     */
+    #[DataProvider('existingDataProvider')]
+    #[DataProvider('nonExistentDataProvider')]
     public function testHasValueReturnsExpectedResult(string $path): void
     {
         $config = new ConfigValues(static::getTestValues());
@@ -136,10 +120,7 @@ class ConfigValuesTest extends TestCase
         $this->assertSame(234.45, $config['c.wumps']);
     }
 
-    /**
-     * @dataProvider nonExistentDataProvider
-     * @param        string $nonExistentPath
-     */
+    #[DataProvider('nonExistentDataProvider')]
     public function testArrayAccessThrowsExceptionWhenValueNotExists(string $nonExistentPath): void
     {
         $this->expectException(ConfigValueNotFoundException::class);
@@ -147,7 +128,7 @@ class ConfigValuesTest extends TestCase
         $config->get($nonExistentPath);
     }
 
-    public function testArrayAccessReturnsExpectedValueForIsset()
+    public function testArrayAccessReturnsExpectedValueForIsset(): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertTrue(isset($config['a']));
@@ -169,19 +150,14 @@ class ConfigValuesTest extends TestCase
         unset($config['a']);
     }
 
-    /**
-     * @dataProvider existingDataProvider
-     */
+    #[DataProvider('existingDataProvider')]
     public function testMagicGetMethodReturnsExpectedValueWhenExists(string $path, $expected): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertSame($expected, $config->$path);
     }
 
-    /**
-     * @param        string $path
-     * @dataProvider nonExistentDataProvider
-     */
+    #[DataProvider('nonExistentDataProvider')]
     public function testMagicGetMethodThrowsExceptionWhenValueNotExists(string $path): void
     {
         $this->expectException(ConfigValueNotFoundException::class);
@@ -190,31 +166,23 @@ class ConfigValuesTest extends TestCase
         $config->$path;
     }
 
-    /**
-     * @dataProvider existingDataProvider
-     * @dataProvider nonExistentDataProvider
-     */
-    public function testMagicIssetMethodReturnsExpectedValue(string $path)
+    #[DataProvider('existingDataProvider')]
+    #[DataProvider('nonExistentDataProvider')]
+    public function testMagicIssetMethodReturnsExpectedValue(string $path): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertSame($config->has($path), isset($config->$path));
     }
 
-    /**
-     * @dataProvider existingDataProvider
-     * @param        string $path
-     */
-    public function testMagicInvokeMethodBehavesSameAsGetWhenValueExists(string $path)
+    #[DataProvider('existingDataProvider')]
+    public function testMagicInvokeMethodBehavesSameAsGetWhenValueExists(string $path): void
     {
         $config = new ConfigValues(static::getTestValues());
         $this->assertSame($config($path), $config->get($path));
     }
 
-    /**
-     * @dataProvider nonExistentDataProvider
-     * @param        string $path
-     */
-    public function testMagicInvokeMethodThrowsExceptionWhenValueNotExists(string $path)
+    #[DataProvider('nonExistentDataProvider')]
+    public function testMagicInvokeMethodThrowsExceptionWhenValueNotExists(string $path): void
     {
         $this->expectException(ConfigValueNotFoundException::class);
         $config = new ConfigValues(static::getTestValues());

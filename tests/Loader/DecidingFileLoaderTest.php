@@ -22,6 +22,7 @@ use Configula\Exception\ConfigLoaderException;
 use Configula\Exception\UnmappedFileExtensionException;
 use Configula\fixtures\ErrorTriggeringFileLoader;
 use Error;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -32,10 +33,7 @@ use stdClass;
  */
 class DecidingFileLoaderTest extends TestCase
 {
-    /**
-     * @param        string $filePath
-     * @dataProvider goodFileProvider
-     */
+    #[dataProvider('goodFileProvider')]
     public function testGoodFilesReturnExpectedResults(string $filePath): void
     {
         $values = (new FileLoader($filePath))->load();
@@ -74,7 +72,7 @@ class DecidingFileLoaderTest extends TestCase
     /**
      * @return array
      */
-    public function goodFileProvider(): array
+    public static function goodFileProvider(): array
     {
         return [
             [__DIR__ . '/../fixtures/ini/config.ini'],

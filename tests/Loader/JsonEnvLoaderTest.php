@@ -18,6 +18,7 @@
 namespace Configula\Loader;
 
 use Configula\Exception\ConfigLoaderException;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
 class JsonEnvLoaderTest extends TestCase
@@ -32,9 +33,7 @@ class JsonEnvLoaderTest extends TestCase
         ]
     ];
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testValidDataReturnsExpectedResults(): void
     {
         putenv('FOOBAR_JSON_DATA=' . json_encode(static::JSON_DATA));
@@ -53,9 +52,7 @@ class JsonEnvLoaderTest extends TestCase
         (new JsonEnvLoader('FOOBAR_JSON_DATA'))->load();
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testValidDataReturnsExpectedResultsWhenArrayOptionEnabled(): void
     {
         putenv('FOOBAR_JSON_DATA=' . json_encode(static::JSON_DATA));

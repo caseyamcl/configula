@@ -20,7 +20,7 @@ namespace Configula\Loader;
 use Configula\Exception\ConfigLoaderException;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractFileLoaderTest extends TestCase
+abstract class AbstractFileLoaderTester extends TestCase
 {
     protected const LOADER_DIRECTORY = __DIR__ . '/../fixtures';
     protected const GOOD_FILE_NAME = 'config';

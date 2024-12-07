@@ -17,6 +17,8 @@
 
 namespace Configula\Loader;
 
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
@@ -25,6 +27,7 @@ use ReflectionMethod;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
+#[RunTestsInSeparateProcesses]
 class EnvLoaderTest extends TestCase
 {
     public const DEFAULT_ENV_VARS = [
@@ -35,7 +38,6 @@ class EnvLoaderTest extends TestCase
     public function testLoadReturnsEverythingInEnvironmentWithDefaultParameters(): void
     {
         $rMethod = new ReflectionMethod(EnvLoader::class, 'prepareVal');
-        $rMethod->setAccessible(true);
 
         $expected = array_map(
             function ($val) use ($rMethod) {
@@ -58,18 +60,12 @@ class EnvLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testLoadLimitsResultsBasedOnRegexString(): void
     {
         $this->setupEnv();
         $this->assertEquals(2, (new EnvLoader('/FOOBAR_APP/'))->load()->count());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testLoadLowerCasesValuesCorrectly(): void
     {
         $this->setupEnv();
@@ -80,9 +76,6 @@ class EnvLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testLoadDelimitsCorrectly(): void
     {
         $this->setupEnv();
@@ -96,9 +89,6 @@ class EnvLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testLoadUsingPrefixWorksCorrectly(): void
     {
         $this->setupEnv();
@@ -106,9 +96,6 @@ class EnvLoaderTest extends TestCase
         $this->assertEquals(['APP_ANOTHER' => 2], $values->getArrayCopy());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testLoadUsingPrefixWorksWhenLowerCaseEnabled(): void
     {
         $this->setupEnv();
@@ -116,9 +103,6 @@ class EnvLoaderTest extends TestCase
         $this->assertEquals(['app_another' => 2], $values->getArrayCopy());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testLoadUsingPrefixWorksWithDelimiter(): void
     {
         $this->setupEnv();
@@ -133,9 +117,6 @@ class EnvLoaderTest extends TestCase
         $this->assertEquals(2, $values->get('ANOTHER'));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testPrepareValuesSetsScalarsCorrectly(): void
     {
         putenv('FOOBAR_INTEGER=2');

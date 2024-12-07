@@ -22,7 +22,7 @@ namespace Configula\Loader;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class JsonFileLoaderTest extends AbstractFileLoaderTest
+class JsonFileLoaderTest extends AbstractFileLoaderTester
 {
     public function testExpectedObjectIsObject(): void
     {

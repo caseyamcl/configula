@@ -22,6 +22,7 @@ use Configula\Loader\ArrayValuesLoader;
 use Configula\Loader\EnvLoader;
 use Configula\Loader\EnvLoaderTest;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use stdClass;
@@ -121,9 +122,7 @@ class ConfigFactoryTest extends TestCase
         $this->assertFalse($values->has('b'));  // subfolder should not be loaded, so no 'b' value
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testLoadEnv()
     {
         // Pre-test
@@ -139,9 +138,7 @@ class ConfigFactoryTest extends TestCase
         $this->assertSame(2, $values->get('another'));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testLoadEnvRegex()
     {
         // Pre-test

@@ -22,7 +22,7 @@ namespace Configula\Loader;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class YamlFileLoaderTest extends AbstractFileLoaderTest
+class YamlFileLoaderTest extends AbstractFileLoaderTester
 {
     /**
      * Get extension without the dot (.)

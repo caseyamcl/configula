@@ -24,7 +24,7 @@ use Configula\Exception\ConfigLoaderException;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class PhpFileLoaderTest extends AbstractFileLoaderTest
+class PhpFileLoaderTest extends AbstractFileLoaderTester
 {
     public function testUnreadableFileInPhpFileLoaderThrowsException(): void
     {

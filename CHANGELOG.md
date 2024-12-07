@@ -4,6 +4,9 @@ All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## UNRELEASED
+### Changed
+- Updated all tests to support latest PHPUnit 11
+
 ### Removed
 - Support for PHP < 8.2
 - Support for PHPUnit < 11
