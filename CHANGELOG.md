@@ -3,6 +3,11 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## UNRELEASED
+### Changed
+- Added GitHub build action for PHP 8.4
+- Updated GitHub build `action/checkout` and `action/cache`
+
 ## [4.2] (2022-08-16)
 ### Added
 - Symfony Config 6.x tests
