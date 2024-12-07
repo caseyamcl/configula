@@ -36,27 +36,20 @@ any PHP application.
 composer require caseyamcl/configula
 ```
 
-## Need PHP v7.1, 7.2 or Symfony v3 compatibility?
+## Need PHP v7.x or Symfony v4 compatibility?
 
-Configula v4.x is compatible with PHP v7.3+ or v8.0+.  If you need PHP 7.1, 7.2 compatibility, instruct Composer to use
-the **3.x** version of this library instead of the current one:
+Configula v5.x is compatible with PHP v8.2+.  
 
-```
-composer require caseyamcl/configula:^3.1
-```
-
-## Need PHP v5.* compatibility?
-
-Configula Version 2.x is compatible with PHP v5.3+.  If you need PHP 5.x compatibility, instruct Composer to use
-the **2.x** version of this library instead of the current one:
-
-```
-composer require caseyamcl/configula:^2.4
-```
+* If you need PHP 7.3+ compatibility, instruct Composer to use the **4.x** version of this library:
+    ```composer require caseyamcl/configula:^4.2```
+* If you need PHP 7-7.2+ compatibility, instruct Composer to use the **3.x** version of this library:
+    ```composer require caseyamcl/configula:^3.2```
+* If you need PHP 5.x support, you can use the **2.x** version of this library (no longer maintained):
+    ```composer require caseyamcl/configula:^2.4```
 
 ## Upgrading?
 
-Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x, 3.x to v4.
+Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x, 3.x, or 4.x to v5.
  
 ## Loading Configuration
   

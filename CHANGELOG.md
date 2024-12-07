@@ -3,6 +3,12 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## UNRELEASED
+### Removed
+- Support for PHP < 8.2
+- Support for PHPUnit < 11
+- Support for Symfony < 6.4
+
 ## [4.2.1] (2024-12-07)
 ### Changed
 - Added GitHub build action for PHP 8.4

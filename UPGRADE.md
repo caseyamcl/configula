@@ -1,3 +1,8 @@
+# Upgrading from v4.x to v5.x
+
+Configula v5 requires a minimum PHP8.2, and adds all the typing and syntax features of modern PHP. No changes were made
+from v4 to the public-facing API, so upgrading from v4 should simply be a change to the `composer.json` file. 
+
 # Upgrading from v3.x to v4.x
 
 Configula v4 introduces PHP8 support, and while there was an attempt to keep breaking changes to a minimum,
@@ -5,12 +10,12 @@ there are a few to address:
 
 ## Move custom logic from `ConfigValues::__construct()` into `ConfigValues::init()`
 
-If you sub-class `ConfigValues` and have custom logic in the `__construct()` method, you'll need to move that logic into
+If you subclass `ConfigValues` and have custom logic in the `__construct()` method, you'll need to move that logic into
 the new `init()` method.  The `ConfigValues::__construct()` is now declared final.
 
 ## Refactor any classes that extend concrete `Loader` classes
 
-The `*Loader` classes are all final now, with the exception of `AbstractFileLoader`. If you extend any of them, you may
+The `*Loader` classes are all final now, except for `AbstractFileLoader`. If you extend any of them, you may
 need to refactor to use a composition-style rather than inheritance-style design pattern (e.g. decorator, etc.) 
 
 # Upgrading from v2.x to v3.x
