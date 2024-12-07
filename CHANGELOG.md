@@ -7,6 +7,8 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Changed
 - Small code fix in ArrayUtils.php (clarity)
 - Lots of code and comment cleanup
+- Added GitHub build action for PHP 8.4
+- Updated GitHub build `action/checkout` and `action/cache`
 ### Fixed
 - Explicitly typecast argument to FolderLoader constructor in `CascadingConfigLoader.php`
 - Actually use the `extensionMap` property in `FolderLoader.php`
