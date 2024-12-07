@@ -24,7 +24,7 @@
         "vlucas/phpdotenv"         : "^2.4",
         "symfony/config"           : "^3.4|^4.0|^5.0|^6.0",
         "squizlabs/php_codesniffer": "^3.0",
-        "phpstan/phpstan"          : "^1.12"
+        "phpstan/phpstan"          : "^1.0"
     },
     "suggest": {
         "vlucas/phpdotenv": "Allows loading values from .env files",
