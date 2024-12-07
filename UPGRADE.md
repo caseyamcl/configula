@@ -1,7 +1,12 @@
 # Upgrading from v4.x to v5.x
 
-Configula v5 requires a minimum PHP8.2, and adds all the typing and syntax features of modern PHP. No changes were made
-from v4 to the public-facing API, so upgrading from v4 should simply be a change to the `composer.json` file. 
+Configula v5 requires a minimum PHP8.2, and adds all the typing and syntax features of modern PHP.
+Some changes were made from v4 to the public-facing API:
+
+## Changes to Exceptions
+
+The abstract `ConfigException` class was replaced by `ConfigExceptionInterface`, which all exception classes
+implement. In your client replace all instances of `ConfigException` to `ConfigExceptionInterface`. 
 
 # Upgrading from v3.x to v4.x
 

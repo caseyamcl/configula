@@ -6,6 +6,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## UNRELEASED
 ### Changed
 - Updated all tests to support latest PHPUnit 11
+- Replaced `ConfigException` with `ConfigExceptionInterface`
 
 ### Removed
 - Support for PHP < 8.2

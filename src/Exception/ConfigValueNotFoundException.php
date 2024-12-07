@@ -19,12 +19,14 @@ declare(strict_types=1);
 
 namespace Configula\Exception;
 
+use RuntimeException;
+
 /**
  * Class ConfigValueNotFoundException
  *
  * This is thrown when a configuration value is not found (or doesn't exist)
  */
-class ConfigValueNotFoundException extends ConfigException
+class ConfigValueNotFoundException extends RuntimeException implements ConfigExceptionInterface
 {
     // pass ...
 }

@@ -19,12 +19,14 @@ declare(strict_types=1);
 
 namespace Configula\Exception;
 
+use RuntimeException;
+
 /**
  * Config Logic Exception
  *
  * This exception is thrown when you attempt to use this library incorrectly.
  */
-class ConfigLogicException extends ConfigException
+class ConfigLogicException extends RuntimeException implements ConfigExceptionInterface
 {
     // pass ...
 }

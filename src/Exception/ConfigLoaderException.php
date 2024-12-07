@@ -19,6 +19,8 @@ declare(strict_types=1);
 
 namespace Configula\Exception;
 
+use RuntimeException;
+
 /**
  * Class ConfigParseException
  *
@@ -26,7 +28,7 @@ namespace Configula\Exception;
  *
  * @package Configula\Exception
  */
-class ConfigLoaderException extends ConfigException
+class ConfigLoaderException extends RuntimeException implements ConfigExceptionInterface
 {
     // pass ...
 }

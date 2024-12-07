@@ -19,12 +19,14 @@ declare(strict_types=1);
 
 namespace Configula\Exception;
 
+use RuntimeException;
+
 /**
  * Invalid Config Value Exception
  *
  * This is not used in Configula, but provided for implementing libraries (see Configula documentation)
  */
-class InvalidConfigValueException extends ConfigException
+class InvalidConfigValueException extends RuntimeException implements ConfigExceptionInterface
 {
     // pass ...
 }
