@@ -31,34 +31,20 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class YamlFileLoader extends AbstractFileLoader
 {
-    /**
-     * @var Parser
-     */
-    private $parser;
-
-    /**
-     * YamlFileLoader constructor.
-     *
-     * @param string      $yamlFilePath
-     * @param bool        $required
-     * @param Parser|null $yamlParser
-     */
-    public function __construct(string $yamlFilePath, bool $required = true, ?Parser $yamlParser = null)
-    {
-        $this->parser = $yamlParser ?: new Parser();
+    public function __construct(
+        string $yamlFilePath,
+        bool $required = true,
+        private ?Parser $yamlParser = null
+    ) {
         parent::__construct($yamlFilePath, $required);
     }
 
-    /**
-     * Parse the contents
-     *
-     * @param  string $rawFileContents
-     * @return array
-     */
     protected function parse(string $rawFileContents): array
     {
+        $parser = $this->yamlParser ?? new Parser();
+
         try {
-            return (array) $this->parser->parse($rawFileContents, Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
+            return (array) $parser->parse($rawFileContents, Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
         } catch (ParseException $e) {
             throw new ConfigLoaderException("Could not parse YAML file: " . $this->getFilePath(), $e->getCode(), $e);
         }

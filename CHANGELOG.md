@@ -5,6 +5,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## UNRELEASED
 ### Changed
+- Refactored all code to PHP 8.2 standards
 - Updated all tests to support latest PHPUnit 11
 - Replaced `ConfigException` with `ConfigExceptionInterface`
 

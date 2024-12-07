@@ -28,24 +28,10 @@ use Symfony\Component\Config\Definition\Processor;
  *
  * @package Configula\Util
  */
-class SymfonyConfigFilter
+readonly class SymfonyConfigFilter
 {
     /**
-     * @var ConfigurationInterface
-     */
-    private $configTree;
-
-    /**
-     * @var null|Processor
-     */
-    private $processor;
-
-    /**
-     * Filter method allows single-call static usage of this class
-     *
-     * @param  ConfigurationInterface $configuration
-     * @param  ConfigValues           $values
-     * @return ConfigValues
+     * Filter method allows single-call static usage of this class using default Processor
      */
     public static function filter(ConfigurationInterface $configuration, ConfigValues $values): ConfigValues
     {
@@ -53,16 +39,10 @@ class SymfonyConfigFilter
         return $that($values);
     }
 
-    /**
-     * SymfonyConfigFilter constructor.
-     *
-     * @param ConfigurationInterface $configTree
-     * @param Processor|null         $processor
-     */
-    final public function __construct(ConfigurationInterface $configTree, ?Processor $processor = null)
-    {
-        $this->configTree = $configTree;
-        $this->processor = $processor ?: new Processor();
+    final public function __construct(
+        private ConfigurationInterface $configTree,
+        private ?Processor $processor = null
+    ) {
     }
 
     /**
@@ -73,6 +53,7 @@ class SymfonyConfigFilter
      */
     public function __invoke(ConfigValues $values): ConfigValues
     {
-        return new ConfigValues($this->processor->processConfiguration($this->configTree, $values->getArrayCopy()));
+        $processor = $this->processor ?: new Processor();
+        return new ConfigValues($processor->processConfiguration($this->configTree, $values->getArrayCopy()));
     }
 }

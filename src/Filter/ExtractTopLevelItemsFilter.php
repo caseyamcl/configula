@@ -27,28 +27,18 @@ use Configula\Exception\ConfigLoaderException;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class ExtractTopLevelItemsFilter
+readonly class ExtractTopLevelItemsFilter
 {
-    /**
-     * @var string
-     */
-    private $topLevelItemName;
-
-    /**
-     * @var string
-     */
-    private $delimiter;
-
     /**
      * Extract Top Level Item constructor.
      *
      * @param string $topLevelItemName
      * @param string $delimiter
      */
-    public function __construct(string $topLevelItemName, string $delimiter = '')
-    {
-        $this->topLevelItemName = $topLevelItemName;
-        $this->delimiter = $delimiter;
+    public function __construct(
+        private string $topLevelItemName,
+        private string $delimiter = ''
+    ) {
     }
 
     /**

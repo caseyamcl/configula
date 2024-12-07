@@ -38,28 +38,18 @@ use SplFileInfo;
  *
  * @package Configula\Loader
  */
-final class FolderLoader implements ConfigLoaderInterface
+final readonly class FolderLoader implements ConfigLoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $path;
-
-    /**
-     * @var bool
-     */
-    private $recursive;
-
     /**
      * ConfigFolderFilesLoader constructor.
      *
      * @param string|SplFileInfo $path
      * @param bool $recursive
      */
-    public function __construct($path, bool $recursive = true)
-    {
-        $this->path = (string) $path;
-        $this->recursive = $recursive;
+    public function __construct(
+        private string|SplFileInfo $path,
+        private bool $recursive = true
+    ) {
     }
 
     /**

@@ -34,20 +34,9 @@ use Dflydev\DotAccessData\Data;
  */
 final class EnvLoader implements ConfigLoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $regex;
-
-    /**
-     * @var null|string
-     */
-    private $delimiter;
-
-    /**
-     * @var bool
-     */
-    private $toLower;
+    private string $regex;
+    private ?string $delimiter;
+    private bool $toLower;
 
     /**
      * Load from environment looking only for those values with a specified prefix (and remove prefix)
@@ -110,25 +99,18 @@ final class EnvLoader implements ConfigLoaderInterface
 
     /**
      * Prepare string value
-     *
-     * @param  string $value
-     * @return bool|float|int|string|null
      */
-    private function prepareVal(string $value)
+    private function prepareVal(string $value): bool|float|int|string|null
     {
         if (is_numeric($value)) {
             return filter_var($value, FILTER_VALIDATE_INT) !== false ? (int) $value : (float) $value;
         }
 
-        switch (strtolower($value)) {
-            case 'null':
-                return null;
-            case 'false':
-                return false;
-            case 'true':
-                return true;
-            default:
-                return $value;
-        }
+        return match (strtolower($value)) {
+            'null' => null,
+            'false' => false,
+            'true' => true,
+            default => $value,
+        };
     }
 }

@@ -30,11 +30,6 @@ class ArrayUtils
 {
     /**
      * Flatten and iterate
-     *
-     * @param  array  $array
-     * @param  string $delimiter
-     * @param  string $basePath
-     * @return Generator
      */
     public static function flattenAndIterate(array $array, string $delimiter = '.', string $basePath = ''): Generator
     {
@@ -55,10 +50,6 @@ class ArrayUtils
      *
      * This is a cascading merge, with individual values being overwritten.
      * From: http://www.php.net/manual/en/function.array-merge-recursive.php#102379
-     *
-     * @param  array $arr1 Array #1
-     * @param  array $arr2 Array #2
-     * @return array
      */
     public static function merge(array $arr1, array $arr2): array
     {

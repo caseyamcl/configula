@@ -28,28 +28,13 @@ use Throwable;
  *
  * @package Configula\Loader
  */
-final class PhpFileLoader implements FileLoaderInterface
+final readonly class PhpFileLoader implements FileLoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
-     * IniFileLoader constructor.
-     *
-     * @param string $filePath
-     */
-    public function __construct(string $filePath)
-    {
-        $this->filePath = $filePath;
+    public function __construct(
+        private string $filePath
+    ) {
     }
 
-    /**
-     * Load config
-     *
-     * @return ConfigValues
-     */
     public function load(): ConfigValues
     {
         // If file is not readable for any reason (permissions, etc.), throw an exception

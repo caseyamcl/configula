@@ -253,30 +253,4 @@ class ConfigValuesTest extends TestCase
         // Original should not contain added value
         $this->assertFalse($config->has('baz'));
     }
-
-    // --------------------------------------------------------------
-
-    public function testGetItemsReturnsArray(): void
-    {
-        $config = new ConfigValues(static::getTestValues());
-        /**
- * @noinspection PhpDeprecationInspection
-*/
-        $this->assertSame(static::getTestValues(), $config->getItems());
-    }
-
-    public function testValidReturnsExpected(): void
-    {
-        $config = new ConfigValues(['a' => 'A']);
-        $this->assertTrue($config->valid('a'));
-        $this->assertFalse($config->valid('b'));
-    }
-
-    public function testGetItemReturnsExpected(): void
-    {
-        $config = new ConfigValues(['a' => 'A', 'c' => ['d' => 'E']]);
-        $this->assertSame('A', $config->getItem('a'));
-        $this->assertSame('E', $config->getItem('c.d'));
-        $this->assertNull($config->getItem('b'));
-    }
 }

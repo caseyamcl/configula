@@ -21,6 +21,7 @@ namespace Configula\Util;
 
 use Generator;
 use IteratorAggregate;
+use ReturnTypeWillChange;
 use SplFileInfo;
 
 /**
@@ -34,46 +35,31 @@ use SplFileInfo;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class LocalDistFileIterator implements IteratorAggregate
+readonly class LocalDistFileIterator implements IteratorAggregate
 {
-    /**
-     * @var iterable
-     */
-    private $iterator;
-
-    /**
-     * @var string
-     */
-    private $localSuffix;
-
-    /**
-     * @var string
-     */
-    private $distSuffix;
-
     /**
      * LocalDistFileIterator constructor.
      * @param iterable|SplFileInfo[]|string[] $fileIterator Iterate either file paths or SplFileInfo instances
      * @param string $localSuffix  File suffix denoting 'local' (high priority) files (always comes before extension)
      * @param string $distSuffix  File suffix denoting 'dist' (low priority) files (always comes before extension)
      */
-    public function __construct(iterable $fileIterator, string $localSuffix = '.local', string $distSuffix = '.dist')
-    {
-        $this->iterator = $fileIterator;
-        $this->localSuffix = $localSuffix;
-        $this->distSuffix = $distSuffix;
+    public function __construct(
+        private iterable $fileIterator,
+        private string $localSuffix = '.local',
+        private string $distSuffix = '.dist'
+    ) {
     }
 
     /**
      * @return Generator<int,SplFileInfo>
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getIterator(): Generator
     {
         $localFiles = [];
         $normalFiles = [];
 
-        foreach ($this->iterator as $file) {
+        foreach ($this->fileIterator as $file) {
             $basename = rtrim($file->getBasename(strtolower($file->getExtension())), '.');
 
             if (strcasecmp(substr($basename, 0 - strlen($this->localSuffix)), $this->localSuffix) === 0) {

@@ -28,12 +28,6 @@ use Configula\Exception\ConfigLoaderException;
  */
 final class JsonFileLoader extends AbstractFileLoader
 {
-    /**
-     * Parse the contents
-     *
-     * @param  string $rawFileContents
-     * @return array
-     */
     protected function parse(string $rawFileContents): array
     {
         if (trim($rawFileContents) === '') {

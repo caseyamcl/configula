@@ -23,42 +23,14 @@ use Configula\ConfigLoaderInterface;
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
 
-/**
- * Json Env Loader
- *
- * Loads JSON tree from single environment variable
- *
- * @package Configula\Loader
- */
-final class JsonEnvLoader implements ConfigLoaderInterface
+final readonly class JsonEnvLoader implements ConfigLoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $envValueName;
-
-    /**
-     * @var bool
-     */
-    private $asAssoc;
-
-    /**
-     * JsonEnvLoader constructor.
-     *
-     * @param string $envValueName
-     * @param bool   $asAssoc
-     */
-    public function __construct(string $envValueName, bool $asAssoc = false)
-    {
-        $this->envValueName = $envValueName;
-        $this->asAssoc = $asAssoc;
+    public function __construct(
+        private string $envValueName,
+        private bool $asAssoc = false
+    ) {
     }
 
-    /**
-     * Load config
-     *
-     * @return ConfigValues
-     */
     public function load(): ConfigValues
     {
         $rawContent = getenv($this->envValueName);

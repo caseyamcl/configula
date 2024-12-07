@@ -32,7 +32,7 @@ use SplFileInfo;
  *
  * @package Configula\Loader
  */
-final class FileLoader implements FileLoaderInterface
+final readonly class FileLoader implements FileLoaderInterface
 {
     public const DEFAULT_EXTENSION_MAP = [
         'yml'  => YamlFileLoader::class,
@@ -43,25 +43,15 @@ final class FileLoader implements FileLoaderInterface
     ];
 
     /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
-     * @var array
-     */
-    private $extensionMap;
-
-    /**
      * FileLoader constructor.
      *
      * @param string         $filePath
      * @param array|string[] $extensionMap Keys are case-insensitive extensions; values are class names
      */
-    public function __construct(string $filePath, array $extensionMap = self::DEFAULT_EXTENSION_MAP)
-    {
-        $this->extensionMap = $extensionMap;
-        $this->filePath = $filePath;
+    public function __construct(
+        private string $filePath,
+        private array $extensionMap = self::DEFAULT_EXTENSION_MAP
+    ) {
     }
 
     /**

@@ -27,21 +27,16 @@ use Configula\ConfigValues;
  *
  * @package Configula\Loader
  */
-final class ArrayValuesLoader implements ConfigLoaderInterface
+final readonly class ArrayValuesLoader implements ConfigLoaderInterface
 {
-    /**
-     * @var array
-     */
-    private $configValues;
-
     /**
      * ArrayValuesLoader constructor.
      *
      * @param array $configValues
      */
-    public function __construct(array $configValues)
-    {
-        $this->configValues = $configValues;
+    public function __construct(
+        private array $configValues
+    ) {
     }
 
     /**

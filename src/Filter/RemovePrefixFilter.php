@@ -26,21 +26,16 @@ use Configula\ConfigValues;
  *
  * @author Casey McLaughlin <caseyamcl@gmail.com>
  */
-class RemovePrefixFilter
+readonly class RemovePrefixFilter
 {
-    /**
-     * @var string
-     */
-    private $prefix;
-
     /**
      * Extract Top Level Item constructor.
      *
      * @param string $prefix
      */
-    public function __construct(string $prefix)
-    {
-        $this->prefix = $prefix;
+    public function __construct(
+        private string $prefix
+    ) {
     }
 
     /**

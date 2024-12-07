@@ -30,37 +30,19 @@ use Configula\Exception\ConfigLoaderException;
  */
 abstract class AbstractFileLoader implements FileLoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
-     * @var bool
-     */
-    private $required;
-
-    /**
-     * AbstractFileLoader constructor.
-     *
-     * @param string $filePath
-     * @param bool   $required If TRUE, this file is required to exist
-     */
-    public function __construct(string $filePath, bool $required = true)
-    {
-        $this->filePath = $filePath;
-        $this->required = $required;
+    public function __construct(
+        private readonly string $filePath,
+        private readonly bool $ensureExists = true
+    ) {
     }
 
     /**
      * Load config
-     *
-     * @return ConfigValues
      */
     public function load(): ConfigValues
     {
         if (! is_readable($this->filePath)) {
-            if ($this->required) {
+            if ($this->ensureExists) {
                 throw (file_exists($this->filePath))
                     ? new ConfigLoaderException("Could not read configuration file: " . $this->filePath)
                     : new ConfigFileNotFoundException('Config file not found: ' . $this->filePath);

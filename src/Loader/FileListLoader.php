@@ -31,35 +31,25 @@ use SplFileInfo;
  *
  * @package Configula\Loader
  */
-final class FileListLoader implements ConfigLoaderInterface
+final readonly class FileListLoader implements ConfigLoaderInterface
 {
-    /**
-     * @var iterable|SplFileInfo[]|string[]
-     */
-    private $files;
-
-    /**
-     * @var array
-     */
-    private $extensionMap;
-
     /**
      * FileListLoader constructor.
      *
-     * @param iterable|SplFileInfo[]|string[] $files
-     * @param array                           $extensionMap
+     * @param iterable<SplFileInfo|string> $files
+     * @param array $extensionMap
      */
-    public function __construct(iterable $files, array $extensionMap = FileLoader::DEFAULT_EXTENSION_MAP)
-    {
-        $this->files = $files;
-        $this->extensionMap = $extensionMap;
+    public function __construct(
+        private iterable $files,
+        private array $extensionMap = FileLoader::DEFAULT_EXTENSION_MAP
+    ) {
     }
 
     /**
      * Load config
      *
      * @return ConfigValues
-     * @throws ConfigLoaderException  If loading fails for whatever reason, throw this exception
+     * @throws ConfigLoaderException  If loading fails for any reason, throw this exception
      */
     public function load(): ConfigValues
     {
@@ -70,7 +60,7 @@ final class FileListLoader implements ConfigLoaderInterface
             try {
                 $newValues = (new FileLoader((string) $fileInfo->getRealPath(), $this->extensionMap))->load();
                 $values = $values->merge($newValues);
-            } catch (ConfigFileNotFoundException | UnmappedFileExtensionException $e) {
+            } catch (ConfigFileNotFoundException | UnmappedFileExtensionException) {
                 // pass..
             }
         }

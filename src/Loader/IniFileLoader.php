@@ -21,42 +21,15 @@ namespace Configula\Loader;
 
 use Configula\ConfigValues;
 use Configula\Exception\ConfigLoaderException;
-use Throwable;
 
-/**
- * Class IniFileLoader
- *
- * @package Configula\Loader
- */
-final class IniFileLoader implements FileLoaderInterface
+final readonly class IniFileLoader implements FileLoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
-     * @var bool
-     */
-    private $processSections;
-
-    /**
-     * IniFileLoader constructor.
-     *
-     * @param string $filePath
-     * @param bool   $processSections
-     */
-    public function __construct(string $filePath, bool $processSections = true)
-    {
-        $this->filePath = $filePath;
-        $this->processSections = $processSections;
+    public function __construct(
+        private string $filePath,
+        private bool $processSections = true
+    ) {
     }
 
-    /**
-     * Load config
-     *
-     * @return ConfigValues
-     */
     public function load(): ConfigValues
     {
         $values = @parse_ini_file($this->filePath, $this->processSections, INI_SCANNER_TYPED);

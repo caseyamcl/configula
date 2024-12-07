@@ -24,47 +24,31 @@ use Configula\ConfigValues;
 use InvalidArgumentException;
 use SplFileInfo;
 
-/**
- * Class CascadingLoader
- *
- * @package FandF\Config
- */
-class CascadingConfigLoader implements ConfigLoaderInterface
+readonly class CascadingConfigLoader implements ConfigLoaderInterface
 {
     /**
-     * @var iterable|ConfigLoaderInterface[]
-     */
-    private $loaders;
-
-    /**
-     *
      * Pass in an iterable list of multiple loaders, file names, or arrays of values
      *
-     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface[] $items
+     * @param  iterable<array|string|SplFileInfo|ConfigLoaderInterface> $items
      * @return CascadingConfigLoader
      */
     public static function build(iterable $items): CascadingConfigLoader
     {
         foreach ($items as $item) {
-            switch (true) {
-                case $item instanceof ConfigLoaderInterface:
-                    $loaders[] = $item;
-                    break;
-                case is_array($item):
-                    $loaders[] = new ArrayValuesLoader($item);
-                    break;
-                case is_string($item) && file_exists($item):
-                    $loaders[] = new FileLoader($item);
-                    break;
-                case $item instanceof SplFileInfo:
-                    $loaders[] = ($item->isDir()) ? new FolderLoader($item) : new FileLoader((string) $item);
-                    break;
-                default:
-                    throw new InvalidArgumentException(sprintf(
+            $loaders[] = match (true) {
+                $item instanceof ConfigLoaderInterface => $item,
+                is_array($item) => new ArrayValuesLoader($item),
+                is_string($item) && file_exists($item) => new FileLoader($item),
+                $item instanceof SplFileInfo => ($item->isDir()) ? new FolderLoader($item) : new FileLoader(
+                    (string)$item
+                ),
+                default => throw new InvalidArgumentException(
+                    sprintf(
                         'Invalid config source (allowed: array, string (filepath), \SplFileInfo, or config loader): %s',
                         gettype($item)
-                    ));
-            }
+                    )
+                ),
+            };
         }
 
         return new static($loaders ?? []);
@@ -73,11 +57,11 @@ class CascadingConfigLoader implements ConfigLoaderInterface
     /**
      * CascadingLoader constructor.
      *
-     * @param iterable|ConfigLoaderInterface[] $loaders Loaders, in the order that you want to load them
+     * @param iterable<ConfigLoaderInterface> $loaders Loaders, in the order that you want to load them
      */
-    final public function __construct(iterable $loaders)
-    {
-        $this->loaders = $loaders;
+    final public function __construct(
+        private iterable $loaders
+    ) {
     }
 
     /**

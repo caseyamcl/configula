@@ -31,16 +31,11 @@ use SplFileInfo;
  * Config Facade Class
  *
  * Provides convenience methods to load configuration using many different strategies in one-step
- *
- * @package Configula
  */
 class ConfigFactory
 {
     /**
      * Build configuration from array
-     *
-     * @param  array $items
-     * @return ConfigValues
      */
     public static function fromArray(array $items): ConfigValues
     {
@@ -51,9 +46,6 @@ class ConfigFactory
      * Load config using single loader
      *
      * This is the same as simply calling `$loader->load()`
-     *
-     * @param  ConfigLoaderInterface $loader
-     * @return ConfigValues
      */
     public static function load(ConfigLoaderInterface $loader): ConfigValues
     {
@@ -65,7 +57,7 @@ class ConfigFactory
      *
      * Pass in an iterable list of multiple loaders, file names, or arrays of values
      *
-     * @param  iterable|array[]|string[]|SplFileInfo[]|ConfigLoaderInterface[] $items
+     * @param  iterable<array|string|SplFileInfo|ConfigLoaderInterface> $items
      * @return ConfigValues
      */
     public static function loadMultiple(iterable $items): ConfigValues
@@ -80,7 +72,7 @@ class ConfigFactory
      *
      * Missing or unreadable files are ignored.
      *
-     * @param  iterable|string[]|SplFileInfo[] $files
+     * @param  iterable<string|SplFileInfo> $files
      * @return ConfigValues
      */
     public static function loadFiles(iterable $files): ConfigValues
@@ -90,10 +82,6 @@ class ConfigFactory
 
     /**
      * Build configuration by reading a single directory of files (non-recursive; ignores subdirectories)
-     *
-     * @param  string $configDirectory
-     * @param  array  $defaults
-     * @return ConfigValues
      */
     public static function loadSingleDirectory(string $configDirectory, array $defaults = []): ConfigValues
     {
@@ -102,10 +90,6 @@ class ConfigFactory
 
     /**
      * Build configuration by recursively reading a directory of files
-     *
-     * @param  string $configPath Directory or file path
-     * @param  array  $defaults
-     * @return ConfigValues
      */
     public static function loadPath(string $configPath = '', array $defaults = []): ConfigValues
     {
