@@ -64,7 +64,7 @@ class ArrayUtils
     {
         foreach ($arr2 as $key => $value) {
             if (array_key_exists($key, $arr1) && is_array($value) && is_array($arr1[$key])) {
-                $arr1[$key] = static::merge($arr1[$key], $arr2[$key]);
+                $arr1[$key] = static::merge($arr1[$key], $value);
             } else {
                 $arr1[$key] = $value;
             }
