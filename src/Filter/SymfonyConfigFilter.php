@@ -59,7 +59,7 @@ class SymfonyConfigFilter
      * @param ConfigurationInterface $configTree
      * @param Processor|null         $processor
      */
-    final public function __construct(ConfigurationInterface $configTree, Processor $processor = null)
+    final public function __construct(ConfigurationInterface $configTree, ?Processor $processor = null)
     {
         $this->configTree = $configTree;
         $this->processor = $processor ?: new Processor();

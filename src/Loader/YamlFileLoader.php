@@ -43,7 +43,7 @@ final class YamlFileLoader extends AbstractFileLoader
      * @param bool        $required
      * @param Parser|null $yamlParser
      */
-    public function __construct(string $yamlFilePath, bool $required = true, Parser $yamlParser = null)
+    public function __construct(string $yamlFilePath, bool $required = true, ?Parser $yamlParser = null)
     {
         $this->parser = $yamlParser ?: new Parser();
         parent::__construct($yamlFilePath, $required);

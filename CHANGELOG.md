@@ -7,6 +7,8 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Changed
 - Added GitHub build action for PHP 8.4
 - Updated GitHub build `action/checkout` and `action/cache`
+### Fixed
+- Implicit null values in `SymfonyConfigFilter` and `YamlFileLoader` classes
 
 ## [4.2] (2022-08-16)
 ### Added
