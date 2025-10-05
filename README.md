@@ -6,7 +6,7 @@ Configula is a configuration library for PHP 7.3+.
 [![Software License][ico-license]](LICENSE.md)
 [![Github Build][ico-ghbuild]][link-ghbuild]
 [![Code coverage][ico-coverage]](coverage.svg)
-[![PHPStan Level 8][ico-phpstan]][link-phpstan]
+[![PHPStan Level 5][ico-phpstan]][link-phpstan]
 [![Total Downloads][ico-downloads]][link-downloads]
 
 Use this library when you want to load configuration from the filesystem, environment, and other sources.  It implements
