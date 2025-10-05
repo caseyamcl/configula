@@ -3,7 +3,7 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## UNRELEASED
+## [5.0.1] (2025-10-05)
 ### Changed
 - Minor edits to README.md
 - [dev] Upgraded to CodeSniffer v4
