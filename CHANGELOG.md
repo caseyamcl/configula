@@ -5,6 +5,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## UNRELEASED
 ### Changed
+- Minor edits to README.md
 - [dev] Upgraded to CodeSniffer v4
 ### Fixed
 - [dev] Ensure that PHPStan runs with enough memory

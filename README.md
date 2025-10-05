@@ -1,6 +1,6 @@
 # Configula
 
-Configula is a configuration library for PHP 7.3+. 
+Configula is a configuration library for PHP 8.2+ (older versions supported; see below). 
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -17,8 +17,8 @@ any PHP application.
 
 * Load configuration from a variety of sources:
     * Load values from _.php_, _.ini_, _.json_, and _.yml_ configuration file types
-    * Load values from the environment, and _.env_ files using a DotEnv library ([vlucas](https://github.com/vlucas/phpdotenv) or [Symfony](https://github.com/symfony/dotenv))
-    * Easily write your own loaders to support other file types and sources
+    * Load values from the environment and _.env_ files using a DotEnv library ([vlucas](https://github.com/vlucas/phpdotenv) or [Symfony](https://github.com/symfony/dotenv))
+    * Write your own loaders to support other file types and sources
 * Cascade/deep merge values from multiple sources (e.g. array, files, environment, etc) 
 * Optionally use in combination with [Symfony Config Component](http://symfony.com/doc/current/components/config/introduction.html)
   to validate configuration values and/or cache them
@@ -40,7 +40,7 @@ composer require caseyamcl/configula
 
 Refer to [UPGRADE.md](UPGRADE.md) for notes on upgrading from Version 2.x, 3.x, or 4.x to v5.
 
-## Need PHP v7.x, 5.x, or older Symfony compatibility?
+## Need PHP v7.x, v5.x, or older Symfony compatibility?
 
 Configula v5.x is compatible with PHP v8.2+.  
 
@@ -53,7 +53,7 @@ Configula v5.x is compatible with PHP v8.2+.
  
 ## Loading Configuration
   
-You can use the `Configula\ConfigFactory` to load configuration from files, the environment or other sources: 
+You can use the `Configula\ConfigFactory` to load configuration from files, the environment, or other sources: 
 
 ```php
 use Configula\ConfigFactory as Config;
@@ -214,7 +214,7 @@ $newConfig = $config->merge(new ConfigValues(['baz' => 'buzz', 'cad' => 'cuzz'])
 $newConfig = $config->mergeValues(['baz' => 'buzz', 'cad' => ['some' => 'thing']]);
 ```
 
-Configula performs a *deep merge*.  Nested arrays are traversed and the last value always takes precedence.
+Configula performs a *deep merge*.  Nested arrays are traversed, and the last value always takes precedence.
 
 Note that Configula does not deep merge nested objects, only arrays.
 
@@ -349,7 +349,7 @@ Configula supports both. You can also write your own loader if your environment 
 ## Loading multiple environment variables
 
 Configula supports loading environment variables as configuration values using `getenv()`.  This is the 
-[12 Factor App](https://12factor.net/config) way of doing things.
+[12-Factor App](https://12factor.net/config) way of doing things.
 
 Common use-cases for this loader include:
 
@@ -530,10 +530,10 @@ $config->get('non_existent_value');
 $config['non_existent_value'];
 $config->non_existent_value;
 
-// This will not throw an exception, but instead return NULL
+// This will not throw an exception but instead return NULL
 $config->find('non_existent_value');
 
-// This will not throw an exception, but instead return 'default'
+// This will not throw an exception but instead return 'default'
 $config->get('non_existent_value', 'default');
 ```
 
@@ -560,7 +560,7 @@ class AppConfig extends ConfigValues
     }
     
     /**
-     * Get the encryption key (as 32-character alphanumeric string)
+     * Get the encryption key (as a 32-character alphanumeric string)
      *
      * @return string
      */
@@ -695,10 +695,10 @@ Use it:
 
 use Configula\ConfigFactory;
 
-// use the factory..
+// use the factory...
 $config = ConfigFactory::load(new MyFileLoader('/path/to/file'));
 
-// ..or don't..
+// ...or don't...
 $config = (new MyFileLoader('/path/to/file'))->load();
 ```
 
@@ -748,10 +748,10 @@ Use it:
 
 use Configula\ConfigFactory;
 
-// use the factory..
+// use the factory...
 $config = ConfigFactory::load(new MyLoader());
 
-// ..or use it directly.
+// ...or use it directly.
 $config = (new MyLoader())->load();
 ```
 
