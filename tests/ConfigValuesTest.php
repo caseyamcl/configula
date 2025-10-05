@@ -96,7 +96,7 @@ class ConfigValuesTest extends TestCase
         $this->assertTrue($config->has($path));
     }
 
-    #[DataProvider('nonExistentDataProvider', false)]
+    #[DataProvider('nonExistentDataProvider')]
     public function testHasReturnsFalseForNonExistentValues(string $path): void
     {
         $config = new ConfigValues(static::getTestValues());
