@@ -10,29 +10,41 @@ jobs:
         name: PHP ${{ matrix.php }}
         steps:
             - uses: actions/checkout@v4
+
             - name: Install PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   coverage: xdebug
+
             - name: Report PHP version
               run: php -v
             - name: Validate composer.json and composer.lock
               run: composer validate
+
             - name: Get Composer Cache Directory
               id: composer-cache
               run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
             - name: Cache dependencies
               uses: actions/cache@v4
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
                   key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
                   restore-keys: ${{ matrix.php }}-composer-
-            - name: Install dependencies
+
+            - name: Install dependencies (Lowest for PHP 8.2)
+              if: matrix.php == '8.2'
+              run: composer install --prefer-lowest --prefer-dist --no-progress --no-suggest
+            - name: Install dependencies (Latest for PHP 8.3+)
+              if: matrix.php != '8.2'
               run: composer install --prefer-dist --no-progress --no-suggest
+
             - name: Run PHPStan
               run: composer phpstan
+
             - name: Run PHP-CS
               run: composer check-style
+
             - name: Run test suite
               run: vendor/bin/phpunit
