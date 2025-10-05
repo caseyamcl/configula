@@ -5,15 +5,14 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## UNRELEASED
 ### Changed
-- [dev] Upgraded PHPUnit to v12 and CodeSniffer to v4
+- [dev] Upgraded to CodeSniffer v4
 ### Fixed
 - [dev] Ensure that PHPStan runs with enough memory
-- [dev] Ignore parameter mismatch in ConfigValues test
 
 ## [5.0] (2024-12-07)
 ### Changed
 - Refactored all code to PHP 8.2 standards
-- Updated all tests to support latest PHPUnit 11
+- Updated all tests to support the latest PHPUnit 11
 - Replaced `ConfigException` with `ConfigExceptionInterface`
 ### Removed
 - Support for PHP < 8.2
