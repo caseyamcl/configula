@@ -3,6 +3,12 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## UNRELEASED
+### Changed
+- [dev] Upgraded PHPUnit to v12 and CodeSniffer to v4
+### Fixed
+- [dev] Ensure that PHPStan runs with enough memory
+
 ## [5.0] (2024-12-07)
 ### Changed
 - Refactored all code to PHP 8.2 standards
