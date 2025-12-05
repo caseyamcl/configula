@@ -24,7 +24,7 @@ jobs:
 
             - name: Get Composer Cache Directory
               id: composer-cache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: Cache dependencies
               uses: actions/cache@v4
@@ -33,11 +33,11 @@ jobs:
                   key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
                   restore-keys: ${{ matrix.php }}-composer-
 
-            - name: Install dependencies (Lowest for PHP 8.2)
-              if: matrix.php == '8.2'
+            - name: Install dependencies (Lowest for PHP 8.3)
+              if: matrix.php == '8.3'
               run: composer update --prefer-lowest --prefer-dist --no-progress --no-suggest
-            - name: Install dependencies (Latest for PHP 8.3+)
-              if: matrix.php != '8.2'
+            - name: Install dependencies (Latest for PHP 8.4+)
+              if: matrix.php != '8.3'
               run: composer install --prefer-dist --no-progress --no-suggest
 
             - name: Run PHPStan
