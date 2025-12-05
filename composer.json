@@ -26,7 +26,7 @@
         "symfony/config"              : "^6.4|^7.0|^8.0",
         "squizlabs/php_codesniffer"   : "^4.0",
         "jaschilz/php-coverage-badger": "^2.0",
-        "phpstan/phpstan"             : "^2.0"
+        "phpstan/phpstan"             : "^2.1.33"
     },
     "suggest": {
         "vlucas/phpdotenv": "Allows loading values from .env files",
