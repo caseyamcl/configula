@@ -3,6 +3,14 @@
 All notable changes to `Configula` will be documented in this file since v3.0
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [5.1.0] (2025-12-09)
+### Added
+- Added support for Symfony v8
+### Changed
+- [dev] Added GitHub build for PHP 8.5
+- [dev] Ensure PHPStan minimum version 
+- [dev] Additional tweaks and deprecations in GitHub build scripts
+
 ## [5.0.1] (2025-10-05)
 ### Changed
 - Minor edits to README.md
