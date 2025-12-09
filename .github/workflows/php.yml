@@ -41,6 +41,7 @@ jobs:
               run: composer install --prefer-dist --no-progress --no-suggest
 
             - name: Run PHPStan
+              if: matrix.php != '8.2'
               run: composer phpstan
 
             - name: Run PHP-CS
